@@ -17,11 +17,11 @@ namespace FinalProject
         private static string fastaPath = @"Data\All_COSMIC_Genes.fasta";
        
         XLSHandler _xlsHandler;
-        FastaHandler _fastaHandler;
+       
         
         public MainForm()
         {
-            _fastaHandler=new FastaHandler(fastaPath);
+           
             InitializeComponent();
         }
 

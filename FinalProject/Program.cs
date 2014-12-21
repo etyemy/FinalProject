@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.Net;
+using System.Xml;
 
 namespace FinalProject
 {
@@ -17,10 +18,7 @@ namespace FinalProject
         [STAThread]
         static void Main()
         {
-           
-            UcscDAL ud = new UcscDAL();
-            ud.getTableColName("all_sts_seq");
-            ud.getFirst20Lines("all_sts_seq");
+            Console.WriteLine(UcscXML.getCodonAt("chr12", 25398286));
           
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);

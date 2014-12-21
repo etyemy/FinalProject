@@ -9,21 +9,19 @@ namespace FinalProject
     class Gene
     {
         private string _name;
-        private string _info;
         private string _chrom;
         private string _startPos;
         private string _endPos;
-        private string _direction;
+        private string _strand;
         private string _seq;
 
-        public Gene(string name,string info,string chrom,string startPos,string endPos,string direction,string seq)
+        public Gene(string name,string chrom,string startPos,string endPos,string strand,string seq)
         {
             _name = name;
-            _info = info;
             _chrom = chrom;
             _startPos = startPos;
             _endPos = endPos;
-            _direction = direction;
+            _strand = strand;
             _seq = seq;
         }
     }
