@@ -8,21 +8,28 @@ namespace FinalProject
 {
     class Gene
     {
-        private string _name;
+        private string _name1;
+        private string _name2;
         private string _chrom;
-        private string _startPos;
-        private string _endPos;
-        private string _strand;
-        private string _seq;
+        private char _strand;
+        private int _startPos;
+        private int _endPos;
+        private int _exonCount;
+        private List<int> _exonStarts;
+        private List<int> _exonEnds;
 
-        public Gene(string name,string chrom,string startPos,string endPos,string strand,string seq)
+        public Gene(string name1, string name2, string chrom, char strand, int startPos, int endPos, int exonCount, List<int> exonStarts, List<int> exonEnds)
         {
-            _name = name;
+            _name1 = name1;
+            _name2 = name2;
             _chrom = chrom;
+            _strand = strand;
             _startPos = startPos;
             _endPos = endPos;
-            _strand = strand;
-            _seq = seq;
+            _exonCount = exonCount;
+            _exonStarts = exonStarts;
+            _exonEnds = exonEnds;
+
         }
     }
 }
