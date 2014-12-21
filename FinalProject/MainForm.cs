@@ -14,11 +14,8 @@ namespace FinalProject
     
     public partial class MainForm : Form
     {
-        private static string fastaPath = @"Data\All_COSMIC_Genes.fasta";
-       
-        XLSHandler _xlsHandler;
-       
-        
+        private XLSHandler _xlsHandler;
+        private RefGeneDAL _refGeneDAL;
         public MainForm()
         {
            
@@ -40,8 +37,10 @@ namespace FinalProject
             fdlg.RestoreDirectory = true;
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
+                _refGeneDAL = new RefGeneDAL();
+                Log.Items.Add("Connection to RefGene Established.");
                 _xlsHandler =new XLSHandler(fdlg.FileName);
-                Log.Items.Add(fdlg.FileName + " Loaded");
+                Log.Items.Add(fdlg.FileName + " Loaded.");
                 
             }
             else

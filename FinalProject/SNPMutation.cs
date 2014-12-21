@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace FinalProject
 {
-    class Mutation
+    class SNPMutation
     {
-        enum XLSCol{Chrom=0,Position,GeneSym,TargetID,Type,Zygosity,Ref,Variant,VarFreq,PValue,Coverage,RefCov,VarCov,HotSpotID};
+        enum XLSCol { Chrom = 0, Position, GeneSym, TargetID, Type, Zygosity, Ref, Variant, VarFreq, PValue, Coverage, RefCov, VarCov, HotSpotID };
 
         private string _chrom;
         private string _position;
@@ -17,8 +17,9 @@ namespace FinalProject
         private string _ref;
         private string _variant;
 
-        public Mutation(string [] xlsLineArr)
+        public SNPMutation(string[] xlsLineArr)
         {
+
             _chrom = xlsLineArr[(int)XLSCol.Chrom];
             _position = xlsLineArr[(int)XLSCol.Position];
             _geneSym = xlsLineArr[(int)XLSCol.GeneSym];
@@ -27,12 +28,11 @@ namespace FinalProject
             _variant = xlsLineArr[(int)XLSCol.Variant];
         }
 
-        public string Type
+        public bool isSNP()
         {
-            get
-            {
-                return _type;
-            }
+            if (_type.Equals("SNP"))
+                return true;
+            return false;
         }
 
     }

@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Gene.cs" />
-    <Compile Include="Mutation.cs" />
+    <Compile Include="SNPMutation.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -18,8 +18,8 @@ namespace FinalProject
         [STAThread]
         static void Main()
         {
-            RefGeneDAL ud = new RefGeneDAL();
-            Console.WriteLine( ud.getTableColName("refGene"));
+           
+           
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());

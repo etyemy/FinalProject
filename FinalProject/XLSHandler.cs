@@ -9,16 +9,16 @@ namespace FinalProject
 {
     class XLSHandler
     {
-        List<Mutation> _mutationList;
+        List<SNPMutation> _mutationList;
         public XLSHandler(string xlsPath)
         {
-            _mutationList = new List<Mutation>();
+            _mutationList = new List<SNPMutation>();
             StreamReader xlsStream = new StreamReader(xlsPath);
             while (xlsStream.Peek() >= 0)
             {
                 string[] xlsLine = xlsStream.ReadLine().Split('\t');
-                Mutation m = new Mutation(xlsLine);
-                if (m.Type.Equals("SNP"))
+                SNPMutation m = new SNPMutation(xlsLine);
+                if (m.isSNP())
                     _mutationList.Add(m);
             }
             xlsStream.Close();
