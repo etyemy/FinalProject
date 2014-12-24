@@ -29,12 +29,7 @@ namespace FinalProject
 
         private void loadXLSToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog fdlg = new OpenFileDialog();
-            fdlg.Title = "C# Corner Open File Dialog";
-            fdlg.InitialDirectory = @"c:\";
-            fdlg.Filter = "ION PGM Output (*.xls)|*.xls";
-            fdlg.FilterIndex = 2;
-            fdlg.RestoreDirectory = true;
+            OpenFileDialog fdlg = getOpenFileDialog();
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
                 _refGeneDAL = new RefGeneDAL();
@@ -47,12 +42,22 @@ namespace FinalProject
             {
                 Log.Items.Add("Cancelled by user");
             }
-
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private OpenFileDialog getOpenFileDialog()
+        {
+            OpenFileDialog fdlg = new OpenFileDialog();
+            fdlg.Title = "C# Corner Open File Dialog";
+            fdlg.InitialDirectory = @"c:\";
+            fdlg.Filter = "ION PGM Output (*.xls)|*.xls";
+            fdlg.FilterIndex = 2;
+            fdlg.RestoreDirectory = true;
+            return fdlg;
         }
 
        

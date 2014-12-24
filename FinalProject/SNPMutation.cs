@@ -34,6 +34,20 @@ namespace FinalProject
                 return true;
             return false;
         }
+        public string Chrom
+        {
+            get
+            {
+                return _chrom;
+            }
+        }
+        public string GeneSym
+        {
+            get
+            {
+                return _geneSym;
+            }
+        }
 
     }
 }

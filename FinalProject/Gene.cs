@@ -15,10 +15,10 @@ namespace FinalProject
         private int _startPos;
         private int _endPos;
         private int _exonCount;
-        private List<int> _exonStarts;
-        private List<int> _exonEnds;
+        private int[] _exonStarts;
+        private int[] _exonEnds;
 
-        public Gene(string name1, string name2, string chrom, char strand, int startPos, int endPos, int exonCount, List<int> exonStarts, List<int> exonEnds)
+        public Gene(string name1, string name2, string chrom, char strand, int startPos, int endPos, int exonCount, int[] exonStarts, int[] exonEnds)
         {
             _name1 = name1;
             _name2 = name2;
@@ -31,5 +31,29 @@ namespace FinalProject
             _exonEnds = exonEnds;
 
         }
+
+        public int ExonCount
+        {
+            get
+            {
+                return _exonCount;
+            }
+        }
+        public string Crhom
+        {
+            get
+            {
+                return _chrom;
+            }
+        }
+        public string Name2
+        {
+            get
+            {
+                return _name2;
+            }
+        }
+
+        
     }
 }
