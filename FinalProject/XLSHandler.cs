@@ -10,28 +10,27 @@ namespace FinalProject
     class XLSHandler
     {
         List<SNPMutation> _mutationList;
-        List<Gene> _geneList;
+        string _xlsPath;
         public XLSHandler(string xlsPath)
         {
             Console.WriteLine("Start!!!!!!!");
-            RefGeneDAL rgd=new RefGeneDAL();
             _mutationList = new List<SNPMutation>();
-            _geneList = new List<Gene>();
-            StreamReader xlsStream = new StreamReader(xlsPath);
+            _xlsPath = xlsPath;
+           
+        }
+
+        public void handle()
+        {
+            StreamReader xlsStream = new StreamReader(_xlsPath);
+            xlsStream.ReadLine();
             while (xlsStream.Peek() >= 0)
             {
-                string[] xlsLine = xlsStream.ReadLine().Split('\t');
-                SNPMutation m = new SNPMutation(xlsLine);
+
+                SNPMutation m = new SNPMutation(xlsStream.ReadLine().Split('\t'));
                 if (m.isSNP())
-                { 
+                {
+                    Console.WriteLine(m.ToString());
                     _mutationList.Add(m);
-                    if(!geneInList(m.Chrom, m.GeneSym))
-                    {
-                        Gene g = rgd.getGene(m.Chrom, m.GeneSym);
-                        _geneList.Add(g);
-                        Console.WriteLine("Gene Added to List "+m.Chrom+" !!!!!!!");
-                    }
-                    
                 }
             }
             Console.WriteLine("End!!!!!!!");
@@ -42,20 +41,5 @@ namespace FinalProject
             ////////////
             xlsStream.Close();
         }
-
-        private bool geneInList(string chrom, string geneSym)
-        {
-            foreach(Gene g in _geneList)
-            {
-                if (g.Crhom.Equals(chrom) && g.Name2.Equals(geneSym))
-                    return true;
-            }
-            return false;
-        }
-
-
-
-
-
     }
 }

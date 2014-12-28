@@ -36,7 +36,7 @@ namespace FinalProject
                 Log.Items.Add("Connection to RefGene Established.");
                 _xlsHandler =new XLSHandler(fdlg.FileName);
                 Log.Items.Add(fdlg.FileName + " Loaded.");
-                
+                _xlsHandler.handle();
             }
             else
             {

@@ -8,24 +8,74 @@ namespace FinalProject
 {
     class SNPMutation
     {
+        private RefGeneBL rgd;
         enum XLSCol { Chrom = 0, Position, GeneSym, TargetID, Type, Zygosity, Ref, Variant, VarFreq, PValue, Coverage, RefCov, VarCov, HotSpotID };
 
         private string _chrom;
-        private string _position;
+        private int _position;
         private string _geneSym;
         private string _type;
-        private string _ref;
-        private string _variant;
+        private char _ref;
+        private char _var;
+        private Gene _gene;
+        private int _offset;
+        private string _refCodon;
+        private string _varCodon;
 
         public SNPMutation(string[] xlsLineArr)
         {
-
+            rgd = new RefGeneBL();
             _chrom = xlsLineArr[(int)XLSCol.Chrom];
-            _position = xlsLineArr[(int)XLSCol.Position];
+            _position = Convert.ToInt32(xlsLineArr[(int)XLSCol.Position]);
             _geneSym = xlsLineArr[(int)XLSCol.GeneSym];
             _type = xlsLineArr[(int)XLSCol.Type];
-            _ref = xlsLineArr[(int)XLSCol.Ref];
-            _variant = xlsLineArr[(int)XLSCol.Variant];
+            _ref = Convert.ToChar(xlsLineArr[(int)XLSCol.Ref]);
+            _var = Convert.ToChar(xlsLineArr[(int)XLSCol.Variant]);
+            _gene = rgd.getGene(_chrom, _geneSym);
+            _offset = _gene.CodonOffsetInGene(_position);
+
+            if (_offset != -1)
+            {
+                _refCodon = UcscXML.getCodonAt(_chrom, _position,_offset);
+                char[] temp = _refCodon.ToCharArray();
+                temp[_offset] = _var;
+                _varCodon = new string(temp);
+                if (_gene.Strand.Equals('-'))
+                {
+                    _refCodon = reverseString(OppositeCodon(_refCodon));
+                    _varCodon = reverseString(OppositeCodon(_varCodon));
+
+                }
+            }
+            else
+                _refCodon = _varCodon = "NoCoding";
+                
+        }
+
+        private string OppositeCodon(string p)
+        {
+            string toReturn = "";
+            foreach(char c in p)
+            {
+                switch(c){
+                    case 'A':
+                        toReturn += "T";
+                        break;
+                    case 'T':
+                        toReturn += "A";
+                        break;
+                    case 'G':
+                        toReturn += "C";
+                        break;
+                    case 'C':
+                        toReturn += "G";
+                        break;
+                    default:
+                        break;
+                }
+               
+            }
+            return toReturn;
         }
 
         public bool isSNP()
@@ -49,5 +99,16 @@ namespace FinalProject
             }
         }
 
+        override public string ToString()
+        {
+            return "" + _chrom + " " + _position + " " +" "+_gene.ExonCount+" "+ _geneSym + " " + _ref + " " + _var + " " + _gene.Strand + " " + _offset + " " + _refCodon + " " + _varCodon;
+        }
+
+        private string reverseString(string toReverse)
+        {
+            char[] arr = toReverse.ToCharArray();
+            Array.Reverse(arr);
+            return new string(arr);
+        }
     }
 }

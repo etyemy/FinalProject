@@ -9,24 +9,28 @@ namespace FinalProject
 {
     public class UcscXML
     {
-        public static string getCodonAt(string chrom, int index)
+        public static string getCodonAt(string chrom, int index,int codonOffset)
         {
-            switch (getOffsetInCodon(index))
+          
+            string toReturn = null;
+            switch (codonOffset)
             {
                 case 0:
-                    return getSeq(chrom, index, index + 2);
+                    toReturn= getSeq(chrom, index, index + 2);
+                    break;
                 case 1:
-                    return getSeq(chrom, index - 1, index + 1);
+                    toReturn = getSeq(chrom, index - 1, index + 1);
+                    break;
                 case 2:
-                    return getSeq(chrom, index - 2, index);
+                    toReturn = getSeq(chrom, index - 2, index);
+                    break;
                 default:
-                    return null;
+                    break;
             }
+            
+            return toReturn.ToUpper();   
         }
-        public static int getOffsetInCodon(int index)
-        {
-            return (index - 1) % 3;
-        }
+        
         private static string getSeq(string chrom, int start, int end)
         {
             XmlDocument xmlDoc = new XmlDocument();
