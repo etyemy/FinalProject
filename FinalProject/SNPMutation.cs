@@ -8,7 +8,7 @@ namespace FinalProject
 {
     class SNPMutation
     {
-        private RefGeneBL rgd;
+        private RefGeneBL _refGeneBL;
         enum XLSCol { Chrom = 0, Position, GeneSym, TargetID, Type, Zygosity, Ref, Variant, VarFreq, PValue, Coverage, RefCov, VarCov, HotSpotID };
 
         private string _chrom;
@@ -21,22 +21,35 @@ namespace FinalProject
         private int _offset;
         private string _refCodon;
         private string _varCodon;
-
+        private int _exonPlaceInSeq;
+        private string _varAA;
+        private string _refAA;
         public SNPMutation(string[] xlsLineArr)
         {
-            rgd = new RefGeneBL();
+            _refGeneBL = new RefGeneBL();
             _chrom = xlsLineArr[(int)XLSCol.Chrom];
             _position = Convert.ToInt32(xlsLineArr[(int)XLSCol.Position]);
             _geneSym = xlsLineArr[(int)XLSCol.GeneSym];
             _type = xlsLineArr[(int)XLSCol.Type];
             _ref = Convert.ToChar(xlsLineArr[(int)XLSCol.Ref]);
             _var = Convert.ToChar(xlsLineArr[(int)XLSCol.Variant]);
-            _gene = rgd.getGene(_chrom, _geneSym);
+            _gene = _refGeneBL.getGene(_chrom, _geneSym);
             _offset = _gene.CodonOffsetInGene(_position);
+            setVarRefCodons();
+            _exonPlaceInSeq = _gene.getExonPlace(_position);
+            _varAA = AminoAcid.getAminoAcid(_varCodon);
+            _refAA = AminoAcid.getAminoAcid(_refCodon);
+          
+            
+        }
 
+        
+
+        private void setVarRefCodons()
+        {
             if (_offset != -1)
             {
-                _refCodon = UcscXML.getCodonAt(_chrom, _position,_offset);
+                _refCodon = UcscXML.getCodonAt(_chrom, _position, _offset);
                 char[] temp = _refCodon.ToCharArray();
                 temp[_offset] = _var;
                 _varCodon = new string(temp);
@@ -44,12 +57,10 @@ namespace FinalProject
                 {
                     _refCodon = reverseString(OppositeCodon(_refCodon));
                     _varCodon = reverseString(OppositeCodon(_varCodon));
-
                 }
             }
             else
                 _refCodon = _varCodon = "NoCoding";
-                
         }
 
         private string OppositeCodon(string p)
@@ -73,7 +84,6 @@ namespace FinalProject
                     default:
                         break;
                 }
-               
             }
             return toReturn;
         }
@@ -101,7 +111,7 @@ namespace FinalProject
 
         override public string ToString()
         {
-            return "" + _chrom + " " + _position + " " +" "+_gene.ExonCount+" "+ _geneSym + " " + _ref + " " + _var + " " + _gene.Strand + " " + _offset + " " + _refCodon + " " + _varCodon;
+            return "" + _chrom + " " + _position + " " + " " + _gene.ExonCount + " " + _geneSym + " " + _ref + " " + _var + " " + _gene.Strand + " " + _offset + " " + _refCodon + " " + _varCodon + " " + _exonPlaceInSeq + " " + _refAA + " " + _varAA;
         }
 
         private string reverseString(string toReverse)

@@ -28,7 +28,6 @@ namespace FinalProject
             _cdsEnd = cdsEnd;
             _exonCount = exonCount;
             fixExonStartEnd(exonStarts, exonEnds);
-
         }
 
         private void fixExonStartEnd(int[] exonStarts, int[] exonEnds)
@@ -61,7 +60,6 @@ namespace FinalProject
                     else
                         tempEnds.Add(exonEnds[i]);
                 }
-
             }
             _exonStarts = tempStarts.ToArray();
             _exonEnds = tempEnds.ToArray();
@@ -96,7 +94,40 @@ namespace FinalProject
             }
         }
 
+        public int getExonPlace(int index)
+        {
+            int lengthToIndex = getLengthToIndex(index);
+            if (lengthToIndex > -1)
+            {
+                if(_strand.Equals('+'))
+                    return (lengthToIndex / 3);
+                return (lengthToIndex / 3) + 1;
+
+            }
+            return -1;
+        }
         public int CodonOffsetInGene(int index)
+        {
+            int lengthToIndex = getLengthToIndex(index);
+            if (lengthToIndex>-1)
+            {
+                if (_strand.Equals('+'))
+                    return (lengthToIndex-1) % 3;
+                else
+                {
+                    int negOffset=(lengthToIndex) % 3;
+                    if (negOffset == 2)
+                        return 0;
+                    else if (negOffset == 0)
+                        return 2;
+                    else
+                        return 1;
+                } 
+            }
+            return -1;
+        }
+
+        private int getLengthToIndex(int index)
         {
             int lengthToIndex = 0;
             bool found = false;
@@ -119,10 +150,8 @@ namespace FinalProject
             }
             else
             {
-                
                 for (int i = _exonStarts.Length - 1; i >= 0; i--)
                 {
-                   
                     if (index >= _exonStarts[i] && index <= _exonEnds[i])
                     {
                         found = true;
@@ -136,23 +165,11 @@ namespace FinalProject
                 }
             }
             if (found)
-            {
-                if (_strand.Equals('+'))
-                    return (lengthToIndex-1) % 3;
-                else
-                {
-
-                    int negOffset=(lengthToIndex) % 3;
-                    if (negOffset == 2)
-                        return 0;
-                    else if (negOffset == 0)
-                        return 2;
-                    else
-                        return 1;
-                }
-                    
-            }
+                return lengthToIndex;
             return -1;
+
         }
+
+        
     }
 }

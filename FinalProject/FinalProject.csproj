@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AminoAcid.cs" />
     <Compile Include="Gene.cs" />
     <Compile Include="RefGeneBL.cs" />
     <Compile Include="SNPMutation.cs" />

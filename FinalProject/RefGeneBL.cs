@@ -9,23 +9,27 @@ namespace FinalProject
 {
     class RefGeneBL
     {
-        RefGeneDAL rgd;
+        RefGeneDAL _refGeneDAL;
         public RefGeneBL()
         {
-            rgd = new RefGeneDAL();
+            _refGeneDAL = new RefGeneDAL();
         }
 
         public Gene getGene(string geneName, string chrom)
         {
-            List<String> geneStrings = rgd.getGene(geneName,chrom);
+            List<String> geneStrings = _refGeneDAL.getGene(geneName,chrom);
             if (geneStrings != null)
             {
-                int[] exonStars = Regex.Split(geneStrings[7], @"\D+").Except(new string[] { "" }).ToArray().Select(x => int.Parse(x)).ToArray();
-                int[] exonEnds = Regex.Split(geneStrings[8], @"\D+").Except(new string[] { "" }).ToArray().Select(x => int.Parse(x)).ToArray();
+                int[] exonStars = exonStringToStringArray(geneStrings[7]);
+                int[] exonEnds = exonStringToStringArray(geneStrings[8]);
                 return new Gene(geneStrings[0], geneStrings[1], geneStrings[2], geneStrings[3][0], int.Parse(geneStrings[4]), int.Parse(geneStrings[5]), int.Parse(geneStrings[6]), exonStars, exonEnds);
             }
             else
                 return null;
+        }
+        private int[] exonStringToStringArray(string exon)
+        {
+            return Regex.Split(exon, @"\D+").Except(new string[] { "" }).ToArray().Select(x => int.Parse(x)).ToArray();
         }
     }
 }
