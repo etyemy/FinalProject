@@ -20,9 +20,13 @@ namespace FinalProject
             List<String> geneStrings = _ucscDAL.getGene(geneName,chrom);
             if (geneStrings != null)
             {
-                int[] exonStars = exonStringToStringArray(geneStrings[7]);
-                int[] exonEnds = exonStringToStringArray(geneStrings[8]);
-                return new Gene(geneStrings[0], geneStrings[1], geneStrings[2], geneStrings[3][0], int.Parse(geneStrings[4]), int.Parse(geneStrings[5]), int.Parse(geneStrings[6]), exonStars, exonEnds);
+                char strand=Convert.ToChar(geneStrings[0]);
+                int cdsStart=int.Parse(geneStrings[1]);
+                int cdsEnd=int.Parse(geneStrings[2]);
+                int exonCount=int.Parse(geneStrings[3]);
+                int[] exonStars = exonStringToStringArray(geneStrings[4]);
+                int[] exonEnds = exonStringToStringArray(geneStrings[5]);
+                return new Gene(geneName, chrom, strand, cdsStart, cdsEnd, exonCount, exonStars, exonEnds);
             }
             else
                 return null;
@@ -34,10 +38,7 @@ namespace FinalProject
 
         public string getCosmicName(string chrom, int position, string mutationName,string geneName)
         {
-            string toReturn = _ucscDAL.getCosmicName(chrom, position, mutationName, geneName); ;
-            if(toReturn==null)
-                return "No Cosmic Name";
-            return toReturn;
+            return _ucscDAL.getCosmicName(chrom, position, mutationName, geneName); 
         }
     }
 }

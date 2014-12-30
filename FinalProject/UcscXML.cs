@@ -27,7 +27,6 @@ namespace FinalProject
                 default:
                     break;
             }
-            
             return toReturn.ToUpper();   
         }
         

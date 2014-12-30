@@ -9,12 +9,11 @@ namespace FinalProject
 {
     class XLSHandler
     {
-        List<SNPMutation> _mutationList;
+        List<Mutation> _mutationList;
         string _xlsPath;
         public XLSHandler(string xlsPath)
         {
-            Console.WriteLine("Start!!!!!!!");
-            _mutationList = new List<SNPMutation>();
+            _mutationList = new List<Mutation>();
             _xlsPath = xlsPath;
         }
 
@@ -24,8 +23,8 @@ namespace FinalProject
             xlsStream.ReadLine();
             while (xlsStream.Peek() >= 0)
             {
-                SNPMutation m = new SNPMutation(xlsStream.ReadLine().Split('\t'));
-                if (m.isSNP() && m.isMutataion() && m.hasCodon())
+                Mutation m = new Mutation(xlsStream.ReadLine().Split('\t'));
+                if (m.isSNP() && m.isMutataion() && m.hasCodon() && m.hasCosmicName())
                 {
                     _mutationList.Add(m);
                 }
@@ -35,7 +34,7 @@ namespace FinalProject
         public override string ToString()
         {
             string toReturn = "";
-            foreach (SNPMutation m in _mutationList)
+            foreach (Mutation m in _mutationList)
                 toReturn += m.ToString() + "\n";
             return toReturn;
 

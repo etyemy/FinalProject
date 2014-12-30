@@ -1,4 +1,7 @@
-﻿using System;
+﻿/* Gene.cs 
+ * Represent gene with information that is important for project use.
+ * */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +11,7 @@ namespace FinalProject
 {
     class Gene
     {
-        private string _name1;
-        private string _name2;
+        private string _name;
         private string _chrom;
         private char _strand;
         private int _cdsStart;
@@ -18,10 +20,9 @@ namespace FinalProject
         private int[] _exonStarts;
         private int[] _exonEnds;
 
-        public Gene(string name1, string name2, string chrom, char strand, int cdsStart, int cdsEnd, int exonCount, int[] exonStarts, int[] exonEnds)
+        public Gene(string name, string chrom, char strand, int cdsStart, int cdsEnd, int exonCount, int[] exonStarts, int[] exonEnds)
         {
-            _name1 = name1;
-            _name2 = name2;
+            _name = name;
             _chrom = chrom;
             _strand = strand;
             _cdsStart = cdsStart;
@@ -30,6 +31,7 @@ namespace FinalProject
             fixExonStartEnd(exonStarts, exonEnds);
         }
 
+        //Fix the start postion and the end position of gene that received for easy later calculation.
         private void fixExonStartEnd(int[] exonStarts, int[] exonEnds)
         {
             List<int> tempStarts = new List<int>();
@@ -65,6 +67,7 @@ namespace FinalProject
             _exonEnds = tempEnds.ToArray();
         }
 
+        //Count the position of the exon inside the gene.
         public int getExonPlace(int index)
         {
             int lengthToIndex = getLengthToIndex(index);
@@ -77,7 +80,7 @@ namespace FinalProject
             }
             return -1;
         }
-        public int CodonOffsetInGene(int index)
+        public int getOffsetInCodon(int index)
         {
             int lengthToIndex = getLengthToIndex(index);
             if (lengthToIndex>-1)
@@ -154,11 +157,11 @@ namespace FinalProject
                 return _chrom;
             }
         }
-        public string Name2
+        public string Name
         {
             get
             {
-                return _name2;
+                return _name;
             }
         }
         public char Strand

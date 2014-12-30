@@ -50,7 +50,7 @@
     <Compile Include="AminoAcid.cs" />
     <Compile Include="Gene.cs" />
     <Compile Include="UcscBL.cs" />
-    <Compile Include="SNPMutation.cs" />
+    <Compile Include="Mutation.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

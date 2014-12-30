@@ -13,7 +13,6 @@ namespace FinalProject
     {
         private MySqlConnection conn = null;
         private MySqlConnectionStringBuilder sb = null;
-        private MySqlDataReader rdr = null;
         private MySqlCommand cmd = null;
 
         public UcscDAL()
@@ -27,66 +26,56 @@ namespace FinalProject
 
         public List<String> getGene(string geneName, string chrom)
         {
+            conn.Open();
             List<String> toReturn = new List<string>();
-            string query = 
-                "SELECT name, name2, chrom, strand, MAX(cdsStart), MAX(cdsEnd), MAX(exonCount), exonStarts, exonEnds "+
-                "FROM refGene "+
-                "WHERE chrom='" + geneName + "' "+
+            string query =
+                "SELECT strand, MAX(cdsStart), MAX(cdsEnd), MAX(exonCount), exonStarts, exonEnds " +
+                "FROM refGene " +
+                "WHERE chrom='" + geneName + "' " +
                 "AND name2='" + chrom + "'";
-            try
-            {
-                conn.Open();
-                cmd = new MySqlCommand(query, conn);
-                rdr = cmd.ExecuteReader();
-                rdr.Read();
+            MySqlDataReader rdr = executeQuery(query);
+            if (rdr.Read())
                 for (int i = 0; i < rdr.FieldCount; i++)
                 {
                     toReturn.Add(rdr.GetString(i));
                 }
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine("Error: {0}", ex.ToString());
-            }
-            finally
-            {
-                rdr.Close();
-                conn.Close();
-            }
+            rdr.Close();
+            conn.Close();
             return toReturn;
         }
-        public string getCosmicName(string chromNum, int position, string mutationName,string geneName)
+        public string getCosmicName(string chromNum, int position, string mutationName, string geneName)
         {
+            conn.Open();
             string toReturn = null;
             string query =
                 "SELECT cosmic_mutation_id " +
-                "FROM cosmicRaw "+ 
-                "WHERE chromosome = '" + chromNum + "' "+
+                "FROM cosmicRaw " +
+                "WHERE chromosome = '" + chromNum + "' " +
                 "AND gene_name ='" + geneName + "'" +
                 "AND grch37_start ='" + position + "'" +
                 "AND cosmicRaw.mut_syntax_aa='" + mutationName + "'";
+            MySqlDataReader rdr = executeQuery(query);
+            if (rdr.Read())
+            {
+                toReturn = rdr.GetString(0);
+            }
+            rdr.Close();
+            conn.Close();
+            return toReturn;
+        }
+
+        private MySqlDataReader executeQuery(string query)
+        {
             try
             {
-                conn.Open();
                 cmd = new MySqlCommand(query, conn);
-                rdr = cmd.ExecuteReader();
-                if (rdr.Read())
-                {
-                    toReturn = rdr.GetString(0);
-                }
-                  
-
+                return cmd.ExecuteReader();
             }
             catch (MySqlException ex)
             {
                 Console.WriteLine("Error: {0}", ex.ToString());
+                return null;
             }
-            finally
-            {
-                rdr.Close();
-                conn.Close();
-            }
-            return toReturn;
         }
     }
 }
