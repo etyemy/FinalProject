@@ -16,7 +16,6 @@ namespace FinalProject
             Console.WriteLine("Start!!!!!!!");
             _mutationList = new List<SNPMutation>();
             _xlsPath = xlsPath;
-           
         }
 
         public void handle()
@@ -25,21 +24,21 @@ namespace FinalProject
             xlsStream.ReadLine();
             while (xlsStream.Peek() >= 0)
             {
-
                 SNPMutation m = new SNPMutation(xlsStream.ReadLine().Split('\t'));
-                if (m.isSNP())
+                if (m.isSNP() && m.isMutataion() && m.hasCodon())
                 {
-                    Console.WriteLine(m.ToString());
                     _mutationList.Add(m);
                 }
             }
-            Console.WriteLine("End!!!!!!!");
-            /////////////
-
-
-
-            ////////////
             xlsStream.Close();
+        }
+        public override string ToString()
+        {
+            string toReturn = "";
+            foreach (SNPMutation m in _mutationList)
+                toReturn += m.ToString() + "\n";
+            return toReturn;
+
         }
     }
 }

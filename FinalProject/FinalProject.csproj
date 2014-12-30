@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="AminoAcid.cs" />
     <Compile Include="Gene.cs" />
-    <Compile Include="RefGeneBL.cs" />
+    <Compile Include="UcscBL.cs" />
     <Compile Include="SNPMutation.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -59,7 +59,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RefGeneDAL.cs" />
+    <Compile Include="UcscDAL.cs" />
     <Compile Include="UcscXML.cs" />
     <Compile Include="XLSHandler.cs" />
     <EmbeddedResource Include="MainForm.resx">

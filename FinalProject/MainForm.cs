@@ -15,7 +15,7 @@ namespace FinalProject
     public partial class MainForm : Form
     {
         private XLSHandler _xlsHandler;
-        private RefGeneDAL _refGeneDAL;
+        private UcscDAL _refGeneDAL;
         public MainForm()
         {
            
@@ -32,11 +32,16 @@ namespace FinalProject
             OpenFileDialog fdlg = getOpenFileDialog();
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
-                _refGeneDAL = new RefGeneDAL();
+                _refGeneDAL = new UcscDAL();
                 Log.Items.Add("Connection to RefGene Established.");
                 _xlsHandler =new XLSHandler(fdlg.FileName);
-                Log.Items.Add(fdlg.FileName + " Loaded.");
+                Log.Items.Add(fdlg.FileName + " Loaded.\n");
+                Log.Items.Add("Analyzing xls File");
                 _xlsHandler.handle();
+                string[] s = _xlsHandler.ToString().Split('\n');
+                foreach(string t in s)
+                    Log.Items.Add(t);
+
             }
             else
             {

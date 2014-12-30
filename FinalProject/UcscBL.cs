@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace FinalProject
 {
-    class RefGeneBL
+    class UcscBL
     {
-        RefGeneDAL _refGeneDAL;
-        public RefGeneBL()
+        UcscDAL _ucscDAL;
+        public UcscBL()
         {
-            _refGeneDAL = new RefGeneDAL();
+            _ucscDAL = new UcscDAL();
         }
 
         public Gene getGene(string geneName, string chrom)
         {
-            List<String> geneStrings = _refGeneDAL.getGene(geneName,chrom);
+            List<String> geneStrings = _ucscDAL.getGene(geneName,chrom);
             if (geneStrings != null)
             {
                 int[] exonStars = exonStringToStringArray(geneStrings[7]);
@@ -30,6 +30,14 @@ namespace FinalProject
         private int[] exonStringToStringArray(string exon)
         {
             return Regex.Split(exon, @"\D+").Except(new string[] { "" }).ToArray().Select(x => int.Parse(x)).ToArray();
+        }
+
+        public string getCosmicName(string chrom, int position, string mutationName,string geneName)
+        {
+            string toReturn = _ucscDAL.getCosmicName(chrom, position, mutationName, geneName); ;
+            if(toReturn==null)
+                return "No Cosmic Name";
+            return toReturn;
         }
     }
 }

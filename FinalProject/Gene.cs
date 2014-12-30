@@ -65,35 +65,6 @@ namespace FinalProject
             _exonEnds = tempEnds.ToArray();
         }
 
-        public int ExonCount
-        {
-            get
-            {
-                return _exonCount;
-            }
-        }
-        public string Crhom
-        {
-            get
-            {
-                return _chrom;
-            }
-        }
-        public string Name2
-        {
-            get
-            {
-                return _name2;
-            }
-        }
-        public char Strand
-        {
-            get
-            {
-                return _strand;
-            }
-        }
-
         public int getExonPlace(int index)
         {
             int lengthToIndex = getLengthToIndex(index);
@@ -167,9 +138,35 @@ namespace FinalProject
             if (found)
                 return lengthToIndex;
             return -1;
-
         }
 
-        
+        public int ExonCount
+        {
+            get
+            {
+                return _exonCount;
+            }
+        }
+        public string Crhom
+        {
+            get
+            {
+                return _chrom;
+            }
+        }
+        public string Name2
+        {
+            get
+            {
+                return _name2;
+            }
+        }
+        public char Strand
+        {
+            get
+            {
+                return _strand;
+            }
+        }
     }
 }

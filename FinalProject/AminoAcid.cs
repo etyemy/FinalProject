@@ -56,8 +56,7 @@ namespace FinalProject
                     return "G";
                 default:
                     return null;
-            }
-                   
+            }  
         }
     }
 }
