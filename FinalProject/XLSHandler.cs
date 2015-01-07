@@ -9,11 +9,13 @@ namespace FinalProject
 {
     class XLSHandler
     {
-        List<Mutation> _mutationList;
+        private List<Mutation> _nonCosmicMutation;
+        private List<Mutation> _cosmicMutation;
         string _xlsPath;
         public XLSHandler(string xlsPath)
         {
-            _mutationList = new List<Mutation>();
+            _nonCosmicMutation = new List<Mutation>();
+            _cosmicMutation = new List<Mutation>();
             _xlsPath = xlsPath;
         }
 
@@ -24,20 +26,35 @@ namespace FinalProject
             while (xlsStream.Peek() >= 0)
             {
                 Mutation m = new Mutation(xlsStream.ReadLine().Split('\t'));
-                if (m.isSNP() && m.isMutataion() && m.hasCodon() && m.hasCosmicName())
-                {
-                    _mutationList.Add(m);
-                }
+                if (m.isImportant())
+                    _cosmicMutation.Add(m);
+                else
+                    _nonCosmicMutation.Add(m);
             }
             xlsStream.Close();
         }
         public override string ToString()
         {
             string toReturn = "";
-            foreach (Mutation m in _mutationList)
+            foreach (Mutation m in _nonCosmicMutation)
                 toReturn += m.ToString() + "\n";
             return toReturn;
 
         }
+        public List<Mutation> NonCosmicMutation
+        {
+            get
+            {
+                return _nonCosmicMutation;
+            }
+        }
+        public List<Mutation> CosmicMutation
+        {
+            get
+            {
+                return _cosmicMutation;
+            }
+        }
+
     }
 }

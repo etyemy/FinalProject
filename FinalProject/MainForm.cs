@@ -14,7 +14,7 @@ namespace FinalProject
 
     public partial class MainForm : Form
     {
-        private XLSHandler _xlsHandler;
+        private XLSHandler _xlsHandler = null;
         private CosmicWebService _cosmicWebService;
         public MainForm()
         {
@@ -30,11 +30,15 @@ namespace FinalProject
                 Log.Items.Add("Connection to RefGene Established.");
                 _xlsHandler = new XLSHandler(fdlg.FileName);
                 Log.Items.Add(fdlg.FileName + " Loaded.\n");
-                Log.Items.Add("Analyzing xls File");
+                Log.Items.Add("Analyzing xls File...");
                 _xlsHandler.handle();
-                string[] s = _xlsHandler.ToString().Split('\n');
-                foreach (string t in s)
-                    Log.Items.Add(t);
+                Log.Items.Add("Found " + _xlsHandler.CosmicMutation.Count + " Interesting Mutations:");
+                foreach (Mutation m in _xlsHandler.CosmicMutation)
+                {
+                    Log.Items.Add(m);
+                }
+
+                getArticlesButton.Enabled = true;
             }
             else
             {
@@ -60,11 +64,15 @@ namespace FinalProject
         private void button1_Click(object sender, EventArgs e)
         {
             logInButton.Enabled = false;
-            bool logedIn=_cosmicWebService.loginToCosmic(emailTextBox.Text, passwordTextBox.Text);
+            bool logedIn = _cosmicWebService.loginToCosmic(emailTextBox.Text, passwordTextBox.Text);
             if (logedIn)
                 loginMode();
             else
+            {
                 logoutMode();
+                statusLabel.Text = "X Wrong Email or Password...";
+            }
+
         }
 
         private void loginMode()
@@ -84,6 +92,33 @@ namespace FinalProject
 
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
+
+        }
+
+        private void logOutButton_Click(object sender, EventArgs e)
+        {
+            _cosmicWebService.logoutFromCosmic();
+            logoutMode();
+        }
+
+        private void getArticlesButton_Click(object sender, EventArgs e)
+        {
+
+            if (_cosmicWebService.isLogedIn())
+            {
+                foreach (Mutation m in _xlsHandler.CosmicMutation)
+                {
+                    _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
+                    TabPage tempPage = new TabPage(m.CosmicName);
+                    tabControl1.TabPages.Add(tempPage);
+                }
+                getArticlesButton.Enabled = false;
+            }
+            else
+            {
+                ArticleEroorLabel.Text = "Login To Cosmic First...";
+                ArticleEroorLabel.Visible = true;
+            }
 
         }
 

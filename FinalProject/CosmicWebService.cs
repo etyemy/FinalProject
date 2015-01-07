@@ -26,8 +26,24 @@ namespace FinalProject
             req.Method = "HEAD";
             req.KeepAlive = false;
             req.AllowAutoRedirect = false;
-            HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-            return isLogedIn();
+            try
+            {
+                HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+                resp.Close();
+                return isLogedIn();
+            }
+            catch (Exception)
+            {
+                return loginToCosmic(email, password);
+            }
+            
+        }
+
+        public void logoutFromCosmic()
+        {
+            _cookieContainer = new CookieContainer();
+            Console.WriteLine(isLogedIn());
+
         }
 
         public bool isLogedIn()
@@ -41,12 +57,18 @@ namespace FinalProject
             {
                 pageSource = sr.ReadToEnd();
             }
+            getResponse.Close();
             HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(pageSource);
             string loginTest=htmlDoc.GetElementbyId("user").InnerText.Trim();
             if (loginTest.Equals("Login"))
                 return false;
             return true;
+        }
+
+        public string getTsvFromCosmic(int CosmicId)
+        {
+            return "";
         }
     }
 }

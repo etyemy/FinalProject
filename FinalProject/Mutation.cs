@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FinalProject
@@ -18,15 +19,16 @@ namespace FinalProject
         private string _type;
         private char _ref;
         private char _var;
+        
         private Gene _gene;
-        private int _offset;
+        
         private string _refCodon;
         private string _varCodon;
-        private int _exonPlaceInSeq;
         private string _varAA;
         private string _refAA;
         private string _mutationName;
         private string _cosmicName;
+
         public Mutation(string[] xlsLineArr)
         {
             _ucscBL = new UcscBL();
@@ -48,31 +50,29 @@ namespace FinalProject
             _gene = _ucscBL.getGene(_chrom, _geneSym);
             if (_gene != null)
             {
-                _offset = _gene.getOffsetInCodon(_position);
-                setVarRefCodons();
+                setVarRefCodons(_gene.getOffsetInCodon(_position));
                 if (_refCodon != null)
                 {
-                    _exonPlaceInSeq = _gene.getExonPlace(_position);
                     _varAA = AminoAcid.getAminoAcid(_varCodon);
                     _refAA = AminoAcid.getAminoAcid(_refCodon);
                     if (_varAA.Equals(_refAA))
                         _mutationName = null;
                     else
                     {
-                        _mutationName = "p." + _refAA + _exonPlaceInSeq + _varAA;
+                        _mutationName = "p." + _refAA + _gene.getExonPlace(_position) + _varAA;
                         _cosmicName = _ucscBL.getCosmicName(_chromNum, _position, _mutationName, _geneSym);
                     }
                 }
             }
         }
-        private void setVarRefCodons()
+        private void setVarRefCodons(int offset)
         {
-            if (_offset != -1)
+            if (offset != -1)
             {
-                _refCodon = UcscXML.getCodonAt(_chrom, _position, _offset);
+                _refCodon = UcscXML.getCodonAt(_chrom, _position, offset);
                 
                 char[] temp = _refCodon.ToCharArray();
-                temp[_offset] = _var;
+                temp[offset] = _var;
                 _varCodon = new string(temp);
                 
                 if (_gene.Strand.Equals('-'))
@@ -144,6 +144,18 @@ namespace FinalProject
             return false;
         }
 
+        public bool isImportant()
+        {
+            if (isSNP() && isMutataion() && hasCodon() && hasCosmicName())
+                return true;
+            return false;
+        }
+
+        public int getCosmicNum()
+        {
+            return Convert.ToInt32(Regex.Match(_cosmicName, @"\d+").Value);
+        }
+
         public string Chrom
         {
             get
@@ -158,10 +170,17 @@ namespace FinalProject
                 return _geneSym;
             }
         }
+        public string CosmicName
+        {
+            get
+            {
+                return _cosmicName;
+            }
+        }
 
         override public string ToString()
         {
-            return "" + _chrom + " " + _position + " " + _geneSym + " " + _ref + " " + _var + " " + _gene.Strand + " " + _refCodon + " " + _varCodon + " " + _exonPlaceInSeq + " " + _refAA + " " + _varAA + " " + _mutationName + " " + _cosmicName;
+            return "" + _chrom + " " + _position + " " + _geneSym + " " + _ref + " " + _var + " "+ _cosmicName;
         }
 
     }

@@ -42,6 +42,9 @@
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.logInButton = new System.Windows.Forms.Button();
             this.logOutButton = new System.Windows.Forms.Button();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.getArticlesButton = new System.Windows.Forms.Button();
+            this.ArticleEroorLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,7 +55,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(445, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1196, 24);
             this.menuStrip1.TabIndex = 16;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
@@ -166,12 +169,44 @@
             this.logOutButton.TabIndex = 25;
             this.logOutButton.Text = "Log Out";
             this.logOutButton.UseVisualStyleBackColor = true;
+            this.logOutButton.Click += new System.EventHandler(this.logOutButton_Click);
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Location = new System.Drawing.Point(461, 70);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(706, 238);
+            this.tabControl1.TabIndex = 27;
+            // 
+            // getArticlesButton
+            // 
+            this.getArticlesButton.Enabled = false;
+            this.getArticlesButton.Location = new System.Drawing.Point(461, 27);
+            this.getArticlesButton.Name = "getArticlesButton";
+            this.getArticlesButton.Size = new System.Drawing.Size(75, 23);
+            this.getArticlesButton.TabIndex = 28;
+            this.getArticlesButton.Text = "Get Articles";
+            this.getArticlesButton.UseVisualStyleBackColor = true;
+            this.getArticlesButton.Click += new System.EventHandler(this.getArticlesButton_Click);
+            // 
+            // ArticleEroorLabel
+            // 
+            this.ArticleEroorLabel.AutoSize = true;
+            this.ArticleEroorLabel.Location = new System.Drawing.Point(552, 32);
+            this.ArticleEroorLabel.Name = "ArticleEroorLabel";
+            this.ArticleEroorLabel.Size = new System.Drawing.Size(0, 13);
+            this.ArticleEroorLabel.TabIndex = 29;
+            this.ArticleEroorLabel.Visible = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(445, 406);
+            this.ClientSize = new System.Drawing.Size(1196, 406);
+            this.Controls.Add(this.ArticleEroorLabel);
+            this.Controls.Add(this.getArticlesButton);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.logOutButton);
             this.Controls.Add(this.logInButton);
             this.Controls.Add(this.label4);
@@ -209,6 +244,9 @@
         private System.Windows.Forms.TextBox passwordTextBox;
         private System.Windows.Forms.Button logInButton;
         private System.Windows.Forms.Button logOutButton;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.Button getArticlesButton;
+        private System.Windows.Forms.Label ArticleEroorLabel;
     }
 }
 
