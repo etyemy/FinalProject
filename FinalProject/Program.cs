@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.Net;
 using System.Xml;
+using System.Text;
 
 namespace FinalProject
 {
@@ -22,5 +23,6 @@ namespace FinalProject
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
         }
+
     }
 }
