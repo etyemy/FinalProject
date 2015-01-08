@@ -108,8 +108,18 @@ namespace FinalProject
             {
                 foreach (Mutation m in _xlsHandler.CosmicMutation)
                 {
-                    _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
+                    
                     TabPage tempPage = new TabPage(m.CosmicName);
+                    
+                    string tsvString = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
+                    string[] tsvLines = tsvString.Split('\n');
+                    foreach(string s in tsvLines)
+                    {
+                        Label l = new Label();
+                        l.Text = s;
+                       
+                        tempPage.Controls.Add(l);
+                    }
                     tabControl1.TabPages.Add(tempPage);
                 }
                 getArticlesButton.Enabled = false;

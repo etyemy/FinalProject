@@ -110,7 +110,7 @@ namespace FinalProject
                         toReturn += "G";
                         break;
                     default:
-                        break;
+                        return null;
                 }
             }
             return toReturn;

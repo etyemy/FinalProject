@@ -26,6 +26,7 @@ namespace FinalProject
             req.Method = "HEAD";
             req.KeepAlive = false;
             req.AllowAutoRedirect = false;
+            req.Timeout = 10000;
             try
             {
                 HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
@@ -48,16 +49,7 @@ namespace FinalProject
 
         public bool isLogedIn()
         {
-           string pageSource;
-            string getUrl = "https://cancer.sanger.ac.uk/cosmic/user_info";
-            HttpWebRequest getRequest = (HttpWebRequest)HttpWebRequest.Create(getUrl);
-            getRequest.CookieContainer = _cookieContainer;
-            WebResponse getResponse = getRequest.GetResponse();
-            using (StreamReader sr = new StreamReader(getResponse.GetResponseStream()))
-            {
-                pageSource = sr.ReadToEnd();
-            }
-            getResponse.Close();
+            string pageSource = getPageSource("https://cancer.sanger.ac.uk/cosmic/user_info");
             HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(pageSource);
             string loginTest=htmlDoc.GetElementbyId("user").InnerText.Trim();
@@ -68,7 +60,22 @@ namespace FinalProject
 
         public string getTsvFromCosmic(int CosmicId)
         {
-            return "";
+            string pageSource = getPageSource("http://cancer.sanger.ac.uk/cosmic/references?q=MUTATION_REFERENCES&amp;id=" + CosmicId);
+            return pageSource;
+        }
+
+        private string getPageSource(string url)
+        {
+            string pageSource;
+            HttpWebRequest getRequest = (HttpWebRequest)HttpWebRequest.Create(url);
+            getRequest.CookieContainer = _cookieContainer;
+            WebResponse getResponse = getRequest.GetResponse();
+            using (StreamReader sr = new StreamReader(getResponse.GetResponseStream()))
+            {
+                pageSource = sr.ReadToEnd();
+            }
+            getResponse.Close();
+            return pageSource;
         }
     }
 }

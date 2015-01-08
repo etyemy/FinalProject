@@ -152,9 +152,9 @@
             // 
             // logInButton
             // 
-            this.logInButton.Location = new System.Drawing.Point(27, 98);
+            this.logInButton.Location = new System.Drawing.Point(27, 96);
             this.logInButton.Name = "logInButton";
-            this.logInButton.Size = new System.Drawing.Size(75, 23);
+            this.logInButton.Size = new System.Drawing.Size(55, 23);
             this.logInButton.TabIndex = 24;
             this.logInButton.Text = "Log In";
             this.logInButton.UseVisualStyleBackColor = true;
@@ -163,9 +163,9 @@
             // logOutButton
             // 
             this.logOutButton.Enabled = false;
-            this.logOutButton.Location = new System.Drawing.Point(127, 98);
+            this.logOutButton.Location = new System.Drawing.Point(97, 96);
             this.logOutButton.Name = "logOutButton";
-            this.logOutButton.Size = new System.Drawing.Size(75, 23);
+            this.logOutButton.Size = new System.Drawing.Size(60, 23);
             this.logOutButton.TabIndex = 25;
             this.logOutButton.Text = "Log Out";
             this.logOutButton.UseVisualStyleBackColor = true;
@@ -176,7 +176,7 @@
             this.tabControl1.Location = new System.Drawing.Point(461, 70);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(706, 238);
+            this.tabControl1.Size = new System.Drawing.Size(706, 314);
             this.tabControl1.TabIndex = 27;
             // 
             // getArticlesButton
