@@ -36,7 +36,7 @@ namespace FinalProject
                 Log.Items.Add("Found " + _xlsHandler.CosmicMutation.Count + " Interesting Mutations:");
                 foreach (Mutation m in _xlsHandler.CosmicMutation)
                 {
-                    Log.Items.Add(m);
+                    Log.Items.Add(m.PrintToLog());
                 }
                 getArticlesButton.Enabled = true;
                 //////////////////
