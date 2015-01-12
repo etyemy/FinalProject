@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace FinalProject
 {
-    class Mutation
+    public class Mutation
     {
         private UcscBL _ucscBL;
-        enum XLSCol { Chrom = 0, Position, GeneSym, TargetID, Type, Zygosity, Ref, Variant, VarFreq, PValue, Coverage, RefCov, VarCov};
+
 
         private string _chrom;
         private string _chromNum;
@@ -19,9 +19,9 @@ namespace FinalProject
         private string _type;
         private char _ref;
         private char _var;
-        
+
         private Gene _gene;
-        
+
         private string _refCodon;
         private string _varCodon;
         private string _varAA;
@@ -29,25 +29,28 @@ namespace FinalProject
         private string _mutationName;
         private string _cosmicName;
 
-        public Mutation(string[] xlsLineArr)
+        public Mutation(string chrom, int position, string geneSym, string mutType, char refNuc, char varNuc)
         {
             _ucscBL = new UcscBL();
-            _chrom = xlsLineArr[(int)XLSCol.Chrom];
-            _position = Convert.ToInt32(xlsLineArr[(int)XLSCol.Position]);
-            _geneSym = xlsLineArr[(int)XLSCol.GeneSym];
-            _type = xlsLineArr[(int)XLSCol.Type];
-            _ref = Convert.ToChar(xlsLineArr[(int)XLSCol.Ref]);
-            _var = Convert.ToChar(xlsLineArr[(int)XLSCol.Variant]);
+            _gene = _ucscBL.getGene(chrom, geneSym);
+            if (_gene != null)
+            {
+                _chrom = chrom;
+                _position = position;
+                _geneSym = geneSym;
+                _type = mutType;
+                _ref = refNuc;
+                _var = varNuc;
 
-            extractExtraData();
-            
+                extractExtraData();
+            }
         }
+
 
         //Extract extra data that not supply in xls file.
         private void extractExtraData()
         {
             _chromNum = _chrom.Replace("chr", "");
-            _gene = _ucscBL.getGene(_chrom, _geneSym);
             if (_gene != null)
             {
                 setVarRefCodons(_gene.getOffsetInCodon(_position));
@@ -70,11 +73,11 @@ namespace FinalProject
             if (offset != -1)
             {
                 _refCodon = UcscXML.getCodonAt(_chrom, _position, offset);
-                
+
                 char[] temp = _refCodon.ToCharArray();
                 temp[offset] = _var;
                 _varCodon = new string(temp);
-                
+
                 if (_gene.Strand.Equals('-'))
                 {
                     _refCodon = reverseString(OppositeCodon(_refCodon));
@@ -122,7 +125,7 @@ namespace FinalProject
                 return true;
             return false;
         }
-       
+
         internal bool isMutataion()
         {
             if (_mutationName != null)
@@ -180,7 +183,7 @@ namespace FinalProject
 
         override public string ToString()
         {
-            return "" + _chrom + " " + _position + " " + _geneSym + " " + _ref + " " + _var + " "+ _cosmicName;
+            return "" + _chrom + " " + _position + " " + _geneSym + " " + _ref + " " + _var + " " + _cosmicName;
         }
 
     }

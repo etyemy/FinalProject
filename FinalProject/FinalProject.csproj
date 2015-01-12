@@ -52,8 +52,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AminoAcid.cs" />
+    <Compile Include="Article.cs" />
+    <Compile Include="ArticlesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ArticlesForm.Designer.cs">
+      <DependentUpon>ArticlesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ArticleTabPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CosmicWebService.cs" />
     <Compile Include="Gene.cs" />
+    <Compile Include="TSVHandler.cs" />
     <Compile Include="UcscBL.cs" />
     <Compile Include="Mutation.cs" />
     <Compile Include="MainForm.cs">
@@ -67,6 +78,9 @@
     <Compile Include="UcscDAL.cs" />
     <Compile Include="UcscXML.cs" />
     <Compile Include="XLSHandler.cs" />
+    <EmbeddedResource Include="ArticlesForm.resx">
+      <DependentUpon>ArticlesForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

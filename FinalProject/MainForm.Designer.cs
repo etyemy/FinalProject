@@ -42,7 +42,7 @@
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.logInButton = new System.Windows.Forms.Button();
             this.logOutButton = new System.Windows.Forms.Button();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.articlesTabControl = new System.Windows.Forms.TabControl();
             this.getArticlesButton = new System.Windows.Forms.Button();
             this.ArticleEroorLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
@@ -103,6 +103,7 @@
             this.emailTextBox.Name = "emailTextBox";
             this.emailTextBox.Size = new System.Drawing.Size(150, 20);
             this.emailTextBox.TabIndex = 17;
+            this.emailTextBox.Text = "motimonso@gmail.com";
             // 
             // label1
             // 
@@ -149,6 +150,7 @@
             this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Size = new System.Drawing.Size(150, 20);
             this.passwordTextBox.TabIndex = 18;
+            this.passwordTextBox.Text = "moti190385";
             // 
             // logInButton
             // 
@@ -158,7 +160,7 @@
             this.logInButton.TabIndex = 24;
             this.logInButton.Text = "Log In";
             this.logInButton.UseVisualStyleBackColor = true;
-            this.logInButton.Click += new System.EventHandler(this.button1_Click);
+            this.logInButton.Click += new System.EventHandler(this.loginButton_Click);
             // 
             // logOutButton
             // 
@@ -173,11 +175,11 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Location = new System.Drawing.Point(461, 70);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(706, 314);
-            this.tabControl1.TabIndex = 27;
+            this.articlesTabControl.Location = new System.Drawing.Point(461, 70);
+            this.articlesTabControl.Name = "tabControl1";
+            this.articlesTabControl.SelectedIndex = 0;
+            this.articlesTabControl.Size = new System.Drawing.Size(706, 314);
+            this.articlesTabControl.TabIndex = 27;
             // 
             // getArticlesButton
             // 
@@ -206,7 +208,7 @@
             this.ClientSize = new System.Drawing.Size(1196, 406);
             this.Controls.Add(this.ArticleEroorLabel);
             this.Controls.Add(this.getArticlesButton);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.articlesTabControl);
             this.Controls.Add(this.logOutButton);
             this.Controls.Add(this.logInButton);
             this.Controls.Add(this.label4);
@@ -244,7 +246,7 @@
         private System.Windows.Forms.TextBox passwordTextBox;
         private System.Windows.Forms.Button logInButton;
         private System.Windows.Forms.Button logOutButton;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl articlesTabControl;
         private System.Windows.Forms.Button getArticlesButton;
         private System.Windows.Forms.Label ArticleEroorLabel;
     }

@@ -31,14 +31,15 @@ namespace FinalProject
                 _xlsHandler = new XLSHandler(fdlg.FileName);
                 Log.Items.Add(fdlg.FileName + " Loaded.\n");
                 Log.Items.Add("Analyzing xls File...");
+                ///////////////
                 _xlsHandler.handle();
                 Log.Items.Add("Found " + _xlsHandler.CosmicMutation.Count + " Interesting Mutations:");
                 foreach (Mutation m in _xlsHandler.CosmicMutation)
                 {
                     Log.Items.Add(m);
                 }
-
                 getArticlesButton.Enabled = true;
+                //////////////////
             }
             else
             {
@@ -61,7 +62,7 @@ namespace FinalProject
             this.Close();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void loginButton_Click(object sender, EventArgs e)
         {
             logInButton.Enabled = false;
             bool logedIn = _cosmicWebService.loginToCosmic(emailTextBox.Text, passwordTextBox.Text);
@@ -74,7 +75,34 @@ namespace FinalProject
             }
 
         }
+        private void logOutButton_Click(object sender, EventArgs e)
+        {
+            _cosmicWebService.logoutFromCosmic();
+            logoutMode();
+        }
 
+        private void getArticlesButton_Click(object sender, EventArgs e)
+        {
+
+            if (_cosmicWebService.isLogedIn())
+            {
+                foreach (Mutation m in _xlsHandler.CosmicMutation)
+                {
+                    string tsvString = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
+                    string[] tsvLines = tsvString.Split('\n');
+                    TSVHandler tsvHandler = new TSVHandler(tsvString);
+
+                    articlesTabControl.TabPages.Add(new ArticleTabPage(new ArticlesForm(tsvHandler, m.CosmicName)));
+                }
+                getArticlesButton.Enabled = false;
+            }
+            else
+            {
+                ArticleEroorLabel.Text = "Login To Cosmic First...";
+                ArticleEroorLabel.Visible = true;
+            }
+
+        }
         private void loginMode()
         {
             statusLabel.Text = "√";
@@ -89,46 +117,8 @@ namespace FinalProject
             logInButton.Enabled = true;
             logOutButton.Enabled = false;
         }
-
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-
-        }
-
-        private void logOutButton_Click(object sender, EventArgs e)
-        {
-            _cosmicWebService.logoutFromCosmic();
-            logoutMode();
-        }
-
-        private void getArticlesButton_Click(object sender, EventArgs e)
-        {
-
-            if (_cosmicWebService.isLogedIn())
-            {
-                foreach (Mutation m in _xlsHandler.CosmicMutation)
-                {
-                    
-                    TabPage tempPage = new TabPage(m.CosmicName);
-                    
-                    string tsvString = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
-                    string[] tsvLines = tsvString.Split('\n');
-                    foreach(string s in tsvLines)
-                    {
-                        Label l = new Label();
-                        l.Text = s;
-                       
-                        tempPage.Controls.Add(l);
-                    }
-                    tabControl1.TabPages.Add(tempPage);
-                }
-                getArticlesButton.Enabled = false;
-            }
-            else
-            {
-                ArticleEroorLabel.Text = "Login To Cosmic First...";
-                ArticleEroorLabel.Visible = true;
-            }
 
         }
 
