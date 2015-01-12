@@ -25,6 +25,14 @@ namespace FinalProject
         {
             StreamReader xlsStream = new StreamReader(_xlsPath);
             xlsStream.ReadLine();
+            string outputPath = _xlsPath.Split('.')[0];
+            outputPath += "_detailed.xls";
+            Console.WriteLine(outputPath);
+            if (File.Exists(outputPath))
+                File.Delete(outputPath);
+            StreamWriter outputStream = new StreamWriter(outputPath);
+            string header = "Chrom\tPosition\tGene Name\tRef\tVar\tRef Codon\tVar Codon\tRef AA\tVar AA\tMutation Symbol\tCosmic Name";
+            outputStream.WriteLine(header);
             while (xlsStream.Peek() >= 0)
             {
                 string[] lineParts = xlsStream.ReadLine().Split('\t');
@@ -36,19 +44,20 @@ namespace FinalProject
                 char varNuc = Convert.ToChar(lineParts[(int)XLSCol.Variant]);
 
                 Mutation m = new Mutation(chrom,position,geneSym,mutType,refNuc,varNuc);
+                outputStream.WriteLine(m.PrintXLSLine());
                 if (m.isImportant())
                     _cosmicMutation.Add(m);
                 else
                     _nonCosmicMutation.Add(m);
             }
-
+            outputStream.Close();
             xlsStream.Close();
         }
         public override string ToString()
         {
             string toReturn = "";
             foreach (Mutation m in _nonCosmicMutation)
-                toReturn += m.ToString() + "\n";
+                toReturn += m.PrintToLog() + "\n";
             return toReturn;
 
         }

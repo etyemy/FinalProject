@@ -181,9 +181,13 @@ namespace FinalProject
             }
         }
 
-        override public string ToString()
+        public string PrintToLog()
         {
             return "" + _chrom + " " + _position + " " + _geneSym + " " + _ref + " " + _var + " " + _cosmicName;
+        }
+        public string PrintXLSLine()
+        {
+            return _chrom + "\t" + _position + "\t" + _geneSym + "\t" + _ref + "\t" + _var + "\t" + _refCodon + "\t" + _varCodon + "\t" + _refAA + "\t" + _varAA + "\t" + _mutationName + "\t" + _cosmicName;
         }
 
     }
