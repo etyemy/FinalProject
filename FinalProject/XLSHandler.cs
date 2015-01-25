@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GemBox.Spreadsheet;
 
 namespace FinalProject
 {
     class XLSHandler
     {
-        enum XLSCol { Chrom = 0, Position, GeneSym, TargetID, Type, Zygosity, Ref, Variant, VarFreq, PValue, Coverage, RefCov, VarCov };
+        enum XLSCol { Chrom = 0, Position, Ref, Variant, AlleleCall, Filter1, Frequency, Quality, Filter2, Type, AlleleSource, AlleleName, GeneID };
 
         private List<Mutation> _nonCosmicMutation;
         private List<Mutation> _cosmicMutation;
@@ -23,6 +24,46 @@ namespace FinalProject
 
         public void handle()
         {
+            // If using Professional version, put your serial key below.
+            SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
+            ExcelFile ef = new ExcelFile();
+            try
+            {
+                ef = ExcelFile.Load(_xlsPath);
+            }
+            catch
+            {
+                Console.WriteLine("CATCH EX");
+                TextReader tr = (TextReader)new StreamReader(_xlsPath);
+                ef = ExcelFile.Load(tr, new CsvLoadOptions('2'));
+            }
+            finally
+            {
+                StringBuilder sb = new StringBuilder();
+
+                foreach (ExcelWorksheet sheet in ef.Worksheets)
+                {
+                    sb.AppendLine();
+                    sb.AppendFormat("--------- {0} ---------", sheet.Name);
+
+                    foreach (ExcelRow row in sheet.Rows)
+                    {
+                        sb.AppendLine();
+                        foreach (ExcelCell cell in row.AllocatedCells)
+                        {
+                            if (cell.Value != null)
+                                sb.AppendFormat("{0}({1})", cell.Value, cell.Value.GetType().Name);
+
+                            sb.Append("\t");
+                        }
+                    }
+                }
+
+                Console.WriteLine(sb.ToString());
+            }
+
+
+
             StreamReader xlsStream = new StreamReader(_xlsPath);
             xlsStream.ReadLine();
             string outputPath = _xlsPath.Split('.')[0];
@@ -35,23 +76,37 @@ namespace FinalProject
             outputStream.WriteLine(header);
             while (xlsStream.Peek() >= 0)
             {
-                string[] lineParts = xlsStream.ReadLine().Split('\t');
-                string chrom = lineParts[(int)XLSCol.Chrom];
-                int position = Convert.ToInt32(lineParts[(int)XLSCol.Position]);
-                string geneSym = lineParts[(int)XLSCol.GeneSym];
-                string mutType = lineParts[(int)XLSCol.Type];
-                char refNuc = Convert.ToChar(lineParts[(int)XLSCol.Ref]);
-                char varNuc = Convert.ToChar(lineParts[(int)XLSCol.Variant]);
 
-                Mutation m = new Mutation(chrom,position,geneSym,mutType,refNuc,varNuc);
-                outputStream.WriteLine(m.PrintXLSLine());
-                if (m.isImportant())
-                    _cosmicMutation.Add(m);
-                else
-                    _nonCosmicMutation.Add(m);
+                string[] lineParts = xlsStream.ReadLine().Split('\t');
+                if (lineParts[(int)XLSCol.Type].Equals("SNP"))
+                {
+                    string chrom = lineParts[(int)XLSCol.Chrom];
+                    int position = Convert.ToInt32(lineParts[(int)XLSCol.Position]);
+                    string geneSym = lineParts[(int)XLSCol.GeneID];
+                    char refNuc = Convert.ToChar(lineParts[(int)XLSCol.Ref]);
+                    char varNuc = Convert.ToChar(lineParts[(int)XLSCol.Variant]);
+                    try
+                    {
+
+                        Mutation m = new Mutation(chrom, position, geneSym, refNuc, varNuc);
+                        outputStream.WriteLine(m.PrintXLSLine());
+                        if (m.isImportant())
+                            _cosmicMutation.Add(m);
+                        else
+                            _nonCosmicMutation.Add(m);
+
+
+                    }
+                    catch (MySql.Data.MySqlClient.MySqlException e)
+                    {
+                        Console.WriteLine("Error: {0}", e.ToString());
+                        throw e;
+                    }
+                }
             }
             outputStream.Close();
             xlsStream.Close();
+
         }
         public override string ToString()
         {

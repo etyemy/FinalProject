@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -31,19 +32,43 @@ namespace FinalProject
                 _xlsHandler = new XLSHandler(fdlg.FileName);
                 Log.Items.Add(fdlg.FileName + " Loaded.\n");
                 Log.Items.Add("Analyzing xls File...");
-                ///////////////
-                _xlsHandler.handle();
-                Log.Items.Add("Found " + _xlsHandler.CosmicMutation.Count + " Interesting Mutations:");
-                foreach (Mutation m in _xlsHandler.CosmicMutation)
-                {
-                    Log.Items.Add(m.PrintToLog());
-                }
-                getArticlesButton.Enabled = true;
-                //////////////////
+               
+                    Thread oThread = new Thread(new ThreadStart(AnalizeXLS));
+                    oThread.Start();
+                    oThread.Join();
+                    if (_xlsHandler.CosmicMutation.Count != 0)
+                    {
+                        Log.Items.Add("Found " + _xlsHandler.CosmicMutation.Count + " Interesting Mutations:");
+                        foreach (Mutation m in _xlsHandler.CosmicMutation)
+                        {
+                            Log.Items.Add(m.PrintToLog());
+                        }
+                        getArticlesButton.Enabled = true;
+                    }
             }
             else
             {
                 Log.Items.Add("Cancelled by user");
+               
+            }
+        }
+
+        private void AnalizeXLS()
+        {
+            
+            try
+            {
+                _xlsHandler.handle();
+            }
+            catch (Exception ex)
+            {
+                if (ex is MySql.Data.MySqlClient.MySqlException)
+                {
+                    Console.WriteLine("Error: {0}", ex.ToString());
+                    Console.WriteLine("XXXXXXXXXXXXXXXXXXX    " + ex.GetType());
+                    MessageBox.Show("SQL Error");
+                }
+                
             }
         }
 

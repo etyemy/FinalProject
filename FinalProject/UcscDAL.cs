@@ -21,7 +21,16 @@ namespace FinalProject
             sb.Server = "genome-mysql.cse.ucsc.edu";
             sb.UserID = "genome";
             sb.Database = "hg19";
-            conn = new MySqlConnection(sb.ToString());
+            try
+            {
+                conn = new MySqlConnection(sb.ToString());
+            }
+            catch (MySqlException e)
+            {
+                Console.WriteLine("Error: {0}", e.ToString());
+                throw e;
+            }
+           
         }
 
         public List<String> getGene(string geneName, string chrom)

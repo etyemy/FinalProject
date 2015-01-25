@@ -11,12 +11,10 @@ namespace FinalProject
     {
         private UcscBL _ucscBL;
 
-
         private string _chrom;
         private string _chromNum;
         private int _position;
         private string _geneSym;
-        private string _type;
         private char _ref;
         private char _var;
 
@@ -29,20 +27,33 @@ namespace FinalProject
         private string _mutationName;
         private string _cosmicName;
 
-        public Mutation(string chrom, int position, string geneSym, string mutType, char refNuc, char varNuc)
+        public Mutation(string chrom, int position, string geneSym, char refNuc, char varNuc)
         {
-            _ucscBL = new UcscBL();
-            _gene = _ucscBL.getGene(chrom, geneSym);
-            if (_gene != null)
+            
+            try
             {
-                _chrom = chrom;
-                _position = position;
-                _geneSym = geneSym;
-                _type = mutType;
-                _ref = refNuc;
-                _var = varNuc;
-
-                extractExtraData();
+                _ucscBL = new UcscBL();
+                _gene = _ucscBL.getGene(chrom, geneSym);
+                
+            }
+            catch (MySql.Data.MySqlClient.MySqlException e)
+            {
+                Console.WriteLine("Error: {0}", e.ToString());
+                throw e;
+            }
+            finally
+            {
+                if (_gene != null )
+                {
+                    _chrom = chrom;
+                    _position = position;
+                    _geneSym = geneSym;
+                    _ref = refNuc;
+                    _var = varNuc;
+                    
+                    extractExtraData();
+                }
+                Console.WriteLine("Creating Mutation " + this.PrintToLog());
             }
         }
 
@@ -58,13 +69,10 @@ namespace FinalProject
                 {
                     _varAA = AminoAcid.getAminoAcid(_varCodon);
                     _refAA = AminoAcid.getAminoAcid(_refCodon);
-                    if (_varAA.Equals(_refAA))
-                        _mutationName = null;
-                    else
-                    {
+                    
                         _mutationName = "p." + _refAA + _gene.getExonPlace(_position) + _varAA;
                         _cosmicName = _ucscBL.getCosmicName(_chromNum, _position, _mutationName, _geneSym);
-                    }
+                   
                 }
             }
         }
@@ -118,14 +126,6 @@ namespace FinalProject
             }
             return toReturn;
         }
-
-        public bool isSNP()
-        {
-            if (_type.Equals("SNP"))
-                return true;
-            return false;
-        }
-
         internal bool isMutataion()
         {
             if (_mutationName != null)
@@ -149,7 +149,7 @@ namespace FinalProject
 
         public bool isImportant()
         {
-            if (isSNP() && isMutataion() && hasCodon() && hasCosmicName())
+            if (isMutataion() && hasCodon() && hasCosmicName())
                 return true;
             return false;
         }
