@@ -51,7 +51,7 @@
     <OutputPath>bin\x86\Aviad\</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icons-Land-Medical-Body-DNA.ico</ApplicationIcon>
+    <ApplicationIcon>Icon-DNA.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
@@ -93,6 +93,12 @@
     </Compile>
     <Compile Include="CosmicWebService.cs" />
     <Compile Include="Gene.cs" />
+    <Compile Include="SettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingForm.Designer.cs">
+      <DependentUpon>SettingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TSVHandler.cs" />
     <Compile Include="UcscBL.cs" />
     <Compile Include="Mutation.cs" />
@@ -123,6 +129,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SettingForm.resx">
+      <DependentUpon>SettingForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -138,7 +147,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icons-Land-Medical-Body-DNA.ico" />
+    <Content Include="Icon-DNA.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

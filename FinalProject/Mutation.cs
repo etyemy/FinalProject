@@ -12,14 +12,14 @@ namespace FinalProject
         private UcscBL _ucscBL;
 
         private string _chrom;
-        private string _chromNum;
         private int _position;
         private string _geneSym;
         private char _ref;
         private char _var;
 
         private Gene _gene;
-
+        
+        private string _chromNum;
         private string _refCodon;
         private string _varCodon;
         private string _varAA;

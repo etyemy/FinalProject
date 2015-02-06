@@ -30,7 +30,6 @@ namespace FinalProject
                 Console.WriteLine("Error: {0}", e.ToString());
                 throw e;
             }
-           
         }
 
         public List<String> getGene(string geneName, string chrom)
