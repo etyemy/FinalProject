@@ -26,87 +26,58 @@ namespace FinalProject
         {
             // If using Professional version, put your serial key below.
             SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
-            ExcelFile ef = new ExcelFile();
+            ExcelFile ef=new ExcelFile();
             try
             {
                 ef = ExcelFile.Load(_xlsPath);
             }
-            catch
+            catch(Exception e)
             {
-                Console.WriteLine("CATCH EX");
+                Console.WriteLine("CATCH EXCEL OPEN");
+                Console.WriteLine("Error: {0}", e.ToString());
                 TextReader tr = (TextReader)new StreamReader(_xlsPath);
-                ef = ExcelFile.Load(tr, new CsvLoadOptions('2'));
+                ef = ExcelFile.Load(tr, new CsvLoadOptions('1'));
             }
             finally
             {
-                StringBuilder sb = new StringBuilder();
+                string outputPath = _xlsPath.Split('.')[0];
+                outputPath += "_detailed.xls";
+                if (File.Exists(outputPath))
+                    File.Delete(outputPath);
+                StreamWriter outputStream = new StreamWriter(outputPath);
+                string header = "Chrom\tPosition\tGene Name\tRef\tVar\tRef Codon\tVar Codon\tRef AA\tVar AA\tMutation Symbol\tCosmic Name";
+                outputStream.WriteLine(header);
 
-                foreach (ExcelWorksheet sheet in ef.Worksheets)
+
+
+                CellRange range = ef.Worksheets[0].GetUsedCellRange(true);
+                for (int i = 1; i < range.LastRowIndex; i++)
                 {
-                    sb.AppendLine();
-                    sb.AppendFormat("--------- {0} ---------", sheet.Name);
-
-                    foreach (ExcelRow row in sheet.Rows)
+                    if (range[i, 9].Value.ToString().Equals("SNP"))
                     {
-                        sb.AppendLine();
-                        foreach (ExcelCell cell in row.AllocatedCells)
+                        string chrom = range[i, 0].Value.ToString();
+                        int position = Convert.ToInt32(range[i, 1].Value.ToString());
+                        string geneName = range[i, 12].Value.ToString();
+                        char refNuc = range[i, 2].Value.ToString()[0];
+                        char varNuc = range[i, 3].Value.ToString()[0];
+                        try
                         {
-                            if (cell.Value != null)
-                                sb.AppendFormat("{0}({1})", cell.Value, cell.Value.GetType().Name);
-
-                            sb.Append("\t");
+                            Mutation m = new Mutation(chrom, position, geneName, refNuc, varNuc);
+                            outputStream.WriteLine(m.PrintXLSLine());
+                            if (m.isImportant())
+                                _cosmicMutation.Add(m);
+                            else
+                                _nonCosmicMutation.Add(m);
+                        }
+                        catch (MySql.Data.MySqlClient.MySqlException e)
+                        {
+                            Console.WriteLine("Error: {0}", e.ToString());
+                            throw e;
                         }
                     }
                 }
-
-                Console.WriteLine(sb.ToString());
+                outputStream.Close();
             }
-
-
-
-            StreamReader xlsStream = new StreamReader(_xlsPath);
-            xlsStream.ReadLine();
-            string outputPath = _xlsPath.Split('.')[0];
-            outputPath += "_detailed.xls";
-            Console.WriteLine(outputPath);
-            if (File.Exists(outputPath))
-                File.Delete(outputPath);
-            StreamWriter outputStream = new StreamWriter(outputPath);
-            string header = "Chrom\tPosition\tGene Name\tRef\tVar\tRef Codon\tVar Codon\tRef AA\tVar AA\tMutation Symbol\tCosmic Name";
-            outputStream.WriteLine(header);
-            while (xlsStream.Peek() >= 0)
-            {
-
-                string[] lineParts = xlsStream.ReadLine().Split('\t');
-                if (lineParts[(int)XLSCol.Type].Equals("SNP"))
-                {
-                    string chrom = lineParts[(int)XLSCol.Chrom];
-                    int position = Convert.ToInt32(lineParts[(int)XLSCol.Position]);
-                    string geneSym = lineParts[(int)XLSCol.GeneID];
-                    char refNuc = Convert.ToChar(lineParts[(int)XLSCol.Ref]);
-                    char varNuc = Convert.ToChar(lineParts[(int)XLSCol.Variant]);
-                    try
-                    {
-
-                        Mutation m = new Mutation(chrom, position, geneSym, refNuc, varNuc);
-                        outputStream.WriteLine(m.PrintXLSLine());
-                        if (m.isImportant())
-                            _cosmicMutation.Add(m);
-                        else
-                            _nonCosmicMutation.Add(m);
-
-
-                    }
-                    catch (MySql.Data.MySqlClient.MySqlException e)
-                    {
-                        Console.WriteLine("Error: {0}", e.ToString());
-                        throw e;
-                    }
-                }
-            }
-            outputStream.Close();
-            xlsStream.Close();
-
         }
         public override string ToString()
         {
