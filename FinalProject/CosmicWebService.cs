@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,9 +22,9 @@ namespace FinalProject
 
         public bool loginToCosmic(string email,string password)
         {
-            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create("https://cancer.sanger.ac.uk/cosmic/login?email="+email+"&password="+password);
+            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create("https://cancer.sanger.ac.uk/cosmic/User?email=" + email + "&password=" + password);
             req.CookieContainer = _cookieContainer; // <= HERE
-            req.Method = "HEAD";
+            req.Method = "POST";
             req.KeepAlive = false;
             req.AllowAutoRedirect = false;
             req.Timeout = 10000;
@@ -43,16 +44,15 @@ namespace FinalProject
         public void logoutFromCosmic()
         {
             _cookieContainer = new CookieContainer();
-            Console.WriteLine(isLogedIn());
-
         }
 
         public bool isLogedIn()
         {
-            string pageSource = getPageSource("https://cancer.sanger.ac.uk/cosmic/user_info");
+            string pageSource = getPageSource("http://cancer.sanger.ac.uk/cancergenome/projects/cosmic/");
             HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(pageSource);
-            string loginTest=htmlDoc.GetElementbyId("user").InnerText.Trim();
+            string loginTest=htmlDoc.GetElementbyId("login").InnerText.Trim();
+            Console.WriteLine("XXXXXXXXXXX "+loginTest);
             if (loginTest.Equals("Login"))
                 return false;
             return true;

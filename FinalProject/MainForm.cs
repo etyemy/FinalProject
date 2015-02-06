@@ -17,9 +17,17 @@ namespace FinalProject
     {
         private XLSHandler _xlsHandler = null;
         private CosmicWebService _cosmicWebService;
+        private string firstSelectedFile = null;
+        private string secondSelectedFile = null;
         public MainForm()
         {
             _cosmicWebService = new CosmicWebService();
+            //bool logedIn = _cosmicWebService.loginToCosmic(Properties.Settings.Default.CosmicEmail, Properties.Settings.Default.CosmicPassword);
+            /*TODO
+                 * 
+                 * cosmic settings error messege
+                 * 
+                 */
             InitializeComponent();
         }
 
@@ -28,87 +36,37 @@ namespace FinalProject
             OpenFileDialog fdlg = getOpenFileDialog();
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
-                Log.Items.Add("Connection to RefGene Established.");
+                firstSelectedFile = fdlg.FileName;
                 _xlsHandler = new XLSHandler(fdlg.FileName);
-                Log.Items.Add(fdlg.FileName + " Loaded.\n");
-                Log.Items.Add("Analyzing xls File...");
-               
-                    Thread oThread = new Thread(new ThreadStart(AnalizeXLS));
-                    oThread.Start();
-                    oThread.Join();
-                    if (_xlsHandler.CosmicMutation.Count != 0)
-                    {
-                        Log.Items.Add("Found " + _xlsHandler.CosmicMutation.Count + " Interesting Mutations:");
-                        foreach (Mutation m in _xlsHandler.CosmicMutation)
-                        {
-                            Log.Items.Add(m.PrintToLog());
-                        }
-                        getArticlesButton.Enabled = true;
-                    }
-            }
-            else
-            {
-                Log.Items.Add("Cancelled by user");
-               
-            }
-        }
-
-        private void AnalizeXLS()
-        {
-            
-            try
-            {
-                _xlsHandler.handle();
-            }
-            catch (Exception ex)
-            {
-                if (ex is MySql.Data.MySqlClient.MySqlException)
+                try
                 {
-                    Console.WriteLine("Error: {0}", ex.ToString());
-                    Console.WriteLine("XXXXXXXXXXXXXXXXXXX    " + ex.GetType());
-                    MessageBox.Show("SQL Error");
+                    _xlsHandler.handle();
                 }
-                
+                catch (Exception ex)
+                {
+                    if (ex is MySql.Data.MySqlClient.MySqlException)
+                    {
+                        MessageBox.Show("SQL Error");
+                    }
+                }
+                if (_xlsHandler.CosmicMutation.Count != 0)
+                {
+                    foreach (Mutation m in _xlsHandler.CosmicMutation)
+                    {
+                    }
+                    getArticlesButton.Enabled = true;
+                }
             }
-        }
-
-        private OpenFileDialog getOpenFileDialog()
-        {
-            OpenFileDialog fdlg = new OpenFileDialog();
-            fdlg.Title = "C# Corner Open File Dialog";
-            fdlg.InitialDirectory = @"c:\";
-            fdlg.Filter = "ION PGM Output (*.xls)|*.xls";
-            fdlg.FilterIndex = 2;
-            fdlg.RestoreDirectory = true;
-            return fdlg;
-        }
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void loginButton_Click(object sender, EventArgs e)
-        {
-            logInButton.Enabled = false;
-            bool logedIn = _cosmicWebService.loginToCosmic(emailTextBox.Text, passwordTextBox.Text);
-            if (logedIn)
-                loginMode();
-            else
-            {
-                logoutMode();
-                statusLabel.Text = "X Wrong Email or Password...";
-            }
-
-        }
-        private void logOutButton_Click(object sender, EventArgs e)
-        {
-            _cosmicWebService.logoutFromCosmic();
-            logoutMode();
         }
 
         private void getArticlesButton_Click(object sender, EventArgs e)
         {
-
+            bool logedIn = _cosmicWebService.loginToCosmic(Properties.Settings.Default.CosmicEmail, Properties.Settings.Default.CosmicPassword);
+            /*TODO
+             * 
+             * cosmic settings error messege
+             * 
+             */
             if (_cosmicWebService.isLogedIn())
             {
                 foreach (Mutation m in _xlsHandler.CosmicMutation)
@@ -119,33 +77,48 @@ namespace FinalProject
 
                     articlesTabControl.TabPages.Add(new ArticleTabPage(new ArticlesForm(tsvHandler, m.CosmicName)));
                 }
-                getArticlesButton.Enabled = false;
             }
             else
             {
-                ArticleEroorLabel.Text = "Login To Cosmic First...";
-                ArticleEroorLabel.Visible = true;
+                /*TODO
+              * 
+              * cosmic settings error messege
+              * 
+              */
             }
 
         }
-        private void loginMode()
+        private OpenFileDialog getOpenFileDialog()
         {
-            statusLabel.Text = "√";
-            statusLabel.ForeColor = Color.Green;
-            logInButton.Enabled = false;
-            logOutButton.Enabled = true;
+            OpenFileDialog fdlg = new OpenFileDialog();
+            fdlg.Title = "C# Corner Open File Dialog";
+            fdlg.InitialDirectory = @"c:\";
+            fdlg.Filter = "ION PGM Output (*.xls)|*.xls";
+            fdlg.FilterIndex = 2;
+            fdlg.RestoreDirectory = true;
+            return fdlg;
         }
-        private void logoutMode()
+        
+        private void settingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            statusLabel.Text = "X";
-            statusLabel.ForeColor = Color.Red;
-            logInButton.Enabled = true;
-            logOutButton.Enabled = false;
+            SettingForm f = new SettingForm();
+            f.Show();
+        }
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
         }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+        }
+
+       
 
     }
 }
