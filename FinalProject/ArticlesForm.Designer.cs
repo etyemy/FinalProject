@@ -29,28 +29,29 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.ArticlesGridView = new System.Windows.Forms.DataGridView();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ArticlesGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.dataGridView1);
+            this.panel1.Controls.Add(this.ArticlesGridView);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(700, 318);
             this.panel1.TabIndex = 0;
             // 
-            // dataGridView1
+            // ArticlesGridView
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(700, 318);
-            this.dataGridView1.TabIndex = 0;
+            this.ArticlesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ArticlesGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ArticlesGridView.Location = new System.Drawing.Point(0, 0);
+            this.ArticlesGridView.Name = "ArticlesGridView";
+            this.ArticlesGridView.RowHeadersVisible = false;
+            this.ArticlesGridView.Size = new System.Drawing.Size(700, 318);
+            this.ArticlesGridView.TabIndex = 0;
             // 
             // ArticlesForm
             // 
@@ -61,7 +62,7 @@
             this.Name = "ArticlesForm";
             this.Text = "ArticlesForm";
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ArticlesGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -69,6 +70,6 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView ArticlesGridView;
     }
 }

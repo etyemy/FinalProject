@@ -126,7 +126,6 @@ namespace FinalProject
 
                 foreach (Mutation m in _mutatioList)
                 {
-                    Console.WriteLine(m.PrintToLog());
                     if (m.CosmicName != null)
                     {
                         string tsvString = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());

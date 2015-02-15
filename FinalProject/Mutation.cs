@@ -39,8 +39,6 @@ namespace FinalProject
             _ref = refNuc;
             _var = varNuc;
         }
-
-
         //Extract extra data that not supply in xls file.
         public void extractExtraData(UcscBL ucscBL)
         {

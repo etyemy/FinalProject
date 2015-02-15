@@ -90,7 +90,7 @@
             this.articlesTabControl.Location = new System.Drawing.Point(0, 139);
             this.articlesTabControl.Name = "articlesTabControl";
             this.articlesTabControl.SelectedIndex = 0;
-            this.articlesTabControl.Size = new System.Drawing.Size(1196, 254);
+            this.articlesTabControl.Size = new System.Drawing.Size(1196, 189);
             this.articlesTabControl.TabIndex = 27;
             // 
             // getArticlesButton

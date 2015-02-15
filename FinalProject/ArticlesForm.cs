@@ -22,17 +22,32 @@ namespace FinalProject
             this.Text = cosmicName;
             _allArticles = tsvHandler.AllArticles;
             _filterdArticles = new List<Article>(tsvHandler.AllArticles);
-            dataGridView1.ColumnCount = 6;
+            ArticlesGridView.ColumnCount = 6;
+            ArticlesGridView.Columns[0].HeaderText = "Title";
+            ArticlesGridView.Columns[1].HeaderText = "Author";
+            ArticlesGridView.Columns[2].HeaderText = "Year";
+            ArticlesGridView.Columns[3].HeaderText = "Journal";
+            ArticlesGridView.Columns[4].HeaderText = "Cosmic ID";
+            ArticlesGridView.Columns[5].HeaderText = "PubMed ID";
+
+            ArticlesGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            ArticlesGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            ArticlesGridView.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            ArticlesGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+
+
+
             foreach(Article a in _filterdArticles)
             {
-                DataGridViewRow tempRow =(DataGridViewRow)dataGridView1.Rows[0].Clone();
+                DataGridViewRow tempRow =(DataGridViewRow)ArticlesGridView.Rows[0].Clone();
                 tempRow.Cells[0].Value = a.Title;
                 tempRow.Cells[1].Value = a.Author;
                 tempRow.Cells[2].Value = a.Year;
                 tempRow.Cells[3].Value = a.Journal;
                 tempRow.Cells[4].Value = a.CosmicID;
                 tempRow.Cells[5].Value = a.PubMedID;
-                dataGridView1.Rows.Add(tempRow);
+                ArticlesGridView.Rows.Add(tempRow);
             }
 
         }
