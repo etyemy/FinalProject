@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace FinalProject
 {
-    class UcscBL
+    public class UcscBL
     {
         UcscDAL _ucscDAL;
         public UcscBL()
         {
             _ucscDAL = new UcscDAL();
         }
-
+        
         public Gene getGene(string geneName, string chrom)
         {
             try
@@ -37,7 +37,7 @@ namespace FinalProject
             {
                 Console.WriteLine("Error: {0}", e.ToString());
                 throw e;
-                
+
             }
         }
         private int[] exonStringToStringArray(string exon)
@@ -45,9 +45,17 @@ namespace FinalProject
             return Regex.Split(exon, @"\D+").Except(new string[] { "" }).ToArray().Select(x => int.Parse(x)).ToArray();
         }
 
-        public string getCosmicName(string chrom, int position, string mutationName, string geneName)
+        public List<String> getCosmicDetails(string chromNum, int position, string cMutationName)
         {
-            return _ucscDAL.getCosmicName(chrom, position, mutationName, geneName);
+            try
+            {
+                return _ucscDAL.getCosmicDetails(chromNum, position, cMutationName);
+            }
+            catch (MySql.Data.MySqlClient.MySqlException e)
+            {
+                Console.WriteLine("Error: {0}", e.ToString());
+                throw e;
+            }
         }
     }
 }

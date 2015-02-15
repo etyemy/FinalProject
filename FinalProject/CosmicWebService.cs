@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -20,27 +21,27 @@ namespace FinalProject
             _cookieContainer = new CookieContainer();
         }
 
-        public bool loginToCosmic(string email,string password)
+        public bool loginToCosmic(string email,string password,int times)
         {
             HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create("https://cancer.sanger.ac.uk/cosmic/User?email=" + email + "&password=" + password);
-            req.CookieContainer = _cookieContainer; // <= HERE
+            req.CookieContainer = _cookieContainer; 
             req.Method = "POST";
             req.KeepAlive = false;
             req.AllowAutoRedirect = false;
             req.Timeout = 10000;
             try
             {
+                if (times == 0)
+                    return false;
                 HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-                resp.Close();
+                
                 return isLogedIn();
             }
             catch (Exception)
             {
-                return loginToCosmic(email, password);
+                return loginToCosmic(email, password,times-1);
             }
-            
         }
-
         public void logoutFromCosmic()
         {
             _cookieContainer = new CookieContainer();
@@ -48,34 +49,42 @@ namespace FinalProject
 
         public bool isLogedIn()
         {
-            string pageSource = getPageSource("http://cancer.sanger.ac.uk/cancergenome/projects/cosmic/");
-            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
-            htmlDoc.LoadHtml(pageSource);
-            string loginTest=htmlDoc.GetElementbyId("login").InnerText.Trim();
-            Console.WriteLine("XXXXXXXXXXX "+loginTest);
-            if (loginTest.Equals("Login"))
-                return false;
-            return true;
+            string pageSource = getPageSource("http://cancer.sanger.ac.uk/cosmic/user_info","GET");
+            return !Regex.IsMatch(pageSource, "\\bLogin\\b");
+            
         }
 
         public string getTsvFromCosmic(int CosmicId)
         {
-            string pageSource = getPageSource("http://cancer.sanger.ac.uk/cosmic/references?q=MUTATION_REFERENCES&amp;id=" + CosmicId);
+            string pageSource = getPageSource("http://cancer.sanger.ac.uk/cosmic/references?q=MUTATION_REFERENCES&amp;id=" + CosmicId,"GET");
             return pageSource;
         }
 
-        private string getPageSource(string url)
+        private string getPageSource(string url,string method)
         {
             string pageSource;
             HttpWebRequest getRequest = (HttpWebRequest)HttpWebRequest.Create(url);
             getRequest.CookieContainer = _cookieContainer;
-            WebResponse getResponse = getRequest.GetResponse();
-            using (StreamReader sr = new StreamReader(getResponse.GetResponseStream()))
+            getRequest.Method = method;
+            getRequest.KeepAlive = false;
+            getRequest.AllowAutoRedirect = false;
+            getRequest.Timeout = 10000;
+            try
             {
-                pageSource = sr.ReadToEnd();
+                WebResponse getResponse = getRequest.GetResponse();
+                using (StreamReader sr = new StreamReader(getResponse.GetResponseStream()))
+                {
+                    pageSource = sr.ReadToEnd();
+                }
+                getResponse.Close();
+                return pageSource;
             }
-            getResponse.Close();
-            return pageSource;
+            catch (Exception e)
+            {
+                Console.WriteLine("Error on creation: {0}", e.ToString());
+                return null;
+            }
+           
         }
     }
 }
