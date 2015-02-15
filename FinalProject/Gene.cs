@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FinalProject
 {
-    class Gene
+    public class Gene
     {
         private string _name;
         private string _chrom;
@@ -65,13 +65,13 @@ namespace FinalProject
         }
 
         //Count the position of the exon inside the gene.
-        public int getExonPlace(int index)
+        public int getCodonPlaceInGene(int index)
         {
             int lengthToIndex = getLengthToIndex(index);
             if (lengthToIndex > -1)
             {
                 if(_strand.Equals('+'))
-                    return (lengthToIndex / 3);
+                    return (lengthToIndex / 3)+1;
                 return (lengthToIndex / 3) + 1;
 
             }
@@ -98,7 +98,7 @@ namespace FinalProject
             return -1;
         }
 
-        private int getLengthToIndex(int index)
+        public int getLengthToIndex(int index)
         {
             int lengthToIndex = 0;
             bool found = false;
