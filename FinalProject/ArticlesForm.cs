@@ -12,33 +12,16 @@ namespace FinalProject
 {
     public partial class ArticlesForm : ArticleFormPage
     {
-        private List<Article> _allArticles;
-        private List<Article> _filterdArticles;
+        private List<Article> _articles;
         public ArticlesForm(TSVHandler tsvHandler,string cosmicName)
         {
             
             InitializeComponent();
-            this.pnl = panel1;
+            this.pnl = articlesMainPanael;
             this.Text = cosmicName;
-            _allArticles = tsvHandler.AllArticles;
-            _filterdArticles = new List<Article>(tsvHandler.AllArticles);
-            ArticlesGridView.ColumnCount = 6;
-            ArticlesGridView.Columns[0].HeaderText = "Title";
-            ArticlesGridView.Columns[1].HeaderText = "Author";
-            ArticlesGridView.Columns[2].HeaderText = "Year";
-            ArticlesGridView.Columns[3].HeaderText = "Journal";
-            ArticlesGridView.Columns[4].HeaderText = "Cosmic ID";
-            ArticlesGridView.Columns[5].HeaderText = "PubMed ID";
-
-            ArticlesGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-            ArticlesGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            ArticlesGridView.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            ArticlesGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-
-
-
-            foreach(Article a in _filterdArticles)
+            _articles = tsvHandler.AllArticles;
+            
+            foreach(Article a in _articles)
             {
                 DataGridViewRow tempRow =(DataGridViewRow)ArticlesGridView.Rows[0].Clone();
                 tempRow.Cells[0].Value = a.Title;

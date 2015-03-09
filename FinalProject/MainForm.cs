@@ -41,22 +41,51 @@ namespace FinalProject
         }
         private void Xls1Button_Click(object sender, EventArgs e)
         {
-            _xls1Path = getFilePath();
-            if (_xls1Path != null)
-            {
-                _xls1Handler = new XLSHandler(_xls1Path);
-            }
-                
+            xlsButtonPressed(1);
         }
 
         private void Xls2Button_Click(object sender, EventArgs e)
         {
-            _xls2Path = getFilePath();
-            if (_xls2Path != null)
+            xlsButtonPressed(2);               
+        }
+
+        private void xlsButtonPressed(int buttonId)
+        {
+            string tempPath=null,fileName;;
+            TextBox tempTextBox=null;
+            string[] tempStringArray;
+            if(buttonId==1)
             {
-                _xls2Handler = new XLSHandler(_xls2Path);
+                _xls1Path = getFilePath();
+                tempPath = _xls1Path;
+                tempTextBox=xls1TextBox;
+                
             }
-               
+            else if(buttonId==2)
+            {
+                _xls2Path = getFilePath();
+                tempPath = _xls2Path;
+                tempTextBox=xls2TextBox;
+            }
+
+            if (tempPath != null)
+            {
+                tempStringArray = tempPath.Split('\\');
+                fileName = tempStringArray[tempStringArray.Length - 1];
+
+                if (_xls2Path==_xls1Path)
+                {
+                    MessageBox.Show("Same File Selected", "Error");
+                }
+                else
+                {
+                    tempTextBox.Text = fileName;
+                    if(buttonId==1)
+                        _xls1Handler= new XLSHandler(tempPath);
+                    else if(buttonId==2)
+                        _xls2Handler = new XLSHandler(tempPath);
+                }
+            }
         }
 
         private void analyzeButton_Click(object sender, EventArgs e)
@@ -131,7 +160,12 @@ namespace FinalProject
                         string tsvString = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
                         string[] tsvLines = tsvString.Split('\n');
                         TSVHandler tsvHandler = new TSVHandler(tsvString);
-                        articlesTabControl.TabPages.Add(new ArticleTabPage(new ArticlesForm(tsvHandler, m.CosmicName)));
+                        string tabName = m.CosmicName;
+                        if (m.NumOfShows == 1)
+                            tabName += " x1";
+                        else
+                            tabName += " x2";
+                        articlesTabControl.TabPages.Add(new ArticleTabPage(new ArticlesForm(tsvHandler, tabName)));
                     }
                 }
             }
@@ -149,6 +183,9 @@ namespace FinalProject
             {
                 try
                 {
+                    /* TODO
+                 * first check if exist in local db
+                 */
                     _mutatioList.ElementAt(i).extractExtraData(_ucscBL);
                 }
                 catch(Exception ex)
@@ -180,7 +217,7 @@ namespace FinalProject
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Title = "Open XLS";
             openFileDialog.InitialDirectory = @"c:\";
-            openFileDialog.Filter = "ION PGM Output (*.xls)|*.xls";
+            openFileDialog.Filter = "ION PGM Output (*.csv, *.xls)|*.xls; *.csv";
             openFileDialog.FilterIndex = 2;
             openFileDialog.RestoreDirectory = true;
             if (openFileDialog.ShowDialog() == DialogResult.OK)

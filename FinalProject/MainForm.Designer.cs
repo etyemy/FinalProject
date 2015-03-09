@@ -134,13 +134,13 @@
             // 
             this.progressBar1.Location = new System.Drawing.Point(12, 82);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(206, 23);
+            this.progressBar1.Size = new System.Drawing.Size(154, 23);
             this.progressBar1.TabIndex = 30;
             // 
             // xls2TextBox
             // 
             this.xls2TextBox.Enabled = false;
-            this.xls2TextBox.Location = new System.Drawing.Point(118, 56);
+            this.xls2TextBox.Location = new System.Drawing.Point(66, 56);
             this.xls2TextBox.Name = "xls2TextBox";
             this.xls2TextBox.Size = new System.Drawing.Size(100, 20);
             this.xls2TextBox.TabIndex = 32;
@@ -148,7 +148,7 @@
             // xls1TextBox
             // 
             this.xls1TextBox.Enabled = false;
-            this.xls1TextBox.Location = new System.Drawing.Point(12, 56);
+            this.xls1TextBox.Location = new System.Drawing.Point(66, 30);
             this.xls1TextBox.Name = "xls1TextBox";
             this.xls1TextBox.Size = new System.Drawing.Size(100, 20);
             this.xls1TextBox.TabIndex = 33;
@@ -157,7 +157,7 @@
             // 
             this.Xls1Button.Location = new System.Drawing.Point(12, 27);
             this.Xls1Button.Name = "Xls1Button";
-            this.Xls1Button.Size = new System.Drawing.Size(100, 23);
+            this.Xls1Button.Size = new System.Drawing.Size(48, 23);
             this.Xls1Button.TabIndex = 34;
             this.Xls1Button.Text = "Xls 1";
             this.Xls1Button.UseVisualStyleBackColor = true;
@@ -165,9 +165,9 @@
             // 
             // Xls2Button
             // 
-            this.Xls2Button.Location = new System.Drawing.Point(119, 27);
+            this.Xls2Button.Location = new System.Drawing.Point(13, 56);
             this.Xls2Button.Name = "Xls2Button";
-            this.Xls2Button.Size = new System.Drawing.Size(99, 23);
+            this.Xls2Button.Size = new System.Drawing.Size(47, 23);
             this.Xls2Button.TabIndex = 35;
             this.Xls2Button.Text = "Xls 2";
             this.Xls2Button.UseVisualStyleBackColor = true;
@@ -175,9 +175,9 @@
             // 
             // analyzeButton
             // 
-            this.analyzeButton.Location = new System.Drawing.Point(244, 27);
+            this.analyzeButton.Location = new System.Drawing.Point(172, 30);
             this.analyzeButton.Name = "analyzeButton";
-            this.analyzeButton.Size = new System.Drawing.Size(61, 49);
+            this.analyzeButton.Size = new System.Drawing.Size(61, 23);
             this.analyzeButton.TabIndex = 36;
             this.analyzeButton.Text = "Analyze";
             this.analyzeButton.UseVisualStyleBackColor = true;
@@ -186,7 +186,7 @@
             // saveButton
             // 
             this.saveButton.Enabled = false;
-            this.saveButton.Location = new System.Drawing.Point(244, 82);
+            this.saveButton.Location = new System.Drawing.Point(172, 82);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(61, 23);
             this.saveButton.TabIndex = 37;
