@@ -13,19 +13,25 @@ namespace FinalProject
         private char _strand;
         private int _cdsStart;
         private int _cdsEnd;
-        private int _exonCount;
         private int[] _exonStarts;
         private int[] _exonEnds;
 
-        public Gene(string name, string chrom, char strand, int cdsStart, int cdsEnd, int exonCount, int[] exonStarts, int[] exonEnds)
+        public Gene(string name, string chrom, char strand, int cdsStart, int cdsEnd, int[] exonStarts, int[] exonEnds)
         {
             _name = name;
             _chrom = chrom;
             _strand = strand;
             _cdsStart = cdsStart;
             _cdsEnd = cdsEnd;
-            _exonCount = exonCount;
             fixExonStartEnd(exonStarts, exonEnds);
+        }
+        public Gene(string name, string chrom, char strand,  int[] exonStarts, int[] exonEnds)
+        {
+            _name = name;
+            _chrom = chrom;
+            _strand = strand;
+            _exonStarts = exonStarts;
+            _exonEnds = exonEnds;
         }
 
         //Fix the start postion and the end position of gene that received for easy later calculation.
@@ -33,7 +39,7 @@ namespace FinalProject
         {
             List<int> tempStarts = new List<int>();
             List<int> tempEnds = new List<int>();
-            for (int i = 0; i < _exonCount; i++)
+            for (int i = 0; i < exonStarts.Length; i++)
             {
                 if (_cdsStart > exonEnds[i])
                     continue;
@@ -63,20 +69,7 @@ namespace FinalProject
             _exonStarts = tempStarts.ToArray();
             _exonEnds = tempEnds.ToArray();
         }
-
-        //Count the position of the exon inside the gene.
-        public int getCodonPlaceInGene(int index)
-        {
-            int lengthToIndex = getLengthToIndex(index);
-            if (lengthToIndex > -1)
-            {
-                if(_strand.Equals('+'))
-                    return (lengthToIndex / 3)+1;
-                return (lengthToIndex / 3) + 1;
-
-            }
-            return -1;
-        }
+       
         public int getOffsetInCodon(int index)
         {
             int lengthToIndex = getLengthToIndex(index);
@@ -140,25 +133,18 @@ namespace FinalProject
             return -1;
         }
 
-        public int ExonCount
+        public int[] ExonStarts
         {
             get
             {
-                return _exonCount;
+                return _exonStarts;
             }
         }
-        public string Crhom
+        public int[] ExonEnds
         {
             get
             {
-                return _chrom;
-            }
-        }
-        public string Name
-        {
-            get
-            {
-                return _name;
+                return _exonEnds;
             }
         }
         public char Strand

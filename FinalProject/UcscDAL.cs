@@ -20,6 +20,7 @@ namespace FinalProject
             try
             {
                 conn = new MySqlConnection(sb.ToString());
+                conn.Open();
                
             }
             catch (MySqlException e)
@@ -31,8 +32,7 @@ namespace FinalProject
         
         public List<String> getGene(string geneName, string chrom)
         {
-            conn.Open();
-            List<String> toReturn = new List<string>();
+            List<String> toReturn =null;
             string query =
                 "SELECT strand, MAX(cdsStart), MAX(cdsEnd), MAX(exonCount), exonStarts, exonEnds " +
                 "FROM refGene " +
@@ -40,18 +40,20 @@ namespace FinalProject
                 "AND name2='" + geneName + "'";
             MySqlDataReader rdr = executeQuery(query);
             if (rdr.Read())
+            {
+                toReturn = new List<string>();
                 for (int i = 0; i < rdr.FieldCount; i++)
                 {
                     toReturn.Add(rdr.GetString(i));
                 }
+            }
+                
             rdr.Close();
-            conn.Close();
             return toReturn;
         }
         
         public List<String> getCosmicDetails(string chromNum, int position,string cMutationName)
         {
-            conn.Open();
             List<String> toReturn = null;
             string query =
                 "SELECT cosmic_mutation_id, mut_syntax_aa " +
@@ -68,7 +70,6 @@ namespace FinalProject
                 toReturn.Add(rdr.GetString(1));
             }
             rdr.Close();
-            conn.Close();
             return toReturn;
         }
 

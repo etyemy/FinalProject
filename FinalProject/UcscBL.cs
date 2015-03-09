@@ -10,28 +10,45 @@ namespace FinalProject
     public class UcscBL
     {
         UcscDAL _ucscDAL;
+        LocalDbDAL _localDbDAL;
         public UcscBL()
         {
             _ucscDAL = new UcscDAL();
+            _localDbDAL = new LocalDbDAL();
         }
         
         public Gene getGene(string geneName, string chrom)
         {
+            Gene g=null;
+            List<String> geneStrings;
             try
             {
-                List<String> geneStrings = _ucscDAL.getGene(geneName, chrom);
-                if (geneStrings != null)
+                geneStrings = _localDbDAL.getGene(geneName, chrom);
+                if (geneStrings == null)
                 {
-                    char strand = Convert.ToChar(geneStrings[0]);
-                    int cdsStart = int.Parse(geneStrings[1]);
-                    int cdsEnd = int.Parse(geneStrings[2]);
-                    int exonCount = int.Parse(geneStrings[3]);
-                    int[] exonStars = exonStringToStringArray(geneStrings[4]);
-                    int[] exonEnds = exonStringToStringArray(geneStrings[5]);
-                    return new Gene(geneName, chrom, strand, cdsStart, cdsEnd, exonCount, exonStars, exonEnds);
+                    geneStrings = _ucscDAL.getGene(geneName, chrom);
+                    if (geneStrings != null)
+                    {
+                        char strand = Convert.ToChar(geneStrings[0]);
+                        int cdsStart = int.Parse(geneStrings[1]);
+                        int cdsEnd = int.Parse(geneStrings[2]);
+                        int[] exonStars = exonStringToIntArray(geneStrings[4]);
+                        int[] exonEnds = exonStringToIntArray(geneStrings[5]);
+                        g = new Gene(geneName, chrom, strand, cdsStart, cdsEnd, exonStars, exonEnds);
+                        string tempExonStarts = intArrayToString(g.ExonStarts);
+                        string tempExonEnds = intArrayToString(g.ExonEnds);
+
+                        _localDbDAL.addGene(geneName, chrom, strand, tempExonStarts, tempExonEnds);
+                    }
                 }
                 else
-                    return null;
+                {
+                    char strand = Convert.ToChar(geneStrings[2]);
+                    int[] exonStarts = exonStringToIntArray(geneStrings[3]);
+                    int[] exonEnds = exonStringToIntArray(geneStrings[4]);
+                    g = new Gene(geneName, chrom, strand, exonStarts, exonEnds);
+                }
+                return g;
             }
             catch (MySql.Data.MySqlClient.MySqlException e)
             {
@@ -39,8 +56,17 @@ namespace FinalProject
                 throw e;
 
             }
+            
         }
-        private int[] exonStringToStringArray(string exon)
+
+        private string intArrayToString(int[] p)
+        {
+            string toReturn = "";
+            foreach (int n in p)
+                toReturn += n + " ";
+            return toReturn;
+        }
+        private int[] exonStringToIntArray(string exon)
         {
             return Regex.Split(exon, @"\D+").Except(new string[] { "" }).ToArray().Select(x => int.Parse(x)).ToArray();
         }
