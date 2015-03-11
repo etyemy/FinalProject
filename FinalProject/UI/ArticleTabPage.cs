@@ -60,7 +60,7 @@ namespace FinalProject
         {
             if (e.ColumnIndex == 0)
             {
-                MessageBox.Show(articleList.ElementAt(e.RowIndex).PubMedID);
+                System.Diagnostics.Process.Start("http://www.ncbi.nlm.nih.gov/pubmed/" + articleList.ElementAt(e.RowIndex).PubMedID);
             }
                 
         }

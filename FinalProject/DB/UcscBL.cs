@@ -16,7 +16,36 @@ namespace FinalProject
             _ucscDAL = new UcscDAL();
             _localDbDAL = new LocalDbDAL();
         }
-        
+        public Mutation getMutation(string chrom, int position, char varNuc, char refNuc)
+        {
+            Mutation toReturn = null;
+            List<String> mutationDetails = _localDbDAL.getMutation(chrom, position, varNuc, refNuc);
+            if(mutationDetails!=null)
+            {
+                string tempChrom = mutationDetails.ElementAt(0);
+                int tempPosition = Convert.ToInt16(mutationDetails.ElementAt(1));
+                string tempGeneName = mutationDetails.ElementAt(2);
+                char tempRefNuc = Convert.ToChar( mutationDetails.ElementAt(3));
+                char tempVarNuc = Convert.ToChar(mutationDetails.ElementAt(4));
+                char tempStrand = Convert.ToChar(mutationDetails.ElementAt(5));
+                string tempChromNum = mutationDetails.ElementAt(6);
+                string tempRefCodon = mutationDetails.ElementAt(7);
+                string tempVarCodon = mutationDetails.ElementAt(8);
+                string tempRefAA = mutationDetails.ElementAt(9);
+                string tempVarAA = mutationDetails.ElementAt(10);
+                string tempPMutationName = mutationDetails.ElementAt(11);
+                string tempCMutationName = mutationDetails.ElementAt(12);
+                string tempCosmicName = mutationDetails.ElementAt(13);
+                toReturn = new Mutation(tempChrom, tempPosition, tempGeneName, tempRefNuc, tempVarNuc,tempStrand,tempChromNum, tempRefCodon, tempVarCodon, tempRefAA, tempVarAA, tempPMutationName, tempCMutationName, tempCosmicName);
+            }
+            
+            return toReturn;
+        }
+        public void addMutation(Mutation m)
+        {
+            _localDbDAL.addMutation(m.Chrom,m.Position,m.GeneName,m.Ref,m.Var,m.Strand,m.ChromNum,m.RefCodon,m.VarCodon,m.RefAA,m.VarAA,m.PMutationName,m.CMutationName,m.CosmicName);
+        }
+
         public Gene getGene(string geneName, string chrom)
         {
             Gene g=null;

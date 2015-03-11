@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace FinalProject
 {
-    public class UcscXML
+    public class UcscWebServices
     {
         public static string getCodonAt(string chrom, int index,int codonOffset)
         {

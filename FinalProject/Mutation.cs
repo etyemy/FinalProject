@@ -11,7 +11,7 @@ namespace FinalProject
     {
         private string _chrom;
         private int _position;
-        private string _geneSym;
+        private string _geneName;
         private char _ref;
         private char _var;
 
@@ -35,16 +35,33 @@ namespace FinalProject
             _chrom = chrom;
             _chromNum = chrom.Replace("chr", "");
             _position = position;
-            _geneSym = geneSym;
+            _geneName = geneSym;
             _ref = refNuc;
             _var = varNuc;
+        }
+        public Mutation(string chrom,int position,string geneName,char refNuc,char varNuc,char strand,string chromNum,string refCodon,string varCodon,string refAA,string varAA,string pMutationName,string cMutationName,string cosmicName)
+        {
+            _chrom = chrom;
+            _position = position;
+            _geneName = geneName;
+            _ref = refNuc;
+            _var = varNuc;
+            _strand = strand;
+            _chromNum = chromNum;
+            _refCodon = refCodon;
+            _varCodon = varCodon;
+            _refAA = refAA;
+            _varAA = varAA;
+            _pMutationName = pMutationName;
+            _cMutationName = cMutationName;
+            _cosmicName = cosmicName;
         }
         //Extract extra data that not supply in xls file.
         public void extractExtraData(UcscBL ucscBL)
         {
             try
             {
-                _gene = ucscBL.getGene(_geneSym, _chrom);
+                _gene = ucscBL.getGene(_geneName, _chrom);
                 _strand = _gene.Strand;
                 _nucPlace = _gene.getLengthToIndex(_position);
                 if(_nucPlace!=-1)
@@ -75,7 +92,7 @@ namespace FinalProject
         {
             if (offset != -1)
             {
-                _refCodon = UcscXML.getCodonAt(_chrom, _position, offset);
+                _refCodon = UcscWebServices.getCodonAt(_chrom, _position, offset);
 
                 char[] temp = _refCodon.ToCharArray();
                 temp[offset] = _var;
@@ -141,14 +158,6 @@ namespace FinalProject
                 return true;
             return false;
         }
-
-        public bool isImportant()
-        {
-            if (isMutataion() && hasCodon() && hasCosmicName())
-                return true;
-            return false;
-        }
-        
         public int getCosmicNum()
         {
             return Convert.ToInt32(Regex.Match(_cosmicName, @"\d+").Value);
@@ -161,11 +170,88 @@ namespace FinalProject
                 return _chrom;
             }
         }
-        public string GeneSym
+        public int Position
         {
             get
             {
-                return _geneSym;
+                return _position;
+            }
+        }
+        public string GeneName
+        {
+            get
+            {
+                return _geneName;
+            }
+        }
+        public char Var
+        {
+            get
+            {
+                return _var;
+            }
+        }
+        public char Ref
+        {
+            get
+            {
+                return _ref;
+            }
+        }
+        public char Strand
+        {
+            get
+            {
+                return _strand;
+            }
+        }
+        public string ChromNum
+        {
+            get
+            {
+                return _chromNum;
+            }
+        }
+        public string RefCodon
+        {
+            get
+            {
+                return _refCodon;
+            }
+        }
+        public string VarCodon
+        {
+            get
+            {
+                return _varCodon;
+            }
+        }
+        public string VarAA
+        {
+            get
+            {
+                return _varAA;
+            }
+        }
+        public string RefAA
+        {
+            get
+            {
+                return _refAA;
+            }
+        }
+        public string PMutationName
+        {
+            get
+            {
+                return _pMutationName;
+            }
+        }
+        public string CMutationName
+        {
+            get
+            {
+                return _cMutationName;
             }
         }
         public string CosmicName
@@ -189,11 +275,11 @@ namespace FinalProject
 
         public string PrintToLog()
         {
-            return "" + _chrom + " " + _position + " " + _geneSym + " " + _ref + " " + _var + " " + _cosmicName + " " + _numOfShows;
+            return "" + _chrom + " " + _position + " " + _geneName + " " + _ref + " " + _var + " " + _cosmicName + " " + _numOfShows;
         }
         public string PrintXLSLine()
         {
-            return _chrom + "\t" + _position + "\t" + _geneSym + "\t" + _ref + "\t" + _var + "\t" + _strand + "\t" + _refCodon + "\t" + _varCodon + "\t" + _refAA + "\t" + _varAA + "\t" + _cMutationName+ "\t" + _pMutationName + "\t" + _cosmicName + "\t" + _numOfShows;
+            return _chrom + "\t" + _position + "\t" + _geneName + "\t" + _ref + "\t" + _var + "\t" + _strand + "\t" + _refCodon + "\t" + _varCodon + "\t" + _refAA + "\t" + _varAA + "\t" + _cMutationName+ "\t" + _pMutationName + "\t" + _cosmicName + "\t" + _numOfShows;
         }
 
         public bool Equals(Mutation that)
