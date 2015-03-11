@@ -30,9 +30,6 @@ namespace FinalProject
             InitializeComponent();
         }
 
-
-       
-
         private void settingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Enabled = false;
@@ -144,37 +141,6 @@ namespace FinalProject
                     _mutatioList.Add(m);
             }
         }
-        private void getArticlesButton_Click(object sender, EventArgs e)
-        {
-            bool logedIn = _cosmicWebService.loginToCosmic(Properties.Settings.Default.CosmicEmail, Properties.Settings.Default.CosmicPassword, 5);
-
-            if (_cosmicWebService.isLogedIn())
-            {
-                toolStripStatusLabel2.Text = "Successful";
-                toolStripStatusLabel2.ForeColor = Color.Green;
-
-                foreach (Mutation m in _mutatioList)
-                {
-                    if (m.CosmicName != null)
-                    {
-                        string tsvString = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
-                        string[] tsvLines = tsvString.Split('\n');
-                        TSVHandler tsvHandler = new TSVHandler(tsvString);
-                        string tabName = m.CosmicName;
-                        if (m.NumOfShows == 1)
-                            tabName += " x1";
-                        else
-                            tabName += " x2";
-                        articlesTabControl.TabPages.Add(new ArticleTabPage(new ArticlesForm(tsvHandler, tabName)));
-                    }
-                }
-            }
-            else
-            {
-                toolStripStatusLabel2.Text = "Failed to log in. Check cosmic email and password in settings and/or check internet connection";
-            }
-        }
-        
         
         private void analyzeBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -211,18 +177,40 @@ namespace FinalProject
             getArticlesButton.Enabled = true;
             saveButton.Enabled = true;
         }
+        private void getArticlesButton_Click(object sender, EventArgs e)
+        {
+            bool logedIn = _cosmicWebService.loginToCosmic(Properties.Settings.Default.CosmicEmail, Properties.Settings.Default.CosmicPassword, 5);
 
+            if (_cosmicWebService.isLogedIn())
+            {
+                toolStripStatusLabel2.Text = "Successful";
+                toolStripStatusLabel2.ForeColor = Color.Green;
+
+                foreach (Mutation m in _mutatioList)
+                {
+                    if (m.CosmicName != null)
+                    {
+
+                        string tsvStringFromCosmic = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
+                        TSVHandler tsvHandler = new TSVHandler(tsvStringFromCosmic);
+                        string tabName = m.CosmicName + " x" + m.NumOfShows;
+                        ArticleTabPage p = new ArticleTabPage(tabName, tsvHandler.AllArticles);
+
+                        tabControl.TabPages.Add(p);
+                    }
+                }
+            }
+            else
+            {
+                toolStripStatusLabel2.Text = "Failed to log in. Check cosmic email and password in settings and/or check internet connection";
+            }
+        }
         private string getFilePath()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Title = "Open XLS";
-            openFileDialog.InitialDirectory = @"c:\";
-            openFileDialog.Filter = "ION PGM Output (*.csv, *.xls)|*.xls; *.csv";
-            openFileDialog.FilterIndex = 2;
-            openFileDialog.RestoreDirectory = true;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            
+            if (_openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                return openFileDialog.FileName;
+                return _openFileDialog.FileName;
             }
             return null;
         }
@@ -237,11 +225,8 @@ namespace FinalProject
         }
 
         private void saveButton_Click(object sender, EventArgs e)
-        {
-            
-            _saveFileDialog.Filter = "Output (*.xls)|*.xls";
+        {            
             _saveFileDialog.ShowDialog();
-
         }
 
         private void saveFileDialog_FileOk(object sender, CancelEventArgs e)
@@ -258,6 +243,11 @@ namespace FinalProject
             }
             
             writer.Close();
+        }
+
+        private void filterButton_Click(object sender, EventArgs e)
+        {
+
         }
 
         

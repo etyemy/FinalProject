@@ -33,7 +33,6 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.articlesTabControl = new System.Windows.Forms.TabControl();
             this.getArticlesButton = new System.Windows.Forms.Button();
             this._statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -47,6 +46,9 @@
             this.saveButton = new System.Windows.Forms.Button();
             this._analyzeBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this._saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.filterButton = new System.Windows.Forms.Button();
+            this._openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this._menuStrip.SuspendLayout();
             this._statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -84,14 +86,6 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // articlesTabControl
-            // 
-            this.articlesTabControl.Location = new System.Drawing.Point(0, 139);
-            this.articlesTabControl.Name = "articlesTabControl";
-            this.articlesTabControl.SelectedIndex = 0;
-            this.articlesTabControl.Size = new System.Drawing.Size(1196, 189);
-            this.articlesTabControl.TabIndex = 27;
             // 
             // getArticlesButton
             // 
@@ -203,13 +197,43 @@
             // 
             // _saveFileDialog
             // 
+            this._saveFileDialog.Filter = "Output (*.xls)|*.xls";
             this._saveFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog_FileOk);
+            // 
+            // tabControl
+            // 
+            this.tabControl.Location = new System.Drawing.Point(12, 140);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(1172, 166);
+            this.tabControl.TabIndex = 39;
+            // 
+            // filterButton
+            // 
+            this.filterButton.Enabled = false;
+            this.filterButton.Location = new System.Drawing.Point(93, 111);
+            this.filterButton.Name = "filterButton";
+            this.filterButton.Size = new System.Drawing.Size(75, 23);
+            this.filterButton.TabIndex = 40;
+            this.filterButton.Text = "Filter";
+            this.filterButton.UseVisualStyleBackColor = true;
+            this.filterButton.Click += new System.EventHandler(this.filterButton_Click);
+            // 
+            // _openFileDialog
+            // 
+            this._openFileDialog.Filter = "ION PGM Output (*.csv, *.xls)|*.xls; *.csv";
+            this._openFileDialog.FilterIndex = 2;
+            this._openFileDialog.InitialDirectory = "c:\\";
+            this._openFileDialog.RestoreDirectory = true;
+            this._openFileDialog.Title = "Open XLS";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1196, 543);
+            this.Controls.Add(this.filterButton);
+            this.Controls.Add(this.tabControl);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.analyzeButton);
             this.Controls.Add(this.Xls2Button);
@@ -219,7 +243,6 @@
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this._statusStrip);
             this.Controls.Add(this.getArticlesButton);
-            this.Controls.Add(this.articlesTabControl);
             this.Controls.Add(this._menuStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -242,7 +265,6 @@
         private System.Windows.Forms.MenuStrip _menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.TabControl articlesTabControl;
         private System.Windows.Forms.Button getArticlesButton;
         private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
         private System.Windows.Forms.StatusStrip _statusStrip;
@@ -257,6 +279,9 @@
         private System.Windows.Forms.Button saveButton;
         private System.ComponentModel.BackgroundWorker _analyzeBackgroundWorker;
         private System.Windows.Forms.SaveFileDialog _saveFileDialog;
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.Button filterButton;
+        private System.Windows.Forms.OpenFileDialog _openFileDialog;
     }
 }
 
