@@ -66,7 +66,7 @@
     <OutputPath>bin\x86\Aviad\</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icon-DNA.ico</ApplicationIcon>
+    <ApplicationIcon>Res\Icon-DNA.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
@@ -107,7 +107,7 @@
       <DependentUpon>SettingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TSVHandler.cs" />
-    <Compile Include="DB\UcscBL.cs" />
+    <Compile Include="DB\MainBL.cs" />
     <Compile Include="Mutation.cs" />
     <Compile Include="UI\MainForm.cs">
       <SubType>Form</SubType>
@@ -117,7 +117,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DB\MainDAL.cs" />
+    <Compile Include="DB\UcscDAL.cs" />
     <Compile Include="WebServices\UcscWebServices.cs" />
     <Compile Include="XLSHandler.cs" />
     <EmbeddedResource Include="UI\MainForm.resx">
@@ -158,7 +158,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>Database.mdf</DependentUpon>
     </Content>
-    <Content Include="Icon-DNA.ico" />
+    <Content Include="Res\Icon-DNA.ico" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

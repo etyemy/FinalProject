@@ -15,18 +15,19 @@ namespace FinalProject
 
     public partial class MainForm : Form
     {
-        enum XlsMinPlace { Chrom = 0, Position, GeneName, Ref, Var };
+        enum XlsMinPlace { Chrom = 0, Position, GeneName, Ref, Var ,NumOfShows};
         private XLSHandler _xls1Handler = null;
         private XLSHandler _xls2Handler = null;
         private CosmicWebService _cosmicWebService;
         private string _xls1Path = null;
         private string _xls2Path = null;
         private List<Mutation> _mutatioList = null;
-        private UcscBL _ucscBL;
+        private MainBL _mainBL;
+        List<string[]> _mutationsDetailsList = null;
         public MainForm()
         {
             _cosmicWebService = new CosmicWebService();
-            _ucscBL = new UcscBL();
+            _mainBL = new MainBL();
             InitializeComponent();
         }
 
@@ -87,7 +88,6 @@ namespace FinalProject
 
         private void analyzeButton_Click(object sender, EventArgs e)
         {
-            _mutatioList = new List<Mutation>();
             Boolean startAnalyze = false;
             if (_xls1Path == null && _xls2Path == null)
             {
@@ -95,64 +95,49 @@ namespace FinalProject
             }
             else if (_xls1Path == null ^ _xls2Path == null)
             {
-                DialogResult result1 = MessageBox.Show("Only one file selected, Continue?", "Notice", MessageBoxButtons.YesNo);
-
-                if (result1 == DialogResult.Yes)
+                if (MessageBox.Show("Only one file selected, Continue?", "Notice", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    XLSHandler temp;
-                    if (_xls2Path == null)
-                        temp = _xls1Handler;
-                    else
-                        temp = _xls2Handler;
-                    addToMutationList(temp, 1);
                     startAnalyze = true;
                 }
             }
             else
             {
-                addToMutationList(_xls1Handler, 1);
-                addToMutationList(_xls2Handler, 2);
                 startAnalyze = true;
             }
             if (startAnalyze)
             {
+                _mutationsDetailsList = intersectionLists(_xls1Handler, _xls2Handler);
+                Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXxx     " + _mutationsDetailsList.Count);
                 analyzeButton.Enabled = false;
                 _analyzeBackgroundWorker.RunWorkerAsync();
             }
+           
                 
         }
-        private void addToMutationList(XLSHandler xlsHandler, int p)
-        {
-            foreach (string[] s in xlsHandler.XlsMin)
-            {
-                Mutation m = new Mutation(s[(int)XlsMinPlace.Chrom], Convert.ToInt32(s[(int)XlsMinPlace.Position]), s[(int)XlsMinPlace.GeneName], s[(int)XlsMinPlace.Ref][0], s[(int)XlsMinPlace.Var][0]);
-                Boolean found = false;
-                foreach (Mutation n in _mutatioList)
-                {
-                    if (n.Equals(m))
-                    {
-                        if (p == 2)
-                            n.NumOfShows = 2;
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                    _mutatioList.Add(m);
-            }
-        }
-        
         private void analyzeBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-           
-            for (int i = 0; i < _mutatioList.Count; i++)
+            _mutatioList = new List<Mutation>();
+            int i = 1;
+            foreach (string [] s in _mutationsDetailsList)
             {
                 try
                 {
-                    /* TODO
-                 * first check if exist in local db
-                 */
-                    _mutatioList.ElementAt(i).extractExtraData(_ucscBL);
+                    string chrom = s[(int)XlsMinPlace.Chrom];
+                    int position = Convert.ToInt32(s[(int)XlsMinPlace.Position]);
+                    string geneName = s[(int)XlsMinPlace.GeneName];
+                    char refNuc =  s[(int)XlsMinPlace.Ref][0];
+                    char varNuc =  s[(int)XlsMinPlace.Var][0];
+                    Console.WriteLine(chrom + " " + position + " " + geneName + " " + refNuc + " " + varNuc);
+                    Mutation tempMutation = _mainBL.getMutation(chrom, position, refNuc, varNuc);
+
+                    if (tempMutation == null)
+                    {
+                        Console.WriteLine("NOT FOUND" );
+                        tempMutation = new Mutation(_mainBL, chrom, position,geneName, refNuc, varNuc);
+                        
+                    }
+                    tempMutation.NumOfShows = Convert.ToInt16(s[(int)XlsMinPlace.NumOfShows]);
+                    _mutatioList.Add(tempMutation);
                 }
                 catch(Exception ex)
                 {
@@ -160,7 +145,8 @@ namespace FinalProject
                 }
                 finally
                 {
-                    _analyzeBackgroundWorker.ReportProgress(((100 / (_mutatioList.Count - 1)) * i));
+                    _analyzeBackgroundWorker.ReportProgress(((100 / (_mutationsDetailsList.Count)) * i));
+                    i++;
                 }
             }
             _analyzeBackgroundWorker.ReportProgress(100);
@@ -177,6 +163,36 @@ namespace FinalProject
             getArticlesButton.Enabled = true;
             saveButton.Enabled = true;
         }
+
+        private List<string[]> intersectionLists(XLSHandler l1,XLSHandler l2)
+        {
+            List<string[]> toReturn=new List<string[]>(l1.XlsMin);
+            if(l1==null^l2==null)
+            {
+                if (_xls2Path == null)
+                    toReturn = new List<string[]>(l1.XlsMin);
+                else
+                    toReturn = new List<string[]>(l2.XlsMin);
+            }
+            else
+            {
+                foreach (string[] s in l2.XlsMin)
+                {
+                    bool found = false;
+                    foreach (string[] d in toReturn)
+                    {
+                        if (d[0].Equals(s[0]) && d[1].Equals(s[1]) && d[2].Equals(s[2]) && d[3].Equals(s[3]) && d[4].Equals(s[4]))
+                        {
+                            found = true;
+                            d[5] = "2";
+                        }
+                    }
+                    if (!found)
+                        toReturn.Add(s);
+                }
+            }
+            return toReturn;
+        }
         private void getArticlesButton_Click(object sender, EventArgs e)
         {
             bool logedIn = _cosmicWebService.loginToCosmic(Properties.Settings.Default.CosmicEmail, Properties.Settings.Default.CosmicPassword, 5);
@@ -188,7 +204,7 @@ namespace FinalProject
 
                 foreach (Mutation m in _mutatioList)
                 {
-                    if (m.CosmicName != null)
+                    if (m.CosmicName != null )
                     {
 
                         string tsvStringFromCosmic = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());

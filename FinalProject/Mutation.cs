@@ -30,7 +30,7 @@ namespace FinalProject
 
         private int _numOfShows = 1;
 
-        public Mutation(string chrom, int position, string geneSym, char refNuc, char varNuc)
+        public Mutation(MainBL ucscBL, string chrom, int position, string geneSym, char refNuc, char varNuc)
         {
             _chrom = chrom;
             _chromNum = chrom.Replace("chr", "");
@@ -38,6 +38,9 @@ namespace FinalProject
             _geneName = geneSym;
             _ref = refNuc;
             _var = varNuc;
+            extractExtraData(ucscBL);
+            if(!ucscBL.mutationExist(this))
+                ucscBL.addMutation(this);
         }
         public Mutation(string chrom,int position,string geneName,char refNuc,char varNuc,char strand,string chromNum,string refCodon,string varCodon,string refAA,string varAA,string pMutationName,string cMutationName,string cosmicName)
         {
@@ -57,7 +60,7 @@ namespace FinalProject
             _cosmicName = cosmicName;
         }
         //Extract extra data that not supply in xls file.
-        public void extractExtraData(UcscBL ucscBL)
+        public void extractExtraData(MainBL ucscBL)
         {
             try
             {

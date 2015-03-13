@@ -27,7 +27,7 @@ namespace FinalProject
                     string geneName = parts[(int)XLSCol.GeneID];
                     string refNuc = parts[(int)XLSCol.Ref];
                     string varNuc = parts[(int)XLSCol.Variant];
-                    string[] a = new string[5] { chrom, position, geneName, refNuc, varNuc };
+                    string[] a = new string[6] { chrom, position, geneName, refNuc, varNuc,"1" };
                     _xlsMin.Add(a);
                 }
             }

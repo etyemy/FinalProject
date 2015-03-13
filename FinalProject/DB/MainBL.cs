@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace FinalProject
 {
-    public class UcscBL
+    public class MainBL
     {
         UcscDAL _ucscDAL;
         LocalDbDAL _localDbDAL;
-        public UcscBL()
+        public MainBL()
         {
             _ucscDAL = new UcscDAL();
             _localDbDAL = new LocalDbDAL();
@@ -19,11 +19,11 @@ namespace FinalProject
         public Mutation getMutation(string chrom, int position, char varNuc, char refNuc)
         {
             Mutation toReturn = null;
-            List<String> mutationDetails = _localDbDAL.getMutation(chrom, position, varNuc, refNuc);
+            List<String> mutationDetails = _localDbDAL.getMutation(chrom, position, refNuc, varNuc);
             if(mutationDetails!=null)
             {
                 string tempChrom = mutationDetails.ElementAt(0);
-                int tempPosition = Convert.ToInt16(mutationDetails.ElementAt(1));
+                int tempPosition = Convert.ToInt32(mutationDetails.ElementAt(1));
                 string tempGeneName = mutationDetails.ElementAt(2);
                 char tempRefNuc = Convert.ToChar( mutationDetails.ElementAt(3));
                 char tempVarNuc = Convert.ToChar(mutationDetails.ElementAt(4));
@@ -111,6 +111,11 @@ namespace FinalProject
                 Console.WriteLine("Error: {0}", e.ToString());
                 throw e;
             }
+        }
+
+        internal bool mutationExist(Mutation mutation)
+        {
+            return _localDbDAL.mutationExist(mutation.Chrom,mutation.Position,mutation.Ref,mutation.Var);
         }
     }
 }
