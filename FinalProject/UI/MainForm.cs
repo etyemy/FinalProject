@@ -23,6 +23,7 @@ namespace FinalProject
         private string _xls2Path = null;
         private List<Mutation> _mutatioList = null;
         private MainBL _mainBL;
+        private int _progressBarCounter=0;
         List<string[]> _mutationsDetailsList = null;
         public MainForm()
         {
@@ -107,7 +108,6 @@ namespace FinalProject
             if (startAnalyze)
             {
                 _mutationsDetailsList = intersectionLists(_xls1Handler, _xls2Handler);
-                Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXxx     " + _mutationsDetailsList.Count);
                 analyzeButton.Enabled = false;
                 _analyzeBackgroundWorker.RunWorkerAsync();
             }
@@ -127,12 +127,10 @@ namespace FinalProject
                     string geneName = s[(int)XlsMinPlace.GeneName];
                     char refNuc =  s[(int)XlsMinPlace.Ref][0];
                     char varNuc =  s[(int)XlsMinPlace.Var][0];
-                    Console.WriteLine(chrom + " " + position + " " + geneName + " " + refNuc + " " + varNuc);
                     Mutation tempMutation = _mainBL.getMutation(chrom, position, refNuc, varNuc);
 
                     if (tempMutation == null)
                     {
-                        Console.WriteLine("NOT FOUND" );
                         tempMutation = new Mutation(_mainBL, chrom, position,geneName, refNuc, varNuc);
                         
                     }
@@ -145,7 +143,8 @@ namespace FinalProject
                 }
                 finally
                 {
-                    _analyzeBackgroundWorker.ReportProgress(((100 / (_mutationsDetailsList.Count)) * i));
+                    _analyzeBackgroundWorker.ReportProgress(((100 / (_mutationsDetailsList.Count)) * (i+1)));
+                   
                     i++;
                 }
             }
@@ -154,11 +153,15 @@ namespace FinalProject
         }
         private void analyzeBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            this.progressBarLabel.Text = "Status: Analyzing Mutation: " + (_progressBarCounter) + " of: " + _mutationsDetailsList.Count;
+            if(e.ProgressPercentage!=100)
+            _progressBarCounter++;
             progressBar1.Value = e.ProgressPercentage;
         }
 
         private void analyzeBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            progressBarLabel.Text +=", Complete!";
             analyzeButton.Enabled = true;
             getArticlesButton.Enabled = true;
             saveButton.Enabled = true;
@@ -212,7 +215,7 @@ namespace FinalProject
                         string tabName = m.CosmicName + " x" + m.NumOfShows;
                         ArticleTabPage p = new ArticleTabPage(tabName, tsvHandler.AllArticles);
 
-                        tabControl.TabPages.Add(p);
+                        _articleTabControl.TabPages.Add(p);
                     }
                 }
             }
@@ -220,6 +223,15 @@ namespace FinalProject
             {
                 toolStripStatusLabel2.Text = "Failed to log in. Check cosmic email and password in settings and/or check internet connection";
             }
+        }
+        private void _articlesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+        }
+
+        private void _articlesBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
         }
         private string getFilePath()
         {
@@ -265,6 +277,8 @@ namespace FinalProject
         {
 
         }
+
+        
 
         
 

@@ -46,9 +46,11 @@
             this.saveButton = new System.Windows.Forms.Button();
             this._analyzeBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this._saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.tabControl = new System.Windows.Forms.TabControl();
+            this._articleTabControl = new System.Windows.Forms.TabControl();
             this.filterButton = new System.Windows.Forms.Button();
             this._openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this._articlesBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.progressBarLabel = new System.Windows.Forms.Label();
             this._menuStrip.SuspendLayout();
             this._statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -126,9 +128,9 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 82);
+            this.progressBar1.Location = new System.Drawing.Point(281, 53);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(154, 23);
+            this.progressBar1.Size = new System.Drawing.Size(268, 23);
             this.progressBar1.TabIndex = 30;
             // 
             // xls2TextBox
@@ -169,7 +171,7 @@
             // 
             // analyzeButton
             // 
-            this.analyzeButton.Location = new System.Drawing.Point(172, 30);
+            this.analyzeButton.Location = new System.Drawing.Point(172, 27);
             this.analyzeButton.Name = "analyzeButton";
             this.analyzeButton.Size = new System.Drawing.Size(61, 23);
             this.analyzeButton.TabIndex = 36;
@@ -180,7 +182,7 @@
             // saveButton
             // 
             this.saveButton.Enabled = false;
-            this.saveButton.Location = new System.Drawing.Point(172, 82);
+            this.saveButton.Location = new System.Drawing.Point(172, 56);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(61, 23);
             this.saveButton.TabIndex = 37;
@@ -200,13 +202,13 @@
             this._saveFileDialog.Filter = "Output (*.xls)|*.xls";
             this._saveFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog_FileOk);
             // 
-            // tabControl
+            // _articleTabControl
             // 
-            this.tabControl.Location = new System.Drawing.Point(12, 140);
-            this.tabControl.Name = "tabControl";
-            this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(1172, 166);
-            this.tabControl.TabIndex = 39;
+            this._articleTabControl.Location = new System.Drawing.Point(12, 140);
+            this._articleTabControl.Name = "_articleTabControl";
+            this._articleTabControl.SelectedIndex = 0;
+            this._articleTabControl.Size = new System.Drawing.Size(1172, 166);
+            this._articleTabControl.TabIndex = 39;
             // 
             // filterButton
             // 
@@ -227,13 +229,28 @@
             this._openFileDialog.RestoreDirectory = true;
             this._openFileDialog.Title = "Open XLS";
             // 
+            // _articlesBackgroundWorker
+            // 
+            this._articlesBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this._articlesBackgroundWorker_DoWork);
+            this._articlesBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._articlesBackgroundWorker_RunWorkerCompleted);
+            // 
+            // progressBarLabel
+            // 
+            this.progressBarLabel.AutoSize = true;
+            this.progressBarLabel.Location = new System.Drawing.Point(278, 27);
+            this.progressBarLabel.Name = "progressBarLabel";
+            this.progressBarLabel.Size = new System.Drawing.Size(43, 13);
+            this.progressBarLabel.TabIndex = 41;
+            this.progressBarLabel.Text = "Status: ";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1196, 543);
+            this.Controls.Add(this.progressBarLabel);
             this.Controls.Add(this.filterButton);
-            this.Controls.Add(this.tabControl);
+            this.Controls.Add(this._articleTabControl);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.analyzeButton);
             this.Controls.Add(this.Xls2Button);
@@ -279,9 +296,11 @@
         private System.Windows.Forms.Button saveButton;
         private System.ComponentModel.BackgroundWorker _analyzeBackgroundWorker;
         private System.Windows.Forms.SaveFileDialog _saveFileDialog;
-        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabControl _articleTabControl;
         private System.Windows.Forms.Button filterButton;
         private System.Windows.Forms.OpenFileDialog _openFileDialog;
+        private System.ComponentModel.BackgroundWorker _articlesBackgroundWorker;
+        private System.Windows.Forms.Label progressBarLabel;
     }
 }
 
