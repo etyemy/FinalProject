@@ -97,6 +97,12 @@
     <Compile Include="UI\ArticleTabPage.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UI\FilterArticlesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FilterArticlesForm.Designer.cs">
+      <DependentUpon>FilterArticlesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="WebServices\CosmicWebService.cs" />
     <Compile Include="Gene.cs" />
     <Compile Include="DB\LocalDbDAL.cs" />
@@ -120,6 +126,12 @@
     <Compile Include="DB\UcscDAL.cs" />
     <Compile Include="WebServices\UcscWebServices.cs" />
     <Compile Include="XLSHandler.cs" />
+    <EmbeddedResource Include="UI\ArticleTabPage.resx">
+      <DependentUpon>ArticleTabPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FilterArticlesForm.resx">
+      <DependentUpon>FilterArticlesForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

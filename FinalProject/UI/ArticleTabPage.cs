@@ -6,16 +6,22 @@ using System.Windows.Forms;
 
 namespace FinalProject
 {
-    class ArticleTabPage:TabPage
+   public class ArticleTabPage:TabPage
     {
-        private List<Article> articleList;
-
-
+        private List<Article> _articleList;
+        private Dictionary<string, bool> _journalToView;
+        private DataGridView dataGridView;
         public ArticleTabPage(string tabName, List<Article> list)
         {
             this.Text = tabName;
-            this.articleList = list;
-            DataGridView dataGridView = new DataGridView();
+            _articleList = list;
+            _journalToView = new Dictionary<string, bool>();
+            foreach (Article a in _articleList)
+            {
+                if (!_journalToView.ContainsKey(a.Journal))
+                    _journalToView.Add(a.Journal, true);
+            }
+            dataGridView = new DataGridView();
             dataGridView.RowHeadersVisible = false;
             dataGridView.ReadOnly = true;
             dataGridView.DefaultCellStyle.SelectionBackColor = dataGridView.DefaultCellStyle.BackColor;
@@ -41,17 +47,9 @@ namespace FinalProject
 
 
             dataGridView.CellContentClick += dataGridView1_CellClick;
-            foreach (Article a in list)
-            {
-                DataGridViewRow tempRow = (DataGridViewRow)dataGridView.Rows[0].Clone();
-                tempRow.Cells[0] = new DataGridViewLinkCell();
-                tempRow.Cells[0].Value = a.Title;
-                tempRow.Cells[1].Value = a.Journal;
-                tempRow.Cells[2].Value = a.Year;
-                tempRow.Cells[3].Value = a.Author;
-               
-                dataGridView.Rows.Add(tempRow);
-            }
+
+            fillTable();
+
             dataGridView.AllowUserToAddRows = false;
 
             this.Controls.Add(dataGridView);
@@ -60,9 +58,45 @@ namespace FinalProject
         {
             if (e.ColumnIndex == 0)
             {
-                System.Diagnostics.Process.Start("http://www.ncbi.nlm.nih.gov/pubmed/" + articleList.ElementAt(e.RowIndex).PubMedID);
+                System.Diagnostics.Process.Start("http://www.ncbi.nlm.nih.gov/pubmed/" + _articleList.ElementAt(e.RowIndex).PubMedID);
             }
                 
+        }
+        public Dictionary<string ,bool> getJournalToView()
+        {
+            return _journalToView;
+        }
+        public void fillTable()
+        {
+            dataGridView.Rows.Clear();
+            
+            foreach(Article a in _articleList)
+            {
+                if(_journalToView[a.Journal])
+                {
+                    DataGridViewRow tempRow = new DataGridViewRow();
+                    tempRow.CreateCells(dataGridView);
+                    tempRow.Cells[0] = new DataGridViewLinkCell();
+                    tempRow.Cells[0].Value = a.Title;
+                    tempRow.Cells[1].Value = a.Journal;
+                    tempRow.Cells[2].Value = a.Year;
+                    tempRow.Cells[3].Value = a.Author;
+
+                    dataGridView.Rows.Add(tempRow);
+                }
+            }
+            dataGridView.Refresh();
+        }
+
+        internal void filterTable()
+        {
+            foreach(DataGridViewRow row in dataGridView.Rows)
+            {
+                if((_journalToView[row.Cells[1].Value.ToString()]))
+                    row.Visible=true;
+                else
+                    row.Visible=false;
+            }
         }
     }
 }

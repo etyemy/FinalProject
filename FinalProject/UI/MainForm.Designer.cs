@@ -51,6 +51,7 @@
             this._openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this._articlesBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.progressBarLabel = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this._menuStrip.SuspendLayout();
             this._statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -207,7 +208,7 @@
             this._articleTabControl.Location = new System.Drawing.Point(12, 140);
             this._articleTabControl.Name = "_articleTabControl";
             this._articleTabControl.SelectedIndex = 0;
-            this._articleTabControl.Size = new System.Drawing.Size(1172, 166);
+            this._articleTabControl.Size = new System.Drawing.Size(1172, 164);
             this._articleTabControl.TabIndex = 39;
             // 
             // filterButton
@@ -301,6 +302,7 @@
         private System.Windows.Forms.OpenFileDialog _openFileDialog;
         private System.ComponentModel.BackgroundWorker _articlesBackgroundWorker;
         private System.Windows.Forms.Label progressBarLabel;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 

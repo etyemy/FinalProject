@@ -8,10 +8,8 @@ namespace FinalProject
 {
     class LocalDbDAL
     {
-
         string connString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Dev\Visual_Projects\FinalProject\FinalProject\DB\Database.mdf;Integrated Security=True";
         private SqlConnection conn = null;
-
 
         public LocalDbDAL()
         {

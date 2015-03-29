@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinalProject.UI;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,7 +16,7 @@ namespace FinalProject
 
     public partial class MainForm : Form
     {
-        enum XlsMinPlace { Chrom = 0, Position, GeneName, Ref, Var ,NumOfShows};
+        enum XlsMinPlace { Chrom = 0, Position, GeneName, Ref, Var, NumOfShows };
         private XLSHandler _xls1Handler = null;
         private XLSHandler _xls2Handler = null;
         private CosmicWebService _cosmicWebService;
@@ -23,7 +24,7 @@ namespace FinalProject
         private string _xls2Path = null;
         private List<Mutation> _mutatioList = null;
         private MainBL _mainBL;
-        private int _progressBarCounter=0;
+        private int _progressBarCounter = 1;
         List<string[]> _mutationsDetailsList = null;
         public MainForm()
         {
@@ -45,26 +46,26 @@ namespace FinalProject
 
         private void Xls2Button_Click(object sender, EventArgs e)
         {
-            xlsButtonPressed(2);               
+            xlsButtonPressed(2);
         }
 
         private void xlsButtonPressed(int buttonId)
         {
-            string tempPath=null,fileName;;
-            TextBox tempTextBox=null;
+            string tempPath = null, fileName; ;
+            TextBox tempTextBox = null;
             string[] tempStringArray;
-            if(buttonId==1)
+            if (buttonId == 1)
             {
                 _xls1Path = getFilePath();
                 tempPath = _xls1Path;
-                tempTextBox=xls1TextBox;
-                
+                tempTextBox = xls1TextBox;
+
             }
-            else if(buttonId==2)
+            else if (buttonId == 2)
             {
                 _xls2Path = getFilePath();
                 tempPath = _xls2Path;
-                tempTextBox=xls2TextBox;
+                tempTextBox = xls2TextBox;
             }
 
             if (tempPath != null)
@@ -72,16 +73,16 @@ namespace FinalProject
                 tempStringArray = tempPath.Split('\\');
                 fileName = tempStringArray[tempStringArray.Length - 1];
 
-                if (_xls2Path==_xls1Path)
+                if (_xls2Path == _xls1Path)
                 {
                     MessageBox.Show("Same File Selected", "Error");
                 }
                 else
                 {
                     tempTextBox.Text = fileName;
-                    if(buttonId==1)
-                        _xls1Handler= new XLSHandler(tempPath);
-                    else if(buttonId==2)
+                    if (buttonId == 1)
+                        _xls1Handler = new XLSHandler(tempPath);
+                    else if (buttonId == 2)
                         _xls2Handler = new XLSHandler(tempPath);
                 }
             }
@@ -111,40 +112,40 @@ namespace FinalProject
                 analyzeButton.Enabled = false;
                 _analyzeBackgroundWorker.RunWorkerAsync();
             }
-           
-                
+
+
         }
         private void analyzeBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             _mutatioList = new List<Mutation>();
             int i = 1;
-            foreach (string [] s in _mutationsDetailsList)
+            foreach (string[] s in _mutationsDetailsList)
             {
                 try
                 {
                     string chrom = s[(int)XlsMinPlace.Chrom];
                     int position = Convert.ToInt32(s[(int)XlsMinPlace.Position]);
                     string geneName = s[(int)XlsMinPlace.GeneName];
-                    char refNuc =  s[(int)XlsMinPlace.Ref][0];
-                    char varNuc =  s[(int)XlsMinPlace.Var][0];
+                    char refNuc = s[(int)XlsMinPlace.Ref][0];
+                    char varNuc = s[(int)XlsMinPlace.Var][0];
                     Mutation tempMutation = _mainBL.getMutation(chrom, position, refNuc, varNuc);
 
                     if (tempMutation == null)
                     {
-                        tempMutation = new Mutation(_mainBL, chrom, position,geneName, refNuc, varNuc);
-                        
+                        tempMutation = new Mutation(_mainBL, chrom, position, geneName, refNuc, varNuc);
+
                     }
                     tempMutation.NumOfShows = Convert.ToInt16(s[(int)XlsMinPlace.NumOfShows]);
                     _mutatioList.Add(tempMutation);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine("Error: {0}", ex.ToString());
                 }
                 finally
                 {
-                    _analyzeBackgroundWorker.ReportProgress(((100 / (_mutationsDetailsList.Count)) * (i+1)));
-                   
+                    _analyzeBackgroundWorker.ReportProgress(((100 / (_mutationsDetailsList.Count)) * i));
+
                     i++;
                 }
             }
@@ -153,24 +154,24 @@ namespace FinalProject
         }
         private void analyzeBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            this.progressBarLabel.Text = "Status: Analyzing Mutation: " + (_progressBarCounter) + " of: " + _mutationsDetailsList.Count;
-            if(e.ProgressPercentage!=100)
-            _progressBarCounter++;
+            this.progressBarLabel.Text = "Status: Analyzing Mutation: " + (_progressBarCounter) + " of " + _mutationsDetailsList.Count;
+            if (e.ProgressPercentage != 100)
+                _progressBarCounter++;
             progressBar1.Value = e.ProgressPercentage;
         }
 
         private void analyzeBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            progressBarLabel.Text +=", Complete!";
+            progressBarLabel.Text += ", Complete!";
             analyzeButton.Enabled = true;
             getArticlesButton.Enabled = true;
             saveButton.Enabled = true;
         }
 
-        private List<string[]> intersectionLists(XLSHandler l1,XLSHandler l2)
+        private List<string[]> intersectionLists(XLSHandler l1, XLSHandler l2)
         {
-            List<string[]> toReturn=new List<string[]>(l1.XlsMin);
-            if(l1==null^l2==null)
+            List<string[]> toReturn = new List<string[]>(l1.XlsMin);
+            if (l1 == null ^ l2 == null)
             {
                 if (_xls2Path == null)
                     toReturn = new List<string[]>(l1.XlsMin);
@@ -207,7 +208,7 @@ namespace FinalProject
 
                 foreach (Mutation m in _mutatioList)
                 {
-                    if (m.CosmicName != null )
+                    if (m.CosmicName != null)
                     {
 
                         string tsvStringFromCosmic = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
@@ -218,6 +219,8 @@ namespace FinalProject
                         _articleTabControl.TabPages.Add(p);
                     }
                 }
+                if (_articleTabControl.TabCount != 0)
+                    filterButton.Enabled = true;
             }
             else
             {
@@ -235,7 +238,7 @@ namespace FinalProject
         }
         private string getFilePath()
         {
-            
+
             if (_openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 return _openFileDialog.FileName;
@@ -253,7 +256,7 @@ namespace FinalProject
         }
 
         private void saveButton_Click(object sender, EventArgs e)
-        {            
+        {
             _saveFileDialog.ShowDialog();
         }
 
@@ -265,22 +268,24 @@ namespace FinalProject
 
             StreamWriter writer = new StreamWriter(name);
             writer.WriteLine("Chrom\tPosition\tGene Name\tRef\tVar\tStrand\tRef Codon\tVar Codon\tRef AA\tVar AA\tCDS Mutation\tAA Mutation\tCosmic Name\tShows");
-            foreach(Mutation m in _mutatioList)
+            foreach (Mutation m in _mutatioList)
             {
                 writer.WriteLine(m.PrintXLSLine());
             }
-            
+
             writer.Close();
         }
 
         private void filterButton_Click(object sender, EventArgs e)
         {
-
+            this.Enabled = false;
+            FilterArticlesForm filterArticleForm = new FilterArticlesForm(this,((ArticleTabPage)_articleTabControl.SelectedTab));
+            filterArticleForm.Show();
         }
 
-        
 
-        
+
+
 
     }
 }
