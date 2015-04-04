@@ -27,6 +27,7 @@ namespace FinalProject
         private string _pMutationName;
         private string _cMutationName;
         private string _cosmicName;
+        private string _tumourSite;
 
         private int _numOfShows = 1;
 
@@ -42,7 +43,7 @@ namespace FinalProject
             if(!ucscBL.mutationExist(this))
                 ucscBL.addMutation(this);
         }
-        public Mutation(string chrom,int position,string geneName,char refNuc,char varNuc,char strand,string chromNum,string refCodon,string varCodon,string refAA,string varAA,string pMutationName,string cMutationName,string cosmicName)
+        public Mutation(string chrom,int position,string geneName,char refNuc,char varNuc,char strand,string chromNum,string refCodon,string varCodon,string refAA,string varAA,string pMutationName,string cMutationName,string cosmicName,string tumourSite)
         {
             _chrom = chrom;
             _position = position;
@@ -58,6 +59,7 @@ namespace FinalProject
             _pMutationName = pMutationName;
             _cMutationName = cMutationName;
             _cosmicName = cosmicName;
+            _tumourSite = tumourSite;
         }
         //Extract extra data that not supply in xls file.
         public void extractExtraData(MainBL ucscBL)
@@ -88,6 +90,7 @@ namespace FinalProject
             {
                 _cosmicName = _cosmicDetails.ElementAt(0);
                 _pMutationName = _cosmicDetails.ElementAt(1);
+                _tumourSite = _cosmicDetails.ElementAt(2);
             }
         }
         
@@ -273,6 +276,13 @@ namespace FinalProject
             set
             {
                 _numOfShows = value;
+            }
+        }
+        public string TumourSite
+        {
+            get
+            {
+                return _tumourSite;
             }
         }
 

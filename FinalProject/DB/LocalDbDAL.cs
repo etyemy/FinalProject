@@ -94,12 +94,12 @@ namespace FinalProject
 
             return toReturn;
         }
-        public void addMutation(string chrom, int position, string geneName, char refNuc, char varNuc, char strand, string chromNum, string refCodon, string varCodon, string refAA, string varAA, string pMutationName, string cMutationName, string cosmicName)
+        public void addMutation(string chrom, int position, string geneName, char refNuc, char varNuc, char strand, string chromNum, string refCodon, string varCodon, string refAA, string varAA, string pMutationName, string cMutationName, string cosmicName, string tumourSite)
         {
             conn.Open();
             string query =
                 "INSERT INTO Mutation " +
-                "VALUES ('" + chrom + "','" + position + "','" + geneName + "','" + refNuc + "','" + varNuc + "','" + strand + "','" + chromNum + "','" + refCodon + "','" + varCodon + "','" + refAA + "','" + varAA + "','" + pMutationName + "','" + cMutationName + "','" + cosmicName + "')";
+                "VALUES ('" + chrom + "','" + position + "','" + geneName + "','" + refNuc + "','" + varNuc + "','" + strand + "','" + chromNum + "','" + refCodon + "','" + varCodon + "','" + refAA + "','" + varAA + "','" + pMutationName + "','" + cMutationName + "','" + cosmicName + "','"+tumourSite+"')";
             SqlCommand comm = new SqlCommand(query, conn);
             comm.ExecuteNonQuery();
             conn.Close();

@@ -56,7 +56,7 @@ namespace FinalProject
         {
             List<String> toReturn = null;
             string query =
-                "SELECT cosmic_mutation_id, mut_syntax_aa " +
+                "SELECT cosmic_mutation_id, mut_syntax_aa, tumour_site " +
                 "FROM cosmicRaw " +
                 "WHERE chromosome = '" + chromNum + "' " +
                 "AND grch37_start ='" + position + "'" +
@@ -68,6 +68,8 @@ namespace FinalProject
                 toReturn = new List<string>();
                 toReturn.Add(rdr.GetString(0));
                 toReturn.Add(rdr.GetString(1));
+                toReturn.Add(rdr.GetString(2));
+                Console.WriteLine(rdr.GetString(2));
             }
             rdr.Close();
             return toReturn;

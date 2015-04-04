@@ -36,14 +36,15 @@ namespace FinalProject
                 string tempPMutationName = mutationDetails.ElementAt(11);
                 string tempCMutationName = mutationDetails.ElementAt(12);
                 string tempCosmicName = mutationDetails.ElementAt(13);
-                toReturn = new Mutation(tempChrom, tempPosition, tempGeneName, tempRefNuc, tempVarNuc,tempStrand,tempChromNum, tempRefCodon, tempVarCodon, tempRefAA, tempVarAA, tempPMutationName, tempCMutationName, tempCosmicName);
+                string tempTumourSite = mutationDetails.ElementAt(14);
+                toReturn = new Mutation(tempChrom, tempPosition, tempGeneName, tempRefNuc, tempVarNuc,tempStrand,tempChromNum, tempRefCodon, tempVarCodon, tempRefAA, tempVarAA, tempPMutationName, tempCMutationName, tempCosmicName, tempTumourSite);
             }
             
             return toReturn;
         }
         public void addMutation(Mutation m)
         {
-            _localDbDAL.addMutation(m.Chrom,m.Position,m.GeneName,m.Ref,m.Var,m.Strand,m.ChromNum,m.RefCodon,m.VarCodon,m.RefAA,m.VarAA,m.PMutationName,m.CMutationName,m.CosmicName);
+            _localDbDAL.addMutation(m.Chrom,m.Position,m.GeneName,m.Ref,m.Var,m.Strand,m.ChromNum,m.RefCodon,m.VarCodon,m.RefAA,m.VarAA,m.PMutationName,m.CMutationName,m.CosmicName,m.TumourSite);
         }
 
         public Gene getGene(string geneName, string chrom)
