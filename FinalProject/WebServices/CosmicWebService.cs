@@ -23,7 +23,7 @@ namespace FinalProject
 
         public bool loginToCosmic(string email,string password,int times)
         {
-            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create("https://cancer.sanger.ac.uk/cosmic/User?email=" + email + "&password=" + password);
+            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create("https://cancer.sanger.ac.uk/cosmic/User?email=" + email + "&pass=" + password);
             req.CookieContainer = _cookieContainer; 
             req.Method = "POST";
             req.KeepAlive = false;
