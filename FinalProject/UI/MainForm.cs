@@ -213,7 +213,7 @@ namespace FinalProject
 
                         string tsvStringFromCosmic = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
                         TSVHandler tsvHandler = new TSVHandler(tsvStringFromCosmic);
-                        string tabName = m.CosmicName + " x" + m.NumOfShows;
+                        string tabName = m.TumourSite + " x" + m.NumOfShows;
                         ArticleTabPage p = new ArticleTabPage(tabName, tsvHandler.AllArticles);
 
                         _articleTabControl.TabPages.Add(p);
