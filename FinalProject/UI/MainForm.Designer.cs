@@ -232,7 +232,9 @@
             // 
             // _articlesBackgroundWorker
             // 
+            this._articlesBackgroundWorker.WorkerReportsProgress = true;
             this._articlesBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this._articlesBackgroundWorker_DoWork);
+            this._articlesBackgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this._articlesBackgroundWorker_ProgressChanged);
             this._articlesBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._articlesBackgroundWorker_RunWorkerCompleted);
             // 
             // progressBarLabel

@@ -24,7 +24,7 @@ namespace FinalProject
         private string _xls2Path = null;
         private List<Mutation> _mutatioList = null;
         private MainBL _mainBL;
-        private int _progressBarCounter = 1;
+        private int _progressBarCounter = 0;
         List<string[]> _mutationsDetailsList = null;
         public MainForm()
         {
@@ -149,12 +149,12 @@ namespace FinalProject
                     i++;
                 }
             }
-            _analyzeBackgroundWorker.ReportProgress(100);
+            
 
         }
         private void analyzeBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            this.progressBarLabel.Text = "Status: Analyzing Mutation: " + (_progressBarCounter) + " of " + _mutationsDetailsList.Count;
+            this.progressBarLabel.Text = "Status: Analyzing Line: " + (_progressBarCounter) + " of " + _mutationsDetailsList.Count;
             if (e.ProgressPercentage != 100)
                 _progressBarCounter++;
             progressBar1.Value = e.ProgressPercentage;
@@ -162,10 +162,12 @@ namespace FinalProject
 
         private void analyzeBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            progressBar1.Value =100;
             progressBarLabel.Text += ", Complete!";
             analyzeButton.Enabled = true;
             getArticlesButton.Enabled = true;
             saveButton.Enabled = true;
+
         }
 
         private List<string[]> intersectionLists(XLSHandler l1, XLSHandler l2)
@@ -199,42 +201,66 @@ namespace FinalProject
         }
         private void getArticlesButton_Click(object sender, EventArgs e)
         {
+            _articlesBackgroundWorker.RunWorkerAsync();
+        }
+        private void _articlesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            _articlesBackgroundWorker.ReportProgress(0);
             bool logedIn = _cosmicWebService.loginToCosmic(Properties.Settings.Default.CosmicEmail, Properties.Settings.Default.CosmicPassword, 5);
 
             if (_cosmicWebService.isLogedIn())
             {
-                toolStripStatusLabel2.Text = "Successful";
-                toolStripStatusLabel2.ForeColor = Color.Green;
-
+                _articlesBackgroundWorker.ReportProgress(1);
                 foreach (Mutation m in _mutatioList)
                 {
                     if (m.CosmicName != null)
                     {
-
                         string tsvStringFromCosmic = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
                         TSVHandler tsvHandler = new TSVHandler(tsvStringFromCosmic);
                         string tabName = m.TumourSite + " x" + m.NumOfShows;
+                        
                         ArticleTabPage p = new ArticleTabPage(tabName, tsvHandler.AllArticles);
 
-                        _articleTabControl.TabPages.Add(p);
+                        
+                        BeginInvoke((MethodInvoker)delegate
+                        {
+                            _articleTabControl.TabPages.Add(p);
+
+                        });
                     }
                 }
-                if (_articleTabControl.TabCount != 0)
-                    filterButton.Enabled = true;
             }
             else
             {
-                toolStripStatusLabel2.Text = "Failed to log in. Check cosmic email and password in settings and/or check internet connection";
+                _articlesBackgroundWorker.ReportProgress(2);
             }
         }
-        private void _articlesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void _articlesBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            switch (e.ProgressPercentage)
+            {
+                case 0:
+                    toolStripStatusLabel2.Text = "Trying To Log In.....";
+                    toolStripStatusLabel2.ForeColor = Color.Blue;
+                    break;
+                case 1:
+                    toolStripStatusLabel2.Text = "Successful";
+                    toolStripStatusLabel2.ForeColor = Color.Green;
+                    break;
+                case 2:
+                    toolStripStatusLabel2.Text = "Failed to log in. Check cosmic email and password in settings and/or check internet connection";
+                    toolStripStatusLabel2.ForeColor = Color.Red;
+                    break;
+                default:
+                    break;
 
+
+            }
         }
-
         private void _articlesBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
+            if (_articleTabControl.TabCount != 0)
+                filterButton.Enabled = true;
         }
         private string getFilePath()
         {
@@ -279,9 +305,11 @@ namespace FinalProject
         private void filterButton_Click(object sender, EventArgs e)
         {
             this.Enabled = false;
-            FilterArticlesForm filterArticleForm = new FilterArticlesForm(this,((ArticleTabPage)_articleTabControl.SelectedTab));
+            FilterArticlesForm filterArticleForm = new FilterArticlesForm(this, ((ArticleTabPage)_articleTabControl.SelectedTab));
             filterArticleForm.Show();
         }
+
+
 
 
 
