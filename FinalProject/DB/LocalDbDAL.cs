@@ -78,7 +78,7 @@ namespace FinalProject
             if (rdr.Read())
             {
                 toReturn = new List<string>();
-                for (int i = 0; i < rdr.FieldCount; i++)
+                for (int i = 1; i < rdr.FieldCount; i++)
                 {
                     string toAdd = rdr.GetString(i).Trim();
                     if (toAdd.Equals(""))

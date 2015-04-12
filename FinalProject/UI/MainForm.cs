@@ -22,7 +22,7 @@ namespace FinalProject
         private CosmicWebService _cosmicWebService;
         private string _xls1Path = null;
         private string _xls2Path = null;
-        private List<Mutation> _mutatioList = null;
+        private List<Mutation> _mutationList = null;
         private MainBL _mainBL;
         private int _progressBarCounter = 0;
         List<string[]> _mutationsDetailsList = null;
@@ -39,14 +39,21 @@ namespace FinalProject
             SettingForm settingForm = new SettingForm(this);
             settingForm.Show();
         }
-        private void Xls1Button_Click(object sender, EventArgs e)
+        private void XlsButton_Click(object sender, EventArgs e)
         {
-            xlsButtonPressed(1);
-        }
+            Button clickedButton = sender as Button;
 
-        private void Xls2Button_Click(object sender, EventArgs e)
-        {
-            xlsButtonPressed(2);
+            if (clickedButton == null) // just to be on the safe side
+                return;
+
+            if (clickedButton == Xls1Button)
+            {
+                xlsButtonPressed(1);
+            }
+            else if (clickedButton == Xls2Button)
+            {
+                xlsButtonPressed(2);
+            }
         }
 
         private void xlsButtonPressed(int buttonId)
@@ -112,12 +119,17 @@ namespace FinalProject
                 analyzeButton.Enabled = false;
                 _analyzeBackgroundWorker.RunWorkerAsync();
             }
-
-
         }
         private void analyzeBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            _mutatioList = new List<Mutation>();
+            _progressBarCounter = 0;
+            BeginInvoke((MethodInvoker)delegate
+            {
+                _patientMutationListBox.Items.Clear();
+                _articleTabControl.TabPages.Clear();
+            });
+           
+            _mutationList = new List<Mutation>();
             int i = 1;
             foreach (string[] s in _mutationsDetailsList)
             {
@@ -129,14 +141,16 @@ namespace FinalProject
                     char refNuc = s[(int)XlsMinPlace.Ref][0];
                     char varNuc = s[(int)XlsMinPlace.Var][0];
                     Mutation tempMutation = _mainBL.getMutation(chrom, position, refNuc, varNuc);
-
                     if (tempMutation == null)
                     {
                         tempMutation = new Mutation(_mainBL, chrom, position, geneName, refNuc, varNuc);
-
                     }
                     tempMutation.NumOfShows = Convert.ToInt16(s[(int)XlsMinPlace.NumOfShows]);
-                    _mutatioList.Add(tempMutation);
+                    _mutationList.Add(tempMutation);
+                    BeginInvoke((MethodInvoker)delegate
+                    {
+                        _patientMutationListBox.Items.Add(tempMutation.PrintToLog());
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -145,12 +159,9 @@ namespace FinalProject
                 finally
                 {
                     _analyzeBackgroundWorker.ReportProgress(((100 / (_mutationsDetailsList.Count)) * i));
-
                     i++;
                 }
             }
-            
-
         }
         private void analyzeBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -205,27 +216,27 @@ namespace FinalProject
         }
         private void _articlesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            BeginInvoke((MethodInvoker)delegate
+            {
+                _articleTabControl.TabPages.Clear();
+            });
             _articlesBackgroundWorker.ReportProgress(0);
             bool logedIn = _cosmicWebService.loginToCosmic(Properties.Settings.Default.CosmicEmail, Properties.Settings.Default.CosmicPassword, 5);
 
             if (_cosmicWebService.isLogedIn())
             {
                 _articlesBackgroundWorker.ReportProgress(1);
-                foreach (Mutation m in _mutatioList)
+                foreach (Mutation m in _mutationList)
                 {
                     if (m.CosmicName != null)
                     {
                         string tsvStringFromCosmic = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
                         TSVHandler tsvHandler = new TSVHandler(tsvStringFromCosmic);
                         string tabName = m.TumourSite + " x" + m.NumOfShows;
-                        
                         ArticleTabPage p = new ArticleTabPage(tabName, tsvHandler.AllArticles);
-
-                        
                         BeginInvoke((MethodInvoker)delegate
                         {
                             _articleTabControl.TabPages.Add(p);
-
                         });
                     }
                 }
@@ -253,8 +264,6 @@ namespace FinalProject
                     break;
                 default:
                     break;
-
-
             }
         }
         private void _articlesBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -294,11 +303,10 @@ namespace FinalProject
 
             StreamWriter writer = new StreamWriter(name);
             writer.WriteLine("Chrom\tPosition\tGene Name\tRef\tVar\tStrand\tRef Codon\tVar Codon\tRef AA\tVar AA\tCDS Mutation\tAA Mutation\tCosmic Name\tShows");
-            foreach (Mutation m in _mutatioList)
+            foreach (Mutation m in _mutationList)
             {
                 writer.WriteLine(m.PrintXLSLine());
             }
-
             writer.Close();
         }
 
@@ -308,12 +316,5 @@ namespace FinalProject
             FilterArticlesForm filterArticleForm = new FilterArticlesForm(this, ((ArticleTabPage)_articleTabControl.SelectedTab));
             filterArticleForm.Show();
         }
-
-
-
-
-
-
-
     }
 }
