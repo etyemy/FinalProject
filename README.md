@@ -15,6 +15,7 @@ My program auzomize this very long and complicate procedure, so that instead of 
 ###releases:
 
 * v0.1 - [Prototype](https://github.com/motimonso/FinalProject/releases/tag/v0.1) - for midterm exam, demonstrate the basic action of the project.
+* v0.2 - [Working Version](https://github.com/motimonso/FinalProject/releases/tag/v0.2) - First complete working version.
 
 Project Calendar and tasks managed in [Trello](https://trello.com/b/hqGIxK0G/final-project)
 
