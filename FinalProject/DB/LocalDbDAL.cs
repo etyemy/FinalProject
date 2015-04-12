@@ -96,13 +96,29 @@ namespace FinalProject
         }
         public void addMutation(string chrom, int position, string geneName, char refNuc, char varNuc, char strand, string chromNum, string refCodon, string varCodon, string refAA, string varAA, string pMutationName, string cMutationName, string cosmicName, string tumourSite)
         {
+            
             conn.Open();
             string query =
                 "INSERT INTO Mutation " +
-                "VALUES ('" + chrom + "','" + position + "','" + geneName + "','" + refNuc + "','" + varNuc + "','" + strand + "','" + chromNum + "','" + refCodon + "','" + varCodon + "','" + refAA + "','" + varAA + "','" + pMutationName + "','" + cMutationName + "','" + cosmicName + "','"+tumourSite+"')";
+                "VALUES ('" + generateMutId() + "','" + chrom + "','" + position + "','" + geneName + "','" + refNuc + "','" + varNuc + "','" + strand + "','" + chromNum + "','" + refCodon + "','" + varCodon + "','" + refAA + "','" + varAA + "','" + pMutationName + "','" + cMutationName + "','" + cosmicName + "','"+tumourSite+"')";
             SqlCommand comm = new SqlCommand(query, conn);
             comm.ExecuteNonQuery();
             conn.Close();
+        }
+
+        private string generateMutId()
+        {
+            DateTime t = DateTime.Now;
+            string temp = "";
+            temp += t.Year;
+            temp += t.Month;
+            temp += t.Day;
+            temp += t.Hour;
+            temp += t.Minute;
+            temp += t.Second;
+            temp += t.Millisecond;
+            Console.WriteLine(temp);
+            return temp;
         }
 
 
