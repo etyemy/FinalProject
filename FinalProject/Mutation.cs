@@ -72,12 +72,11 @@ namespace FinalProject
             {
                 _gene = MainBL.getGene(_geneName, _chrom);
                 _strand = _gene.Strand;
-                _nucPlace = _gene.getLengthToIndex(_position);
-                if(_nucPlace!=-1)
-                {
-                    _cMutationName = "c." + _nucPlace + _ref + ">" + _var;
-                    _cosmicDetails = MainBL.getCosmicDetails(_chromNum, _position, _cMutationName);
-                }
+                //_nucPlace = _gene.getLengthToIndex(_position);
+                //if(_nucPlace!=-1)
+                //{
+                    _cosmicDetails = MainBL.getCosmicDetails(_chromNum, _position, _ref,_var);
+                //}
                 setVarRefCodons(_gene.getOffsetInCodon(_position));
             }
             catch (MySql.Data.MySqlClient.MySqlException e)
@@ -94,7 +93,8 @@ namespace FinalProject
             {
                 _cosmicName = _cosmicDetails.ElementAt(0);
                 _pMutationName = _cosmicDetails.ElementAt(1);
-                _tumourSite = _cosmicDetails.ElementAt(2);
+                _cMutationName = _cosmicDetails.ElementAt(2);
+                _tumourSite = _cosmicDetails.ElementAt(3);
             }
         }
         

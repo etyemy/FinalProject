@@ -34,7 +34,7 @@ namespace FinalProject
             conn.Open();
             List<String> toReturn =null;
             string query =
-                "SELECT strand, MAX(cdsStart), MAX(cdsEnd), MAX(exonCount), exonStarts, exonEnds " +
+                "SELECT strand, MIN(cdsStart), MAX(cdsEnd), MAX(exonCount), exonStarts, exonEnds " +
                 "FROM refGene " +
                 "WHERE chrom='" + chrom + "' " +
                 "AND name2='" + geneName + "'";
@@ -52,16 +52,16 @@ namespace FinalProject
             return toReturn;
         }
         
-        public List<String> getCosmicDetails(string chromNum, int position,string cMutationName)
+        public List<String> getCosmicDetails(string chromNum, int position,char refNuc,char varNuc)
         {
             conn.Open();
             List<String> toReturn = null;
             string query =
-                "SELECT cosmic_mutation_id, mut_syntax_aa, tumour_site " +
+                "SELECT cosmic_mutation_id, mut_syntax_aa, mut_syntax_cds, tumour_site " +
                 "FROM cosmicRaw " +
                 "WHERE chromosome = '" + chromNum + "' " +
                 "AND grch37_start ='" + position + "' " +
-                "AND mut_syntax_cds ='" + cMutationName + "'";
+                "AND mut_syntax_cds REGEXP '" +refNuc+">"+varNuc + "$'";
             MySqlDataReader rdr = executeQuery(query);
             if (rdr.Read())
             {
@@ -69,6 +69,7 @@ namespace FinalProject
                 toReturn.Add(rdr.GetString(0));
                 toReturn.Add(rdr.GetString(1));
                 toReturn.Add(rdr.GetString(2));
+                toReturn.Add(rdr.GetString(3));
             }
             conn.Close();
             rdr.Close();

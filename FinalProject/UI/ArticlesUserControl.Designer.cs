@@ -40,7 +40,7 @@
             // 
             this._cosmicStatusText.AutoSize = true;
             this._cosmicStatusText.ForeColor = System.Drawing.Color.Red;
-            this._cosmicStatusText.Location = new System.Drawing.Point(260, 15);
+            this._cosmicStatusText.Location = new System.Drawing.Point(265, 11);
             this._cosmicStatusText.Name = "_cosmicStatusText";
             this._cosmicStatusText.Size = new System.Drawing.Size(73, 13);
             this._cosmicStatusText.TabIndex = 59;
@@ -49,7 +49,7 @@
             // CosmicStatusLabel
             // 
             this.CosmicStatusLabel.AutoSize = true;
-            this.CosmicStatusLabel.Location = new System.Drawing.Point(177, 15);
+            this.CosmicStatusLabel.Location = new System.Drawing.Point(182, 11);
             this.CosmicStatusLabel.Name = "CosmicStatusLabel";
             this.CosmicStatusLabel.Size = new System.Drawing.Size(87, 13);
             this.CosmicStatusLabel.TabIndex = 58;

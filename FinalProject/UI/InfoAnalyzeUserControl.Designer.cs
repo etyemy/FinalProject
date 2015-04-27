@@ -117,7 +117,7 @@
             // 
             // _openFileDialog
             // 
-            this._openFileDialog.FileName = "openFileDialog1";
+            this._openFileDialog.Filter = "ION PGM File|*.csv;*.xls";
             // 
             // _analyzeBackgroundWorker
             // 
@@ -125,6 +125,11 @@
             this._analyzeBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.analyzeBackgroundWorker_DoWork);
             this._analyzeBackgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.analyzeBackgroundWorker_ProgressChanged);
             this._analyzeBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.analyzeBackgroundWorker_RunWorkerCompleted);
+            // 
+            // _saveFileDialog
+            // 
+            this._saveFileDialog.Filter = "Output Info|*.xls";
+            this._saveFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog_FileOk);
             // 
             // InfoAnalyzeUserControl
             // 

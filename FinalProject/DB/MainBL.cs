@@ -138,11 +138,11 @@ namespace FinalProject
             return Regex.Split(exon, @"\D+").Except(new string[] { "" }).ToArray().Select(x => int.Parse(x)).ToArray();
         }
 
-        public List<String> getCosmicDetails(string chromNum, int position, string cMutationName)
+        public List<String> getCosmicDetails(string chromNum, int position, char refNuc, char varNuc)
         {
             try
             {
-                return _ucscDAL.getCosmicDetails(chromNum, position, cMutationName);
+                return _ucscDAL.getCosmicDetails(chromNum, position, refNuc,varNuc);
             }
             catch (MySql.Data.MySqlClient.MySqlException e)
             {

@@ -97,5 +97,11 @@ namespace FinalProject.UI
             _mutationList = mutationList;
             getArticlesButton.Enabled = true;
         }
+        public void clearAll()
+        {
+            _articleTabControl.TabPages.Clear();
+            filterButton.Enabled = false;
+            getArticlesButton.Enabled = false;
+        }
     }
 }
