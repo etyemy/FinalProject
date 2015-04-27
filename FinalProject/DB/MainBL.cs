@@ -16,35 +16,72 @@ namespace FinalProject
             _ucscDAL = new UcscDAL();
             _localDbDAL = new LocalDbDAL();
         }
-        public Mutation getMutation(string chrom, int position, char varNuc, char refNuc)
+        public Mutation getMutationByDetails(string chrom, int position, char varNuc, char refNuc)
         {
             Mutation toReturn = null;
-            List<String> mutationDetails = _localDbDAL.getMutation(chrom, position, refNuc, varNuc);
+            List<String> mutationDetails = _localDbDAL.getMutationByDetails(chrom, position, refNuc, varNuc);
             if(mutationDetails!=null)
             {
-                string tempChrom = mutationDetails.ElementAt(0);
-                int tempPosition = Convert.ToInt32(mutationDetails.ElementAt(1));
-                string tempGeneName = mutationDetails.ElementAt(2);
-                char tempRefNuc = Convert.ToChar( mutationDetails.ElementAt(3));
-                char tempVarNuc = Convert.ToChar(mutationDetails.ElementAt(4));
-                char tempStrand = Convert.ToChar(mutationDetails.ElementAt(5));
-                string tempChromNum = mutationDetails.ElementAt(6);
-                string tempRefCodon = mutationDetails.ElementAt(7);
-                string tempVarCodon = mutationDetails.ElementAt(8);
-                string tempRefAA = mutationDetails.ElementAt(9);
-                string tempVarAA = mutationDetails.ElementAt(10);
-                string tempPMutationName = mutationDetails.ElementAt(11);
-                string tempCMutationName = mutationDetails.ElementAt(12);
-                string tempCosmicName = mutationDetails.ElementAt(13);
-                string tempTumourSite = mutationDetails.ElementAt(14);
-                toReturn = new Mutation(tempChrom, tempPosition, tempGeneName, tempRefNuc, tempVarNuc,tempStrand,tempChromNum, tempRefCodon, tempVarCodon, tempRefAA, tempVarAA, tempPMutationName, tempCMutationName, tempCosmicName, tempTumourSite);
+                string mutId = mutationDetails.ElementAt(0);
+                string tempChrom = mutationDetails.ElementAt(1);
+                int tempPosition = Convert.ToInt32(mutationDetails.ElementAt(2));
+                string tempGeneName = mutationDetails.ElementAt(3);
+                char tempRefNuc = Convert.ToChar( mutationDetails.ElementAt(4));
+                char tempVarNuc = Convert.ToChar(mutationDetails.ElementAt(5));
+                char tempStrand = Convert.ToChar(mutationDetails.ElementAt(6));
+                string tempChromNum = mutationDetails.ElementAt(7);
+                string tempRefCodon = mutationDetails.ElementAt(8);
+                string tempVarCodon = mutationDetails.ElementAt(9);
+                string tempRefAA = mutationDetails.ElementAt(10);
+                string tempVarAA = mutationDetails.ElementAt(11);
+                string tempPMutationName = mutationDetails.ElementAt(12);
+                string tempCMutationName = mutationDetails.ElementAt(13);
+                string tempCosmicName = mutationDetails.ElementAt(14);
+                string tempTumourSite = mutationDetails.ElementAt(15);
+                toReturn = new Mutation(mutId,tempChrom, tempPosition, tempGeneName, tempRefNuc, tempVarNuc,tempStrand,tempChromNum, tempRefCodon, tempVarCodon, tempRefAA, tempVarAA, tempPMutationName, tempCMutationName, tempCosmicName, tempTumourSite);
             }
             
             return toReturn;
         }
+        public List<Mutation> getMutationListPerPatient(string patientId)
+        {
+            List<string> tempList = _localDbDAL.getMutationListPerPatient(patientId);
+            List<Mutation> toReturn =new List<Mutation>();
+            foreach (string s in tempList)
+                toReturn.Add(getMutationById(s));
+            return toReturn;
+
+        }
+        public Mutation getMutationById(string mutId)
+        {
+            Mutation toReturn = null;
+            List<String> mutationDetails = _localDbDAL.getMutationByID(mutId);
+            if (mutationDetails != null)
+            {
+                string tempMutId = mutationDetails.ElementAt(0);
+                string tempChrom = mutationDetails.ElementAt(1);
+                int tempPosition = Convert.ToInt32(mutationDetails.ElementAt(2));
+                string tempGeneName = mutationDetails.ElementAt(3);
+                char tempRefNuc = Convert.ToChar(mutationDetails.ElementAt(4));
+                char tempVarNuc = Convert.ToChar(mutationDetails.ElementAt(5));
+                char tempStrand = Convert.ToChar(mutationDetails.ElementAt(6));
+                string tempChromNum = mutationDetails.ElementAt(7);
+                string tempRefCodon = mutationDetails.ElementAt(8);
+                string tempVarCodon = mutationDetails.ElementAt(9);
+                string tempRefAA = mutationDetails.ElementAt(10);
+                string tempVarAA = mutationDetails.ElementAt(11);
+                string tempPMutationName = mutationDetails.ElementAt(12);
+                string tempCMutationName = mutationDetails.ElementAt(13);
+                string tempCosmicName = mutationDetails.ElementAt(14);
+                string tempTumourSite = mutationDetails.ElementAt(15);
+                toReturn = new Mutation(tempMutId, tempChrom, tempPosition, tempGeneName, tempRefNuc, tempVarNuc, tempStrand, tempChromNum, tempRefCodon, tempVarCodon, tempRefAA, tempVarAA, tempPMutationName, tempCMutationName, tempCosmicName, tempTumourSite);
+            }
+
+            return toReturn;
+        }
         public void addMutation(Mutation m)
         {
-            _localDbDAL.addMutation(m.Chrom,m.Position,m.GeneName,m.Ref,m.Var,m.Strand,m.ChromNum,m.RefCodon,m.VarCodon,m.RefAA,m.VarAA,m.PMutationName,m.CMutationName,m.CosmicName,m.TumourSite);
+            _localDbDAL.addMutation(m.MutId,m.Chrom,m.Position,m.GeneName,m.Ref,m.Var,m.Strand,m.ChromNum,m.RefCodon,m.VarCodon,m.RefAA,m.VarAA,m.PMutationName,m.CMutationName,m.CosmicName,m.TumourSite);
         }
 
         public Gene getGene(string geneName, string chrom)
@@ -117,6 +154,29 @@ namespace FinalProject
         internal bool mutationExist(Mutation mutation)
         {
             return _localDbDAL.mutationExist(mutation.Chrom,mutation.Position,mutation.Ref,mutation.Var);
+        }
+
+        public List<String> getPatientById(string id)
+        {
+            return _localDbDAL.getPatientById(id);
+        }
+
+        internal bool patientExist(string id)
+        {
+            return _localDbDAL.patientExist(id);
+        }
+
+        public void addPatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
+        {
+            _localDbDAL.addPatient(id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion);
+        }
+        public void updatePatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
+        {
+            _localDbDAL.updatePatient(id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion);
+        }
+        public void addMatch(string patientId, string mutId)
+        {
+            _localDbDAL.addMatch(patientId, mutId);
         }
     }
 }

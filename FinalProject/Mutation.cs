@@ -9,6 +9,8 @@ namespace FinalProject
 {
     public class Mutation
     {
+        private string _mutId;
+
         private string _chrom;
         private int _position;
         private string _geneName;
@@ -33,6 +35,7 @@ namespace FinalProject
 
         public Mutation(MainBL ucscBL, string chrom, int position, string geneSym, char refNuc, char varNuc)
         {
+            _mutId = generateMutId();
             _chrom = chrom;
             _chromNum = chrom.Replace("chr", "");
             _position = position;
@@ -43,8 +46,9 @@ namespace FinalProject
             if(!ucscBL.mutationExist(this))
                 ucscBL.addMutation(this);
         }
-        public Mutation(string chrom,int position,string geneName,char refNuc,char varNuc,char strand,string chromNum,string refCodon,string varCodon,string refAA,string varAA,string pMutationName,string cMutationName,string cosmicName,string tumourSite)
+        public Mutation(string mutId,string chrom,int position,string geneName,char refNuc,char varNuc,char strand,string chromNum,string refCodon,string varCodon,string refAA,string varAA,string pMutationName,string cMutationName,string cosmicName,string tumourSite)
         {
+            _mutId = mutId;
             _chrom = chrom;
             _position = position;
             _geneName = geneName;
@@ -62,17 +66,17 @@ namespace FinalProject
             _tumourSite = tumourSite;
         }
         //Extract extra data that not supply in xls file.
-        public void extractExtraData(MainBL ucscBL)
+        public void extractExtraData(MainBL MainBL)
         {
             try
             {
-                _gene = ucscBL.getGene(_geneName, _chrom);
+                _gene = MainBL.getGene(_geneName, _chrom);
                 _strand = _gene.Strand;
                 _nucPlace = _gene.getLengthToIndex(_position);
                 if(_nucPlace!=-1)
                 {
                     _cMutationName = "c." + _nucPlace + _ref + ">" + _var;
-                    _cosmicDetails = ucscBL.getCosmicDetails(_chromNum, _position, _cMutationName);
+                    _cosmicDetails = MainBL.getCosmicDetails(_chromNum, _position, _cMutationName);
                 }
                 setVarRefCodons(_gene.getOffsetInCodon(_position));
             }
@@ -285,6 +289,13 @@ namespace FinalProject
                 return _tumourSite;
             }
         }
+        public string MutId
+        {
+            get
+            {
+                return _mutId;
+            }
+        }
 
         public string PrintToLog()
         {
@@ -300,5 +311,18 @@ namespace FinalProject
             return (this.Chrom.Equals(that.Chrom) && this._position == that._position);
         }
 
+        private string generateMutId()
+        {
+            DateTime t = DateTime.Now;
+            string temp = "";
+            temp += t.Year;
+            temp += t.Month;
+            temp += t.Day;
+            temp += t.Hour;
+            temp += t.Minute;
+            temp += t.Second;
+            temp += t.Millisecond;
+            return temp;
+        }
     }
 }

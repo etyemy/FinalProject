@@ -20,18 +20,18 @@ namespace FinalProject
             try
             {
                 conn = new MySqlConnection(sb.ToString());
-                conn.Open();
-               
             }
             catch (MySqlException e)
             {
                 Console.WriteLine("Error on creation: {0}", e.ToString());
                 throw e;
             }
+            
         }
         
         public List<String> getGene(string geneName, string chrom)
         {
+            conn.Open();
             List<String> toReturn =null;
             string query =
                 "SELECT strand, MAX(cdsStart), MAX(cdsEnd), MAX(exonCount), exonStarts, exonEnds " +
@@ -47,21 +47,21 @@ namespace FinalProject
                     toReturn.Add(rdr.GetString(i));
                 }
             }
-                
+            conn.Close();    
             rdr.Close();
             return toReturn;
         }
         
         public List<String> getCosmicDetails(string chromNum, int position,string cMutationName)
         {
+            conn.Open();
             List<String> toReturn = null;
             string query =
                 "SELECT cosmic_mutation_id, mut_syntax_aa, tumour_site " +
                 "FROM cosmicRaw " +
                 "WHERE chromosome = '" + chromNum + "' " +
-                "AND grch37_start ='" + position + "'" +
+                "AND grch37_start ='" + position + "' " +
                 "AND mut_syntax_cds ='" + cMutationName + "'";
-
             MySqlDataReader rdr = executeQuery(query);
             if (rdr.Read())
             {
@@ -69,8 +69,8 @@ namespace FinalProject
                 toReturn.Add(rdr.GetString(0));
                 toReturn.Add(rdr.GetString(1));
                 toReturn.Add(rdr.GetString(2));
-                Console.WriteLine(rdr.GetString(2));
             }
+            conn.Close();
             rdr.Close();
             return toReturn;
         }
