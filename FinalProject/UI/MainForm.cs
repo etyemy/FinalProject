@@ -1,5 +1,4 @@
-﻿using FinalProject.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,314 +6,78 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FinalProject
+namespace FinalProject.UI
 {
-
     public partial class MainForm : Form
     {
-        enum XlsMinPlace { Chrom = 0, Position, GeneName, Ref, Var, NumOfShows };
-        private XLSHandler _xls1Handler = null;
-        private XLSHandler _xls2Handler = null;
-        private CosmicWebService _cosmicWebService;
-        private string _xls1Path = null;
-        private string _xls2Path = null;
-        private List<Mutation> _mutationList = null;
         private MainBL _mainBL;
-        private int _progressBarCounter = 0;
-        List<string[]> _mutationsDetailsList = null;
+        
+        private InfoAnalyzeUserControl infoAnalyzeUserControl;
+        private ArticlesUserControl articlesUserControl;
+        private PatientUserControl patientUserControl;
         public MainForm()
         {
-            _cosmicWebService = new CosmicWebService();
-            _mainBL = new MainBL();
             InitializeComponent();
-        }
+            _mainBL = new MainBL();
+            infoAnalyzeUserControl = new InfoAnalyzeUserControl(this);
+            articlesUserControl = new ArticlesUserControl(this);
+            patientUserControl = new PatientUserControl(this);
+            
+            this.Controls.Add(infoAnalyzeUserControl);
+            this.Controls.Add(articlesUserControl);
+            this.Controls.Add(patientUserControl);
 
+            infoAnalyzeUserControl.Left = 5;
+            articlesUserControl.Left = 5;
+            patientUserControl.Left = 5;
+
+            infoAnalyzeUserControl.Top = 20;
+            articlesUserControl.Top =90;
+            patientUserControl.Top = 300;
+
+        }
         private void settingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Enabled = false;
             SettingForm settingForm = new SettingForm(this);
             settingForm.Show();
         }
-        private void XlsButton_Click(object sender, EventArgs e)
-        {
-            Button clickedButton = sender as Button;
-
-            if (clickedButton == null) // just to be on the safe side
-                return;
-
-            if (clickedButton == Xls1Button)
-            {
-                xlsButtonPressed(1);
-            }
-            else if (clickedButton == Xls2Button)
-            {
-                xlsButtonPressed(2);
-            }
-        }
-
-        private void xlsButtonPressed(int buttonId)
-        {
-            string tempPath = null, fileName; ;
-            TextBox tempTextBox = null;
-            string[] tempStringArray;
-            if (buttonId == 1)
-            {
-                _xls1Path = getFilePath();
-                tempPath = _xls1Path;
-                tempTextBox = xls1TextBox;
-
-            }
-            else if (buttonId == 2)
-            {
-                _xls2Path = getFilePath();
-                tempPath = _xls2Path;
-                tempTextBox = xls2TextBox;
-            }
-
-            if (tempPath != null)
-            {
-                tempStringArray = tempPath.Split('\\');
-                fileName = tempStringArray[tempStringArray.Length - 1];
-
-                if (_xls2Path == _xls1Path)
-                {
-                    MessageBox.Show("Same File Selected", "Error");
-                }
-                else
-                {
-                    tempTextBox.Text = fileName;
-                    if (buttonId == 1)
-                        _xls1Handler = new XLSHandler(tempPath);
-                    else if (buttonId == 2)
-                        _xls2Handler = new XLSHandler(tempPath);
-                }
-            }
-        }
-
-        private void analyzeButton_Click(object sender, EventArgs e)
-        {
-            Boolean startAnalyze = false;
-            if (_xls1Path == null && _xls2Path == null)
-            {
-                MessageBox.Show("No files selected", "Error");
-            }
-            else if (_xls1Path == null ^ _xls2Path == null)
-            {
-                if (MessageBox.Show("Only one file selected, Continue?", "Notice", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    startAnalyze = true;
-                }
-            }
-            else
-            {
-                startAnalyze = true;
-            }
-            if (startAnalyze)
-            {
-                _mutationsDetailsList = intersectionLists(_xls1Handler, _xls2Handler);
-                analyzeButton.Enabled = false;
-                _analyzeBackgroundWorker.RunWorkerAsync();
-            }
-        }
-        private void analyzeBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            _progressBarCounter = 0;
-            BeginInvoke((MethodInvoker)delegate
-            {
-                _patientMutationListBox.Items.Clear();
-                _articleTabControl.TabPages.Clear();
-            });
-           
-            _mutationList = new List<Mutation>();
-            int i = 1;
-            foreach (string[] s in _mutationsDetailsList)
-            {
-                try
-                {
-                    string chrom = s[(int)XlsMinPlace.Chrom];
-                    int position = Convert.ToInt32(s[(int)XlsMinPlace.Position]);
-                    string geneName = s[(int)XlsMinPlace.GeneName];
-                    char refNuc = s[(int)XlsMinPlace.Ref][0];
-                    char varNuc = s[(int)XlsMinPlace.Var][0];
-                    Mutation tempMutation = _mainBL.getMutation(chrom, position, refNuc, varNuc);
-                    if (tempMutation == null)
-                    {
-                        tempMutation = new Mutation(_mainBL, chrom, position, geneName, refNuc, varNuc);
-                    }
-                    tempMutation.NumOfShows = Convert.ToInt16(s[(int)XlsMinPlace.NumOfShows]);
-                    _mutationList.Add(tempMutation);
-                    BeginInvoke((MethodInvoker)delegate
-                    {
-                        _patientMutationListBox.Items.Add(tempMutation.PrintToLog());
-                    });
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error: {0}", ex.ToString());
-                }
-                finally
-                {
-                    _analyzeBackgroundWorker.ReportProgress(((100 / (_mutationsDetailsList.Count)) * i));
-                    i++;
-                }
-            }
-        }
-        private void analyzeBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            this.progressBarLabel.Text = "Status: Analyzing Line: " + (_progressBarCounter) + " of " + _mutationsDetailsList.Count;
-            if (e.ProgressPercentage != 100)
-                _progressBarCounter++;
-            progressBar1.Value = e.ProgressPercentage;
-        }
-
-        private void analyzeBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            progressBar1.Value =100;
-            progressBarLabel.Text += ", Complete!";
-            analyzeButton.Enabled = true;
-            getArticlesButton.Enabled = true;
-            saveButton.Enabled = true;
-
-        }
-
-        private List<string[]> intersectionLists(XLSHandler l1, XLSHandler l2)
-        {
-            List<string[]> toReturn = new List<string[]>(l1.XlsMin);
-            if (l1 == null ^ l2 == null)
-            {
-                if (_xls2Path == null)
-                    toReturn = new List<string[]>(l1.XlsMin);
-                else
-                    toReturn = new List<string[]>(l2.XlsMin);
-            }
-            else
-            {
-                foreach (string[] s in l2.XlsMin)
-                {
-                    bool found = false;
-                    foreach (string[] d in toReturn)
-                    {
-                        if (d[0].Equals(s[0]) && d[1].Equals(s[1]) && d[2].Equals(s[2]) && d[3].Equals(s[3]) && d[4].Equals(s[4]))
-                        {
-                            found = true;
-                            d[5] = "2";
-                        }
-                    }
-                    if (!found)
-                        toReturn.Add(s);
-                }
-            }
-            return toReturn;
-        }
-        private void getArticlesButton_Click(object sender, EventArgs e)
-        {
-            _articlesBackgroundWorker.RunWorkerAsync();
-        }
-        private void _articlesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            BeginInvoke((MethodInvoker)delegate
-            {
-                _articleTabControl.TabPages.Clear();
-            });
-            _articlesBackgroundWorker.ReportProgress(0);
-            bool logedIn = _cosmicWebService.loginToCosmic(Properties.Settings.Default.CosmicEmail, Properties.Settings.Default.CosmicPassword, 5);
-
-            if (_cosmicWebService.isLogedIn())
-            {
-                _articlesBackgroundWorker.ReportProgress(1);
-                foreach (Mutation m in _mutationList)
-                {
-                    if (m.CosmicName != null)
-                    {
-                        string tsvStringFromCosmic = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
-                        TSVHandler tsvHandler = new TSVHandler(tsvStringFromCosmic);
-                        string tabName = m.TumourSite + " x" + m.NumOfShows;
-                        ArticleTabPage p = new ArticleTabPage(tabName, tsvHandler.AllArticles);
-                        BeginInvoke((MethodInvoker)delegate
-                        {
-                            _articleTabControl.TabPages.Add(p);
-                        });
-                    }
-                }
-            }
-            else
-            {
-                _articlesBackgroundWorker.ReportProgress(2);
-            }
-        }
-        private void _articlesBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            switch (e.ProgressPercentage)
-            {
-                case 0:
-                    toolStripStatusLabel2.Text = "Trying To Log In.....";
-                    toolStripStatusLabel2.ForeColor = Color.Blue;
-                    break;
-                case 1:
-                    toolStripStatusLabel2.Text = "Successful";
-                    toolStripStatusLabel2.ForeColor = Color.Green;
-                    break;
-                case 2:
-                    toolStripStatusLabel2.Text = "Failed to log in. Check cosmic email and password in settings and/or check internet connection";
-                    toolStripStatusLabel2.ForeColor = Color.Red;
-                    break;
-                default:
-                    break;
-            }
-        }
-        private void _articlesBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (_articleTabControl.TabCount != 0)
-                filterButton.Enabled = true;
-        }
-        private string getFilePath()
-        {
-
-            if (_openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                return _openFileDialog.FileName;
-            }
-            return null;
-        }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+
+        public MainBL MainBL
         {
-
-        }
-
-        private void saveButton_Click(object sender, EventArgs e)
-        {
-            _saveFileDialog.ShowDialog();
-        }
-
-        private void saveFileDialog_FileOk(object sender, CancelEventArgs e)
-        {
-            string name = _saveFileDialog.FileName;
-            if (File.Exists(name))
-                File.Delete(name);
-
-            StreamWriter writer = new StreamWriter(name);
-            writer.WriteLine("Chrom\tPosition\tGene Name\tRef\tVar\tStrand\tRef Codon\tVar Codon\tRef AA\tVar AA\tCDS Mutation\tAA Mutation\tCosmic Name\tShows");
-            foreach (Mutation m in _mutationList)
+            get
             {
-                writer.WriteLine(m.PrintXLSLine());
+                return _mainBL;
             }
-            writer.Close();
+        
         }
-
-        private void filterButton_Click(object sender, EventArgs e)
+        public InfoAnalyzeUserControl InfoAnalyzeUC
         {
-            this.Enabled = false;
-            FilterArticlesForm filterArticleForm = new FilterArticlesForm(this, ((ArticleTabPage)_articleTabControl.SelectedTab));
-            filterArticleForm.Show();
+            get
+            {
+                return infoAnalyzeUserControl;
+            }
+        }
+        public ArticlesUserControl ArticlesUC
+        {
+            get
+            {
+                return articlesUserControl;
+            }
+        }
+        public PatientUserControl PatientUC
+        {
+            get
+            {
+                return patientUserControl;
+            }
         }
     }
 }

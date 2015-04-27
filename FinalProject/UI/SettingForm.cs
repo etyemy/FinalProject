@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinalProject.UI;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +13,7 @@ namespace FinalProject
     public partial class SettingForm : Form
     {
         private MainForm mainForm;
+       
         public SettingForm(MainForm mainForm)
         {
             this.mainForm = mainForm;

@@ -13,6 +13,7 @@ namespace FinalProject
         private DataGridView dataGridView;
         public ArticleTabPage(string tabName, List<Article> list)
         {
+            this.MouseEnter += (s, e) => this.Focus();
             this.Text = tabName;
             _articleList = list;
             _journalToView = new Dictionary<string, bool>();
@@ -97,6 +98,17 @@ namespace FinalProject
                 else
                     row.Visible=false;
             }
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // ArticleTabPage
+            // 
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ResumeLayout(false);
+
         }
     }
 }
