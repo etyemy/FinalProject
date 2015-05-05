@@ -40,6 +40,9 @@
             this._analyzeBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this._articlesBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this._saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.historyLinkedLabel = new System.Windows.Forms.LinkLabel();
+            this.historyLabel1 = new System.Windows.Forms.Label();
+            this.historyLabel2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // progressBarLabel
@@ -131,10 +134,41 @@
             this._saveFileDialog.Filter = "Output Info|*.xls";
             this._saveFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog_FileOk);
             // 
+            // historyLinkedLabel
+            // 
+            this.historyLinkedLabel.AutoSize = true;
+            this.historyLinkedLabel.Location = new System.Drawing.Point(629, 29);
+            this.historyLinkedLabel.Name = "historyLinkedLabel";
+            this.historyLinkedLabel.Size = new System.Drawing.Size(55, 13);
+            this.historyLinkedLabel.TabIndex = 53;
+            this.historyLinkedLabel.TabStop = true;
+            this.historyLinkedLabel.Text = "linkLabel1";
+            // 
+            // historyLabel1
+            // 
+            this.historyLabel1.AutoSize = true;
+            this.historyLabel1.Location = new System.Drawing.Point(588, 29);
+            this.historyLabel1.Name = "historyLabel1";
+            this.historyLabel1.Size = new System.Drawing.Size(37, 13);
+            this.historyLabel1.TabIndex = 54;
+            this.historyLabel1.Text = "Found";
+            // 
+            // historyLabel2
+            // 
+            this.historyLabel2.AutoSize = true;
+            this.historyLabel2.Location = new System.Drawing.Point(690, 29);
+            this.historyLabel2.Name = "historyLabel2";
+            this.historyLabel2.Size = new System.Drawing.Size(142, 13);
+            this.historyLabel2.TabIndex = 55;
+            this.historyLabel2.Text = "patients with same mutations";
+            // 
             // InfoAnalyzeUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.historyLabel2);
+            this.Controls.Add(this.historyLabel1);
+            this.Controls.Add(this.historyLinkedLabel);
             this.Controls.Add(this.progressBarLabel);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.analyzeButton);
@@ -164,5 +198,8 @@
         private System.ComponentModel.BackgroundWorker _analyzeBackgroundWorker;
         private System.ComponentModel.BackgroundWorker _articlesBackgroundWorker;
         private System.Windows.Forms.SaveFileDialog _saveFileDialog;
+        private System.Windows.Forms.LinkLabel historyLinkedLabel;
+        private System.Windows.Forms.Label historyLabel1;
+        private System.Windows.Forms.Label historyLabel2;
     }
 }

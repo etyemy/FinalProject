@@ -79,5 +79,12 @@ namespace FinalProject.UI
                 return patientUserControl;
             }
         }
+
+        private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            articlesUserControl.clearAll();
+            infoAnalyzeUserControl.clearAll();
+            patientUserControl.clearAll();
+        }
     }
 }

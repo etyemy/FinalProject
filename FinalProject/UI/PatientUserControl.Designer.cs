@@ -270,7 +270,9 @@
             this._patientMutationListBox.FormattingEnabled = true;
             this._patientMutationListBox.Location = new System.Drawing.Point(3, 34);
             this._patientMutationListBox.Name = "_patientMutationListBox";
+            this._patientMutationListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
             this._patientMutationListBox.Size = new System.Drawing.Size(308, 199);
+            this._patientMutationListBox.Sorted = true;
             this._patientMutationListBox.TabIndex = 69;
             // 
             // PatientUserControl

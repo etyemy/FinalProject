@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -8,7 +9,8 @@ namespace FinalProject
 {
     class LocalDbDAL
     {
-        string connString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Dev\Visual_Projects\FinalProject\FinalProject\Database.mdf;Integrated Security=True";
+        //string connString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Dev\Visual_Projects\FinalProject\FinalProject\Database.mdf;Integrated Security=True";
+        string connString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
         private SqlConnection conn = null;
 
         public LocalDbDAL()
@@ -16,7 +18,6 @@ namespace FinalProject
             try
             {
                 conn = new SqlConnection(connString);
-
             }
             catch (SqlException e)
             {
@@ -192,7 +193,7 @@ namespace FinalProject
                 toReturn = new List<string>();
                 for (int i = 0; i < rdr.FieldCount; i++)
                 {
-                    toReturn.Add(rdr.GetString(i));
+                    toReturn.Add(rdr.GetString(i).Trim());
                 }
             }
             conn.Close();
@@ -251,5 +252,27 @@ namespace FinalProject
             comm.ExecuteNonQuery();
             conn.Close();
         }
+
+        public List<string> getPatientWithSameMutation(string patientId, string mutId)
+        {
+            conn.Open();
+            List<string> toReturn = null;
+            string query =
+                "SELECT patient_id " +
+                "FROM Matches " +
+                "WHERE mutation_id='" + mutId + "' "+
+                "AND patient_id !="+patientId+"'" ;
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlDataReader rdr = cmd.ExecuteReader();
+            toReturn = new List<string>();
+            while (rdr.Read())
+            {
+                toReturn.Add(rdr.GetString(0).Trim());
+            }
+            conn.Close();
+            rdr.Close();
+            return toReturn;
+        }
+
     }
 }

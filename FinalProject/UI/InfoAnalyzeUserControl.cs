@@ -21,6 +21,7 @@ namespace FinalProject.UI
         private MainBL _mainBL;
         List<string[]> _mutationsDetailsList = null;
         private MainForm _mainForm;
+        List<string> historyPatient = null;
         public InfoAnalyzeUserControl(MainForm mainForm)
         {
 
@@ -138,7 +139,7 @@ namespace FinalProject.UI
         private void analyzeBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             this.progressBarLabel.Text = "Status: Analyzing Line: " + (e.ProgressPercentage) + " of " + _mutationsDetailsList.Count;
-            progressBar1.Value = (100/_mutationsDetailsList.Count)*e.ProgressPercentage;
+            progressBar1.Value = (100 / _mutationsDetailsList.Count) * e.ProgressPercentage;
         }
 
         private void analyzeBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -149,6 +150,7 @@ namespace FinalProject.UI
             progressBarLabel.Text += ", Complete!";
             analyzeButton.Enabled = true;
             saveButton.Enabled = true;
+            
 
         }
 
@@ -210,6 +212,19 @@ namespace FinalProject.UI
                 writer.WriteLine(m.PrintXLSLine());
             }
             writer.Close();
+        }
+        public void clearAll()
+        {
+            _xls1Handler = null;
+            _xls2Handler = null;
+            _xls1Path = null;
+            _xls2Path = null;
+            _mutationList = null;
+            _mutationsDetailsList = null;
+            xls1TextBox.Text = "";
+            xls2TextBox.Text = "";
+            saveButton.Enabled = false;
+            progressBarLabel.Text = "Status:";
         }
     }
 }

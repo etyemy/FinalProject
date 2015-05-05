@@ -102,6 +102,8 @@ namespace FinalProject.UI
             _articleTabControl.TabPages.Clear();
             filterButton.Enabled = false;
             getArticlesButton.Enabled = false;
+            _cosmicStatusText.Text = "Disconnected";
+            _cosmicStatusText.ForeColor = Color.Red;
         }
     }
 }

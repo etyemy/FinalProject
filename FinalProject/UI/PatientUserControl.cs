@@ -77,6 +77,7 @@ namespace FinalProject.UI
                     _mainBL.addMatch(id, m.MutId);
                 }
             }
+            MessageBox.Show("Patient saved successfully");
         }
         public void initPatientUC(List<Mutation> mutationList)
         {
@@ -85,6 +86,20 @@ namespace FinalProject.UI
             if (_mutationList != null)
                 foreach (Mutation m in mutationList)
                     _patientMutationListBox.Items.Add(m.PrintToLog());
+        }
+        public void clearAll()
+        {
+            _patientMutationListBox.Items.Clear();
+            _idTextBox.Text = "";
+            _firstNameTextBox.Text = "";
+            _lastNameTextBox.Text = "";
+            _pathologicalNoTextBox.Text = "";
+            _runNoTextBox.Text = "";
+            _tumourSiteTextBox.Text = "";
+            _diseaseLevelTextBox.Text = "";
+            _previousTreatmentTextBox.Text = "";
+            _currentTreatmentTextBox.Text = "";
+            _conclusionsTextBox1.Text = "";
         }
     }
 }

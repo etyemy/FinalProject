@@ -299,7 +299,7 @@ namespace FinalProject
 
         public string PrintToLog()
         {
-            return "" + _chrom + ", " + _position + ", " + _geneName + ", " + _ref + ", " + _var + ", " + _cosmicName + ", x" + _numOfShows+", "+_tumourSite;
+            return "" + _chrom + ", " + _position + ", " + _geneName +  ", x" + _numOfShows+", "+_tumourSite;
         }
         public string PrintXLSLine()
         {
