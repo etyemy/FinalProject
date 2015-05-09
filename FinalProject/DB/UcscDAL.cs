@@ -61,16 +61,45 @@ namespace FinalProject
                 "FROM cosmicRaw " +
                 "WHERE chromosome = '" + chromNum + "' " +
                 "AND grch37_start ='" + position + "' " +
-                "AND mut_syntax_cds REGEXP '" +refNuc+">"+varNuc + "$'";
+              //  "AND UPPER(mut_nt)=UPPER('"+refNuc+">"+varNuc+"')";
+             "AND mut_syntax_cds REGEXP '" + refNuc + ">" + varNuc + "$'";
+            Console.WriteLine(query);
+
             MySqlDataReader rdr = executeQuery(query);
-            if (rdr.Read())
+            List<string> cosmicIdList = new List<string>();
+            string cosmicIDs = "";
+            bool firstTime = true;
+            while (rdr.Read())
             {
-                toReturn = new List<string>();
-                toReturn.Add(rdr.GetString(0));
-                toReturn.Add(rdr.GetString(1));
-                toReturn.Add(rdr.GetString(2));
-                toReturn.Add(rdr.GetString(3));
+                if(firstTime)
+                {
+                    toReturn = new List<string>();
+                    toReturn.Add(rdr.GetString(0));
+                    toReturn.Add(rdr.GetString(1));
+                    toReturn.Add(rdr.GetString(2));
+                    toReturn.Add(rdr.GetString(3));
+                    cosmicIdList.Add(rdr.GetString(0));
+                    firstTime = false;
+                }
+
+                else
+                {
+                    bool found = false;
+                    foreach (string s in cosmicIdList)
+                        if (s.Trim().Equals(rdr.GetString(0).Trim()))
+                            found = true;
+                    if (!found)
+                    {
+                        toReturn[0] += " " + rdr.GetString(0);
+                        cosmicIdList.Add(rdr.GetString(0));
+                    }
+                        
+                }
+                
+                
             }
+            if(toReturn!=null)
+                toReturn.Add(cosmicIDs);
             conn.Close();
             rdr.Close();
             return toReturn;

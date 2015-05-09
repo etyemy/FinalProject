@@ -41,16 +41,20 @@ namespace FinalProject.UI
                 _articlesBackgroundWorker.ReportProgress(1);
                 foreach (Mutation m in _mutationList)
                 {
-                    if (m.CosmicName != null)
+                    if (!m.CosmicName.Equals("-----"))
                     {
-                        string tsvStringFromCosmic = _cosmicWebService.getTsvFromCosmic(m.getCosmicNum());
-                        TSVHandler tsvHandler = new TSVHandler(tsvStringFromCosmic);
-                        string tabName = m.TumourSite + " x" + m.NumOfShows;
-                        ArticleTabPage p = new ArticleTabPage(tabName, tsvHandler.AllArticles);
-                        BeginInvoke((MethodInvoker)delegate
+                        foreach(int i in m.getCosmicNums())
                         {
-                            _articleTabControl.TabPages.Add(p);
-                        });
+                            string tsvStringFromCosmic = _cosmicWebService.getTsvFromCosmic(i);
+                            TSVHandler tsvHandler = new TSVHandler(tsvStringFromCosmic);
+                            string tabName = m.GeneName + " " + m.PMutationName + " COSM"+i;
+                            ArticleTabPage p = new ArticleTabPage(tabName, tsvHandler.AllArticles);
+                            BeginInvoke((MethodInvoker)delegate
+                            {
+                                _articleTabControl.TabPages.Add(p);
+                            });
+                        }
+                        
                     }
                 }
             }

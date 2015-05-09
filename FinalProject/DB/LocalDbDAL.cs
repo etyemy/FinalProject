@@ -9,8 +9,8 @@ namespace FinalProject
 {
     class LocalDbDAL
     {
-        //string connString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Dev\Visual_Projects\FinalProject\FinalProject\Database.mdf;Integrated Security=True";
-        string connString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
+        string connString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Dev\Visual_Projects\FinalProject\FinalProject\Database.mdf;Integrated Security=True";
+        //string connString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
         private SqlConnection conn = null;
 
         public LocalDbDAL()
@@ -149,6 +149,7 @@ namespace FinalProject
             string query =
                 "INSERT INTO Mutation " +
                 "VALUES ('" + mutId + "','" + chrom + "','" + position + "','" + geneName + "','" + refNuc + "','" + varNuc + "','" + strand + "','" + chromNum + "','" + refCodon + "','" + varCodon + "','" + refAA + "','" + varAA + "','" + pMutationName + "','" + cMutationName + "','" + cosmicName + "','"+tumourSite+"')";
+            //Console.WriteLine(query);
             SqlCommand comm = new SqlCommand(query, conn);
             comm.ExecuteNonQuery();
             conn.Close();

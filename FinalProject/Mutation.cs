@@ -25,7 +25,6 @@ namespace FinalProject
         private string _varCodon;
         private string _varAA;
         private string _refAA;
-        private int _nucPlace;
         private string _pMutationName;
         private string _cMutationName;
         private string _cosmicName;
@@ -72,11 +71,11 @@ namespace FinalProject
             {
                 _gene = MainBL.getGene(_geneName, _chrom);
                 _strand = _gene.Strand;
-                //_nucPlace = _gene.getLengthToIndex(_position);
-                //if(_nucPlace!=-1)
-                //{
+                if(_strand.Equals('+'))
                     _cosmicDetails = MainBL.getCosmicDetails(_chromNum, _position, _ref,_var);
-                //}
+                else if (_strand.Equals('-'))
+                    _cosmicDetails = MainBL.getCosmicDetails(_chromNum, _position, OppositeNuc(_ref),OppositeNuc(_var));
+
                 setVarRefCodons(_gene.getOffsetInCodon(_position));
             }
             catch (MySql.Data.MySqlClient.MySqlException e)
@@ -84,10 +83,15 @@ namespace FinalProject
                 Console.WriteLine("Error: {0}", e.ToString());
                 throw e;
             }
-            if (_refCodon != null)
+            if (!_refCodon.Equals("No Coding"))
             {
                 _varAA = AminoAcid.getAminoAcid(_varCodon);
                 _refAA = AminoAcid.getAminoAcid(_refCodon);
+            }
+            else
+            {
+                _varAA = "-----";
+                _refAA = "-----";
             }
             if (_cosmicDetails != null)
             {
@@ -95,6 +99,13 @@ namespace FinalProject
                 _pMutationName = _cosmicDetails.ElementAt(1);
                 _cMutationName = _cosmicDetails.ElementAt(2);
                 _tumourSite = _cosmicDetails.ElementAt(3);
+            }
+            else
+            {
+                _cosmicName = "-----";
+                _pMutationName = "-----";
+                _cMutationName = "-----";
+                _tumourSite = "-----";
             }
         }
         
@@ -113,6 +124,11 @@ namespace FinalProject
                     _refCodon = reverseString(OppositeCodon(_refCodon));
                     _varCodon = reverseString(OppositeCodon(_varCodon));
                 }
+            }
+            else
+            {
+                _refCodon = "No Coding";
+                _varCodon = "No Coding";
             }
         }
         
@@ -147,6 +163,22 @@ namespace FinalProject
                 }
             }
             return toReturn;
+        }
+        private char OppositeNuc(char c)
+        {
+            switch (c)
+            {
+                case 'A':
+                    return 'T';
+                case 'T':
+                    return 'A';
+                case 'G':
+                    return 'C';
+                case 'C':
+                    return 'G';
+                default:
+                    return ' ';
+            }
         }
         internal bool isMutataion()
         {
@@ -296,10 +328,26 @@ namespace FinalProject
                 return _mutId;
             }
         }
-
+        public List<string> getCosmicNames()
+        {
+            List<string> toReturn=new List<string>();
+            string[] cosmicId = _cosmicName.Split(' ');
+            foreach (string s in cosmicId)
+                toReturn.Add(s.Trim());
+            return toReturn;
+        }
+        
+        public List<int> getCosmicNums()
+        {
+            List<int> toReturn=new List<int>();
+            string[] cosmicId = _cosmicName.Split(' ');
+            foreach (string s in cosmicId)
+                toReturn.Add(Convert.ToInt32(Regex.Match(s, @"\d+").Value));
+            return toReturn;
+        }
         public string PrintToLog()
         {
-            return "" + _chrom + ", " + _position + ", " + _geneName +  ", x" + _numOfShows+", "+_tumourSite;
+            return "" + _chrom + ", " + _position + ", " + _geneName + ", "+_pMutationName+", "+_cosmicName+", x" + _numOfShows;
         }
         public string PrintXLSLine()
         {
@@ -324,5 +372,6 @@ namespace FinalProject
             temp += t.Millisecond;
             return temp;
         }
+
     }
 }

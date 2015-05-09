@@ -21,7 +21,6 @@ namespace FinalProject.UI
         private MainBL _mainBL;
         List<string[]> _mutationsDetailsList = null;
         private MainForm _mainForm;
-        List<string> historyPatient = null;
         public InfoAnalyzeUserControl(MainForm mainForm)
         {
 
@@ -150,8 +149,6 @@ namespace FinalProject.UI
             progressBarLabel.Text += ", Complete!";
             analyzeButton.Enabled = true;
             saveButton.Enabled = true;
-            
-
         }
 
         private List<string[]> intersectionLists(XLSHandler l1, XLSHandler l2)
