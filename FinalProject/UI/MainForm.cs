@@ -17,6 +17,7 @@ namespace FinalProject.UI
         private InfoAnalyzeUserControl infoAnalyzeUserControl;
         private ArticlesUserControl articlesUserControl;
         private PatientUserControl patientUserControl;
+        private MutationUserControl mutationUserControl;
         public MainForm()
         {
             InitializeComponent();
@@ -24,18 +25,22 @@ namespace FinalProject.UI
             infoAnalyzeUserControl = new InfoAnalyzeUserControl(this);
             articlesUserControl = new ArticlesUserControl(this);
             patientUserControl = new PatientUserControl(this);
+            mutationUserControl = new MutationUserControl(this);
             
             this.Controls.Add(infoAnalyzeUserControl);
             this.Controls.Add(articlesUserControl);
             this.Controls.Add(patientUserControl);
+            this.Controls.Add(mutationUserControl);
 
+            mutationUserControl.Left = 5;
             infoAnalyzeUserControl.Left = 5;
             articlesUserControl.Left = 5;
             patientUserControl.Left = 5;
 
             infoAnalyzeUserControl.Top = 20;
-            articlesUserControl.Top =90;
-            patientUserControl.Top = 300;
+            articlesUserControl.Top =280;
+            patientUserControl.Top = 465;
+            mutationUserControl.Top = 80;
 
         }
         private void settingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -79,12 +84,20 @@ namespace FinalProject.UI
                 return patientUserControl;
             }
         }
+        public MutationUserControl MutationUC
+        {
+            get
+            {
+                return mutationUserControl;
+            }
+        }
 
         private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             articlesUserControl.clearAll();
             infoAnalyzeUserControl.clearAll();
             patientUserControl.clearAll();
+            mutationUserControl.clearAll();
         }
     }
 }

@@ -53,20 +53,21 @@
             this._firstNameTextBox = new System.Windows.Forms.TextBox();
             this.idLabel = new System.Windows.Forms.Label();
             this._idTextBox = new System.Windows.Forms.TextBox();
-            this._patientMutationListBox = new System.Windows.Forms.ListBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.testNameLabel = new System.Windows.Forms.Label();
+            this._testNameTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // idToLoadTextBox
             // 
-            this.idToLoadTextBox.Location = new System.Drawing.Point(83, 5);
+            this.idToLoadTextBox.Location = new System.Drawing.Point(3, 32);
             this.idToLoadTextBox.Name = "idToLoadTextBox";
             this.idToLoadTextBox.Size = new System.Drawing.Size(100, 20);
             this.idToLoadTextBox.TabIndex = 94;
             // 
             // _savePatientButton
             // 
-            this._savePatientButton.Location = new System.Drawing.Point(233, 3);
+            this._savePatientButton.Location = new System.Drawing.Point(3, 81);
             this._savePatientButton.Name = "_savePatientButton";
             this._savePatientButton.Size = new System.Drawing.Size(78, 23);
             this._savePatientButton.TabIndex = 93;
@@ -97,7 +98,7 @@
             // 
             this._conclusionsTextBox1.Location = new System.Drawing.Point(1043, 19);
             this._conclusionsTextBox1.Name = "_conclusionsTextBox1";
-            this._conclusionsTextBox1.Size = new System.Drawing.Size(213, 215);
+            this._conclusionsTextBox1.Size = new System.Drawing.Size(213, 173);
             this._conclusionsTextBox1.TabIndex = 90;
             this._conclusionsTextBox1.Text = "";
             // 
@@ -114,7 +115,7 @@
             // 
             this._currentTreatmentTextBox.Location = new System.Drawing.Point(824, 19);
             this._currentTreatmentTextBox.Name = "_currentTreatmentTextBox";
-            this._currentTreatmentTextBox.Size = new System.Drawing.Size(213, 215);
+            this._currentTreatmentTextBox.Size = new System.Drawing.Size(213, 173);
             this._currentTreatmentTextBox.TabIndex = 88;
             this._currentTreatmentTextBox.Text = "";
             // 
@@ -131,7 +132,7 @@
             // 
             this._previousTreatmentTextBox.Location = new System.Drawing.Point(608, 19);
             this._previousTreatmentTextBox.Name = "_previousTreatmentTextBox";
-            this._previousTreatmentTextBox.Size = new System.Drawing.Size(210, 215);
+            this._previousTreatmentTextBox.Size = new System.Drawing.Size(210, 173);
             this._previousTreatmentTextBox.TabIndex = 86;
             this._previousTreatmentTextBox.Text = "";
             // 
@@ -148,7 +149,7 @@
             // 
             this._backgroundTextBox.Location = new System.Drawing.Point(441, 97);
             this._backgroundTextBox.Name = "_backgroundTextBox";
-            this._backgroundTextBox.Size = new System.Drawing.Size(161, 137);
+            this._backgroundTextBox.Size = new System.Drawing.Size(161, 95);
             this._backgroundTextBox.TabIndex = 84;
             this._backgroundTextBox.Text = "";
             // 
@@ -165,14 +166,14 @@
             // 
             this._diseaseLevelTextBox.Location = new System.Drawing.Point(441, 19);
             this._diseaseLevelTextBox.Name = "_diseaseLevelTextBox";
-            this._diseaseLevelTextBox.Size = new System.Drawing.Size(161, 59);
+            this._diseaseLevelTextBox.Size = new System.Drawing.Size(161, 38);
             this._diseaseLevelTextBox.TabIndex = 82;
             this._diseaseLevelTextBox.Text = "";
             // 
             // _tumourSiteLabel
             // 
             this._tumourSiteLabel.AutoSize = true;
-            this._tumourSiteLabel.Location = new System.Drawing.Point(332, 198);
+            this._tumourSiteLabel.Location = new System.Drawing.Point(215, 83);
             this._tumourSiteLabel.Name = "_tumourSiteLabel";
             this._tumourSiteLabel.Size = new System.Drawing.Size(64, 13);
             this._tumourSiteLabel.TabIndex = 81;
@@ -180,7 +181,7 @@
             // 
             // _tumourSiteTextBox
             // 
-            this._tumourSiteTextBox.Location = new System.Drawing.Point(335, 214);
+            this._tumourSiteTextBox.Location = new System.Drawing.Point(218, 99);
             this._tumourSiteTextBox.Name = "_tumourSiteTextBox";
             this._tumourSiteTextBox.Size = new System.Drawing.Size(100, 20);
             this._tumourSiteTextBox.TabIndex = 80;
@@ -188,7 +189,7 @@
             // _runNoLabel
             // 
             this._runNoLabel.AutoSize = true;
-            this._runNoLabel.Location = new System.Drawing.Point(332, 159);
+            this._runNoLabel.Location = new System.Drawing.Point(215, 44);
             this._runNoLabel.Name = "_runNoLabel";
             this._runNoLabel.Size = new System.Drawing.Size(44, 13);
             this._runNoLabel.TabIndex = 79;
@@ -196,7 +197,7 @@
             // 
             // _runNoTextBox
             // 
-            this._runNoTextBox.Location = new System.Drawing.Point(335, 175);
+            this._runNoTextBox.Location = new System.Drawing.Point(218, 60);
             this._runNoTextBox.Name = "_runNoTextBox";
             this._runNoTextBox.Size = new System.Drawing.Size(100, 20);
             this._runNoTextBox.TabIndex = 78;
@@ -204,7 +205,7 @@
             // _pathologicalNoLabel
             // 
             this._pathologicalNoLabel.AutoSize = true;
-            this._pathologicalNoLabel.Location = new System.Drawing.Point(332, 120);
+            this._pathologicalNoLabel.Location = new System.Drawing.Point(215, 5);
             this._pathologicalNoLabel.Name = "_pathologicalNoLabel";
             this._pathologicalNoLabel.Size = new System.Drawing.Size(82, 13);
             this._pathologicalNoLabel.TabIndex = 77;
@@ -212,7 +213,7 @@
             // 
             // _pathologicalNoTextBox
             // 
-            this._pathologicalNoTextBox.Location = new System.Drawing.Point(335, 136);
+            this._pathologicalNoTextBox.Location = new System.Drawing.Point(218, 21);
             this._pathologicalNoTextBox.Name = "_pathologicalNoTextBox";
             this._pathologicalNoTextBox.Size = new System.Drawing.Size(100, 20);
             this._pathologicalNoTextBox.TabIndex = 76;
@@ -220,7 +221,7 @@
             // _lastNameLabel
             // 
             this._lastNameLabel.AutoSize = true;
-            this._lastNameLabel.Location = new System.Drawing.Point(332, 81);
+            this._lastNameLabel.Location = new System.Drawing.Point(106, 120);
             this._lastNameLabel.Name = "_lastNameLabel";
             this._lastNameLabel.Size = new System.Drawing.Size(58, 13);
             this._lastNameLabel.TabIndex = 75;
@@ -228,7 +229,7 @@
             // 
             // _lastNameTextBox
             // 
-            this._lastNameTextBox.Location = new System.Drawing.Point(335, 97);
+            this._lastNameTextBox.Location = new System.Drawing.Point(109, 136);
             this._lastNameTextBox.Name = "_lastNameTextBox";
             this._lastNameTextBox.Size = new System.Drawing.Size(100, 20);
             this._lastNameTextBox.TabIndex = 74;
@@ -236,7 +237,7 @@
             // _firstNameLabel
             // 
             this._firstNameLabel.AutoSize = true;
-            this._firstNameLabel.Location = new System.Drawing.Point(332, 42);
+            this._firstNameLabel.Location = new System.Drawing.Point(106, 81);
             this._firstNameLabel.Name = "_firstNameLabel";
             this._firstNameLabel.Size = new System.Drawing.Size(57, 13);
             this._firstNameLabel.TabIndex = 73;
@@ -244,7 +245,7 @@
             // 
             // _firstNameTextBox
             // 
-            this._firstNameTextBox.Location = new System.Drawing.Point(335, 58);
+            this._firstNameTextBox.Location = new System.Drawing.Point(109, 97);
             this._firstNameTextBox.Name = "_firstNameTextBox";
             this._firstNameTextBox.Size = new System.Drawing.Size(100, 20);
             this._firstNameTextBox.TabIndex = 72;
@@ -252,7 +253,7 @@
             // idLabel
             // 
             this.idLabel.AutoSize = true;
-            this.idLabel.Location = new System.Drawing.Point(332, 3);
+            this.idLabel.Location = new System.Drawing.Point(106, 42);
             this.idLabel.Name = "idLabel";
             this.idLabel.Size = new System.Drawing.Size(18, 13);
             this.idLabel.TabIndex = 71;
@@ -260,25 +261,34 @@
             // 
             // _idTextBox
             // 
-            this._idTextBox.Location = new System.Drawing.Point(335, 19);
+            this._idTextBox.Location = new System.Drawing.Point(109, 58);
             this._idTextBox.Name = "_idTextBox";
             this._idTextBox.Size = new System.Drawing.Size(100, 20);
             this._idTextBox.TabIndex = 70;
             // 
-            // _patientMutationListBox
+            // testNameLabel
             // 
-            this._patientMutationListBox.FormattingEnabled = true;
-            this._patientMutationListBox.Location = new System.Drawing.Point(3, 34);
-            this._patientMutationListBox.Name = "_patientMutationListBox";
-            this._patientMutationListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this._patientMutationListBox.Size = new System.Drawing.Size(308, 199);
-            this._patientMutationListBox.Sorted = true;
-            this._patientMutationListBox.TabIndex = 69;
+            this.testNameLabel.AutoSize = true;
+            this.testNameLabel.Location = new System.Drawing.Point(106, 3);
+            this.testNameLabel.Name = "testNameLabel";
+            this.testNameLabel.Size = new System.Drawing.Size(59, 13);
+            this.testNameLabel.TabIndex = 96;
+            this.testNameLabel.Text = "Test Name";
+            // 
+            // _testNameTextBox
+            // 
+            this._testNameTextBox.Location = new System.Drawing.Point(109, 19);
+            this._testNameTextBox.Name = "_testNameTextBox";
+            this._testNameTextBox.ReadOnly = true;
+            this._testNameTextBox.Size = new System.Drawing.Size(100, 20);
+            this._testNameTextBox.TabIndex = 95;
             // 
             // PatientUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.testNameLabel);
+            this.Controls.Add(this._testNameTextBox);
             this.Controls.Add(this.idToLoadTextBox);
             this.Controls.Add(this._savePatientButton);
             this.Controls.Add(this._loadPatientButton);
@@ -304,9 +314,8 @@
             this.Controls.Add(this._firstNameTextBox);
             this.Controls.Add(this.idLabel);
             this.Controls.Add(this._idTextBox);
-            this.Controls.Add(this._patientMutationListBox);
             this.Name = "PatientUserControl";
-            this.Size = new System.Drawing.Size(1270, 242);
+            this.Size = new System.Drawing.Size(1270, 198);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -339,8 +348,9 @@
         private System.Windows.Forms.TextBox _firstNameTextBox;
         private System.Windows.Forms.Label idLabel;
         private System.Windows.Forms.TextBox _idTextBox;
-        private System.Windows.Forms.ListBox _patientMutationListBox;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Label testNameLabel;
+        private System.Windows.Forms.TextBox _testNameTextBox;
 
     }
 }

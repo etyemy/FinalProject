@@ -9,8 +9,12 @@ namespace FinalProject
 {
     class LocalDbDAL
     {
+        //Connection string for debbuging mode
         string connString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Dev\Visual_Projects\FinalProject\FinalProject\Database.mdf;Integrated Security=True";
+
+        //Connection string for publish
         //string connString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
+        
         private SqlConnection conn = null;
 
         public LocalDbDAL()
@@ -222,23 +226,23 @@ namespace FinalProject
 
             return toReturn;
         }
-        public void addPatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
+        public void addPatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion,string testName)
         {
             conn.Open();
             string query =
                 "INSERT INTO Patients " +
-                "VALUES ('" + id + "','" + fName + "','" + lName + "','" + pathologicalNum + "','" + runNum + "','" + tumourSite + "','" + deseaseLevel + "','" + prevTreatment + "','" + currTreatment + "','" + background + "','" + conclusion + "')";
+                "VALUES ('" + id + "','" + fName + "','" + lName + "','" + pathologicalNum + "','" + runNum + "','" + tumourSite + "','" + deseaseLevel + "','" + prevTreatment + "','" + currTreatment + "','" + background + "','" + conclusion + "','"+testName+"')";
             SqlCommand comm = new SqlCommand(query, conn);
             comm.ExecuteNonQuery();
             conn.Close();
         }
-        public void updatePatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
+        public void updatePatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion,string testName)
         {
             conn.Open();
             string query =
                 "UPDATE Patients " +
-                "SET id='" + id + "', first_name='" + fName + "', last_name='" + lName + "', pathological_number='" + pathologicalNum + "', run_number='" + runNum + "', tumour_site='" + tumourSite + "', disease_level='" + deseaseLevel + "', previous_treatment='" + prevTreatment + "', current_treatment='" + currTreatment + "', background='" + background + "', conclusion='" + conclusion + "' " +
-                "WHERE id='" + id + "'";
+                "SET id='" + id + "', first_name='" + fName + "', last_name='" + lName + "', pathological_number='" + pathologicalNum + "', run_number='" + runNum + "', tumour_site='" + tumourSite + "', disease_level='" + deseaseLevel + "', previous_treatment='" + prevTreatment + "', current_treatment='" + currTreatment + "', background='" + background + "', conclusion='" + conclusion + "', test_name='" +testName+"' "+
+                "WHERE id='" + id + "' AND test_name='"+testName+"'";
             SqlCommand comm = new SqlCommand(query, conn);
             comm.ExecuteNonQuery();
             conn.Close();
@@ -254,21 +258,20 @@ namespace FinalProject
             conn.Close();
         }
 
-        public List<string> getPatientWithSameMutation(string patientId, string mutId)
+        public int getNumOfPatientWithSameMut(string mutId)
         {
             conn.Open();
-            List<string> toReturn = null;
+            int toReturn = 0;
             string query =
-                "SELECT patient_id " +
+                "SELECT COUNT(DISTINCT patient_id) " +
                 "FROM Matches " +
-                "WHERE mutation_id='" + mutId + "' "+
-                "AND patient_id !="+patientId+"'" ;
+                "WHERE mutation_id='" + mutId + "' ";
             SqlCommand cmd = new SqlCommand(query, conn);
             SqlDataReader rdr = cmd.ExecuteReader();
-            toReturn = new List<string>();
-            while (rdr.Read())
+            
+            if (rdr.Read())
             {
-                toReturn.Add(rdr.GetString(0).Trim());
+                toReturn=rdr.GetInt32(0);
             }
             conn.Close();
             rdr.Close();

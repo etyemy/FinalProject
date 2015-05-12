@@ -143,12 +143,39 @@ namespace FinalProject.UI
 
         private void analyzeBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            _mainForm.MutationUC.clearAll();
+            _mainForm.MutationUC.initTable(_mutationList);
             _mainForm.ArticlesUC.initArticleUC(_mutationList);
-            _mainForm.PatientUC.initPatientUC(_mutationList);
+            _mainForm.PatientUC.clearAll();
+            _mainForm.PatientUC.initPatientUC(_mutationList,generateTestName());
             progressBar1.Value = 100;
             progressBarLabel.Text += ", Complete!";
             analyzeButton.Enabled = true;
             saveButton.Enabled = true;
+        }
+
+        private string generateTestName()
+        {
+            string testName = "";
+            string[] tempStringArray;
+            string fileName;
+            if(_xls1Path!=null)
+            {
+                tempStringArray = _xls1Path.Split('\\');
+                fileName = tempStringArray[tempStringArray.Length - 1].Split('.')[0];
+                testName += fileName;
+                if (_xls2Path != null)
+                    testName += "_";
+            }
+            if (_xls2Path != null)
+            {
+                tempStringArray = _xls2Path.Split('\\');
+                fileName = tempStringArray[tempStringArray.Length - 1].Split('.')[0];
+                testName +=  fileName;
+            }
+            return testName;
+            
+            
         }
 
         private List<string[]> intersectionLists(XLSHandler l1, XLSHandler l2)

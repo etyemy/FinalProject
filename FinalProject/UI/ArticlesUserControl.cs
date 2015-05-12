@@ -47,7 +47,7 @@ namespace FinalProject.UI
                         {
                             string tsvStringFromCosmic = _cosmicWebService.getTsvFromCosmic(i);
                             TSVHandler tsvHandler = new TSVHandler(tsvStringFromCosmic);
-                            string tabName = m.GeneName + " " + m.PMutationName + " COSM"+i;
+                            string tabName = m.GeneName + "  " + m.PMutationName + "  COSM"+i;
                             ArticleTabPage p = new ArticleTabPage(tabName, tsvHandler.AllArticles);
                             BeginInvoke((MethodInvoker)delegate
                             {

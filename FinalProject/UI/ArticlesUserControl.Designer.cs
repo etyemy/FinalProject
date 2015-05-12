@@ -71,7 +71,7 @@
             this._articleTabControl.Location = new System.Drawing.Point(3, 35);
             this._articleTabControl.Name = "_articleTabControl";
             this._articleTabControl.SelectedIndex = 0;
-            this._articleTabControl.Size = new System.Drawing.Size(1252, 164);
+            this._articleTabControl.Size = new System.Drawing.Size(1252, 142);
             this._articleTabControl.TabIndex = 56;
             // 
             // getArticlesButton
@@ -102,7 +102,7 @@
             this.Controls.Add(this._articleTabControl);
             this.Controls.Add(this.getArticlesButton);
             this.Name = "ArticlesUserControl";
-            this.Size = new System.Drawing.Size(1270, 203);
+            this.Size = new System.Drawing.Size(1270, 182);
             this.ResumeLayout(false);
             this.PerformLayout();
 

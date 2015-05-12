@@ -165,18 +165,24 @@ namespace FinalProject
         {
             return _localDbDAL.patientExist(id);
         }
-
-        public void addPatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
+        internal int getNumOfPatientWithSameMut(string id)
         {
-            _localDbDAL.addPatient(id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion);
+            return _localDbDAL.getNumOfPatientWithSameMut( id);
         }
-        public void updatePatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
+
+        public void addPatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion,string testName)
         {
-            _localDbDAL.updatePatient(id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion);
+            _localDbDAL.addPatient(id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion,testName);
+        }
+        public void updatePatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion,string testName)
+        {
+            _localDbDAL.updatePatient(id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion, testName);
         }
         public void addMatch(string patientId, string mutId)
         {
             _localDbDAL.addMatch(patientId, mutId);
         }
+
+        
     }
 }

@@ -61,7 +61,6 @@ namespace FinalProject
                 "FROM cosmicRaw " +
                 "WHERE chromosome = '" + chromNum + "' " +
                 "AND grch37_start ='" + position + "' " +
-              //  "AND UPPER(mut_nt)=UPPER('"+refNuc+">"+varNuc+"')";
              "AND mut_syntax_cds REGEXP '" + refNuc + ">" + varNuc + "$'";
             Console.WriteLine(query);
 
