@@ -107,6 +107,7 @@
   <ItemGroup>
     <Compile Include="AminoAcid.cs" />
     <Compile Include="Article.cs" />
+    <Compile Include="Patient.cs" />
     <Compile Include="UI\ArticlesUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

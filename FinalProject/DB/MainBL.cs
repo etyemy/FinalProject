@@ -43,9 +43,9 @@ namespace FinalProject
             
             return toReturn;
         }
-        public List<Mutation> getMutationListPerPatient(string patientId)
+        public List<Mutation> getMutationListByTestName(string testName)
         {
-            List<string> tempList = _localDbDAL.getMutationListPerPatient(patientId);
+            List<string> tempList = _localDbDAL.getMutationListPerPatient(testName);
             List<Mutation> toReturn =new List<Mutation>();
             foreach (string s in tempList)
                 toReturn.Add(getMutationById(s));
@@ -102,8 +102,8 @@ namespace FinalProject
                         int[] exonStars = exonStringToIntArray(geneStrings[4]);
                         int[] exonEnds = exonStringToIntArray(geneStrings[5]);
                         g = new Gene(geneName, chrom, strand, cdsStart, cdsEnd, exonStars, exonEnds);
-                        string tempExonStarts = intArrayToString(g.ExonStarts);
-                        string tempExonEnds = intArrayToString(g.ExonEnds);
+                        string tempExonStarts = exonIntArrayToString(g.ExonStarts);
+                        string tempExonEnds = exonIntArrayToString(g.ExonEnds);
 
                         _localDbDAL.addGene(geneName, chrom, strand, tempExonStarts, tempExonEnds);
                     }
@@ -125,19 +125,6 @@ namespace FinalProject
             }
             
         }
-
-        private string intArrayToString(int[] p)
-        {
-            string toReturn = "";
-            foreach (int n in p)
-                toReturn += n + " ";
-            return toReturn;
-        }
-        private int[] exonStringToIntArray(string exon)
-        {
-            return Regex.Split(exon, @"\D+").Except(new string[] { "" }).ToArray().Select(x => int.Parse(x)).ToArray();
-        }
-
         public List<String> getCosmicDetails(string chromNum, int position, char refNuc, char varNuc)
         {
             try
@@ -156,9 +143,24 @@ namespace FinalProject
             return _localDbDAL.mutationExist(mutation.Chrom,mutation.Position,mutation.Ref,mutation.Var);
         }
 
-        public List<String> getPatientById(string id)
+        public Patient getPatientById(string id)
         {
-            return _localDbDAL.getPatientById(id);
+            List<string> patient = _localDbDAL.getPatientById(id);
+            
+            string testName = patient.ElementAt(0);
+            string patientId = patient.ElementAt(1);
+            string fName = patient.ElementAt(2);
+            string lName = patient.ElementAt(3);
+            string pathoNum = patient.ElementAt(4);
+            string runNum = patient.ElementAt(5);
+            string tumourSite = patient.ElementAt(6);
+            string diseaseLevel = patient.ElementAt(7);
+            string background = patient.ElementAt(8);
+            string prevTreatment = patient.ElementAt(9);
+            string currTreatment = patient.ElementAt(10);
+            string conclusion = patient.ElementAt(11);
+
+            return new Patient(testName, patientId, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
         }
 
         internal bool patientExist(string id)
@@ -167,22 +169,32 @@ namespace FinalProject
         }
         internal int getNumOfPatientWithSameMut(string id)
         {
-            return _localDbDAL.getNumOfPatientWithSameMut( id);
+            return _localDbDAL.getNumOfTestsWithSameMut(id);
         }
 
-        public void addPatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion,string testName)
+        public void addPatient(string testName,string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
         {
-            _localDbDAL.addPatient(id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion,testName);
+            _localDbDAL.addPatient(testName,id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion);
         }
         public void updatePatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion,string testName)
         {
             _localDbDAL.updatePatient(id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion, testName);
         }
-        public void addMatch(string patientId, string mutId)
+        public void addMatch(string testName, string mutId)
         {
-            _localDbDAL.addMatch(patientId, mutId);
+            _localDbDAL.addMatch(testName, mutId);
         }
 
-        
+        private string exonIntArrayToString(int[] p)
+        {
+            string toReturn = "";
+            foreach (int n in p)
+                toReturn += n + " ";
+            return toReturn;
+        }
+        private int[] exonStringToIntArray(string exon)
+        {
+            return Regex.Split(exon, @"\D+").Except(new string[] { "" }).ToArray().Select(x => int.Parse(x)).ToArray();
+        }
     }
 }

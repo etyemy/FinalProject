@@ -50,7 +50,12 @@ namespace FinalProject.UI
                     tempRow.Cells[11].Value = m.CMutationName;
                     tempRow.Cells[12].Value = m.CosmicName;
                     tempRow.Cells[13].Value = m.NumOfShows;
-                    tempRow.Cells[14].Value = _mainForm.MainBL.getNumOfPatientWithSameMut(m.MutId);
+                    int historyNum=_mainForm.MainBL.getNumOfPatientWithSameMut(m.MutId);
+                    if (historyNum == 0)
+                        tempRow.Cells[14] = new DataGridViewTextBoxCell();
+                    tempRow.Cells[14].Value = historyNum;
+                    if (!m.CosmicName.Equals("-----"))
+                        tempRow.DefaultCellStyle.BackColor = Color.LightCyan;
                     mutationDataGridView.Rows.Add(tempRow);
                 }
             }

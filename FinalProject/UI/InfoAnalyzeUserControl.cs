@@ -249,6 +249,7 @@ namespace FinalProject.UI
             xls2TextBox.Text = "";
             saveButton.Enabled = false;
             progressBarLabel.Text = "Status:";
+            progressBar1.Value = 0;
         }
     }
 }

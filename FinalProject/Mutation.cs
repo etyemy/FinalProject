@@ -64,7 +64,6 @@ namespace FinalProject
             _cosmicName = cosmicName;
             _tumourSite = tumourSite;
         }
-        //Extract extra data that not supply in xls file.
         public void extractExtraData(MainBL MainBL)
         {
             try
@@ -180,31 +179,7 @@ namespace FinalProject
                     return ' ';
             }
         }
-        internal bool isMutataion()
-        {
-            if (_pMutationName != null)
-                return true;
-            return false;
-        }
-
-        internal bool hasCodon()
-        {
-            if (_varCodon != null)
-                return true;
-            return false;
-        }
-
-        internal bool hasCosmicName()
-        {
-            if (_cosmicName != null)
-                return true;
-            return false;
-        }
-        public int getCosmicNum()
-        {
-            return Convert.ToInt32(Regex.Match(_cosmicName, @"\d+").Value);
-        }
-
+        
         public string Chrom
         {
             get
@@ -328,15 +303,6 @@ namespace FinalProject
                 return _mutId;
             }
         }
-        public List<string> getCosmicNames()
-        {
-            List<string> toReturn=new List<string>();
-            string[] cosmicId = _cosmicName.Split(' ');
-            foreach (string s in cosmicId)
-                toReturn.Add(s.Trim());
-            return toReturn;
-        }
-        
         public List<int> getCosmicNums()
         {
             List<int> toReturn=new List<int>();
@@ -345,20 +311,10 @@ namespace FinalProject
                 toReturn.Add(Convert.ToInt32(Regex.Match(s, @"\d+").Value));
             return toReturn;
         }
-        public string PrintToLog()
-        {
-            return "" + _chrom + ", " + _position + ", " + _geneName + ", "+_pMutationName+", "+_cosmicName+", x" + _numOfShows;
-        }
         public string PrintXLSLine()
         {
             return _chrom + "\t" + _position + "\t" + _geneName + "\t" + _ref + "\t" + _var + "\t" + _strand + "\t" + _refCodon + "\t" + _varCodon + "\t" + _refAA + "\t" + _varAA + "\t" + _cMutationName+ "\t" + _pMutationName + "\t" + _cosmicName + "\t" + _numOfShows;
         }
-
-        public bool Equals(Mutation that)
-        {
-            return (this.Chrom.Equals(that.Chrom) && this._position == that._position);
-        }
-
         private string generateMutId()
         {
             DateTime t = DateTime.Now;

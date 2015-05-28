@@ -49,6 +49,13 @@ namespace FinalProject.UI
             SettingForm settingForm = new SettingForm(this);
             settingForm.Show();
         }
+        private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            articlesUserControl.clearAll();
+            infoAnalyzeUserControl.clearAll();
+            patientUserControl.clearAll();
+            mutationUserControl.clearAll();
+        }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -90,14 +97,6 @@ namespace FinalProject.UI
             {
                 return mutationUserControl;
             }
-        }
-
-        private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            articlesUserControl.clearAll();
-            infoAnalyzeUserControl.clearAll();
-            patientUserControl.clearAll();
-            mutationUserControl.clearAll();
         }
     }
 }

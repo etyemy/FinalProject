@@ -14,6 +14,7 @@ namespace FinalProject.UI
         MainForm _mainForm;
         MainBL _mainBL;
         List<Mutation> _mutationList = null;
+        Patient _patient;
         public PatientUserControl(MainForm mainForm)
         {
             _mainForm = mainForm;
@@ -26,22 +27,24 @@ namespace FinalProject.UI
             string patientId = idToLoadTextBox.Text;
             if (_mainBL.patientExist(patientId))
             {
-                List<string> patient = _mainBL.getPatientById(patientId);
+                _patient = _mainBL.getPatientById(patientId);
+                //List<string> patient = _mainBL.getPatientById(patientId);
                 
-                _idTextBox.Text = patient.ElementAt(0);
+                _idTextBox.Text = _patient.PatientID;
                 _idTextBox.ReadOnly = true;
-                _firstNameTextBox.Text = patient.ElementAt(1);
-                _lastNameTextBox.Text = patient.ElementAt(2);
-                _pathologicalNoTextBox.Text = patient.ElementAt(3);
-                _runNoTextBox.Text = patient.ElementAt(4);
-                _tumourSiteTextBox.Text = patient.ElementAt(5);
-                _diseaseLevelTextBox.Text = patient.ElementAt(6);
-                _previousTreatmentTextBox.Text = patient.ElementAt(7);
-                _currentTreatmentTextBox.Text = patient.ElementAt(8);
-                _backgroundTextBox.Text = patient.ElementAt(9);
-                _conclusionsTextBox1.Text = patient.ElementAt(10);
-                _mutationList = _mainBL.getMutationListPerPatient(_idTextBox.Text);
-                initPatientUC(_mutationList,patient.ElementAt(11));
+                _firstNameTextBox.Text = _patient.FName;
+                _lastNameTextBox.Text = _patient.LName;
+                _pathologicalNoTextBox.Text = _patient.PathoNum;
+                _runNoTextBox.Text = _patient.RunNum;
+                _tumourSiteTextBox.Text = _patient.TumourSite;
+                _diseaseLevelTextBox.Text = _patient.DiseaseLevel;
+                _backgroundTextBox.Text = _patient.Background;
+                _previousTreatmentTextBox.Text = _patient.PrevTreatment;
+                _currentTreatmentTextBox.Text = _patient.CurrTreatment;
+                _conclusionsTextBox1.Text = _patient.Conclusion;
+
+                _mutationList = _mainBL.getMutationListByTestName(_patient.TestName);
+                initPatientUC(_mutationList,_patient.TestName);
                 _mainForm.MutationUC.initTable(_mutationList);
                 _mainForm.ArticlesUC.initArticleUC(_mutationList);
             }
@@ -51,6 +54,7 @@ namespace FinalProject.UI
 
         private void _savePatientButton_Click(object sender, EventArgs e)
         {
+            string testName = _testNameTextBox.Text;
             string id = _idTextBox.Text;
             string fName = _firstNameTextBox.Text;
             string lName = _lastNameTextBox.Text;
@@ -62,20 +66,19 @@ namespace FinalProject.UI
             string currTreatment = _currentTreatmentTextBox.Text;
             string background = _backgroundTextBox.Text;
             string conclusion = _conclusionsTextBox1.Text;
-            string testName = _testNameTextBox.Text;
             if (_mainBL.patientExist(id))
             {
                 if (MessageBox.Show("Patient with this ID allready exist, Overwrite?", "Notice", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    _mainBL.updatePatient(id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, prevTreatment, currTreatment, background, conclusion, testName);
+                    _mainBL.updatePatient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
                 }
             }
             else
             {
-                _mainBL.addPatient(id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, prevTreatment, currTreatment, background, conclusion, testName);
+                _mainBL.addPatient(testName,id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, prevTreatment, currTreatment, background, conclusion);
                 foreach (Mutation m in _mutationList)
                 {
-                    _mainBL.addMatch(id, m.MutId);
+                    _mainBL.addMatch(testName, m.MutId);
                 }
             }
             MessageBox.Show("Patient saved successfully");
@@ -83,17 +86,13 @@ namespace FinalProject.UI
         public void initPatientUC(List<Mutation> mutationList,string testName)
         {
             _mutationList = mutationList;
-            //_patientMutationListBox.Items.Clear();
-            //if (_mutationList != null)
-            //    foreach (Mutation m in mutationList)
-            //        _patientMutationListBox.Items.Add(m.PrintToLog());
             _testNameTextBox.Text = testName;
         }
         public void clearAll()
         {
-            //_patientMutationListBox.Items.Clear();
+           
             _idTextBox.Text = "";
-            _idTextBox.ReadOnly = true;
+            _idTextBox.ReadOnly = false;
             _firstNameTextBox.Text = "";
             _lastNameTextBox.Text = "";
             _pathologicalNoTextBox.Text = "";
@@ -103,6 +102,7 @@ namespace FinalProject.UI
             _backgroundTextBox.Text = "";
             _previousTreatmentTextBox.Text = "";
             _currentTreatmentTextBox.Text = "";
+            _testNameTextBox.Text = "";
             _conclusionsTextBox1.Text = "";
         }
     }

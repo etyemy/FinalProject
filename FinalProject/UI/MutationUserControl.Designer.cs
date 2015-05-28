@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.mutationDataGridView = new System.Windows.Forms.DataGridView();
             this.chromosomeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.positionCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -78,6 +79,8 @@
             this.mutationDataGridView.Name = "mutationDataGridView";
             this.mutationDataGridView.ReadOnly = true;
             this.mutationDataGridView.RowHeadersVisible = false;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.mutationDataGridView.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.mutationDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.mutationDataGridView.Size = new System.Drawing.Size(1245, 188);
             this.mutationDataGridView.TabIndex = 0;
