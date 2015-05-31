@@ -8,6 +8,7 @@ using System.Text;
 
 namespace FinalProject
 {
+
     class LocalDbDAL
     {
         //Connection string for debbuging mode
@@ -314,7 +315,7 @@ namespace FinalProject
             }
             return toReturn;
         }
-        internal bool patientExist(string id)
+        internal bool patientExist(string testName)
         {
 
             bool toReturn = false;
@@ -323,8 +324,8 @@ namespace FinalProject
             {
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = conn;
-                cmd.Parameters.Add("@id", SqlDbType.NChar).Value = id;
-                cmd.CommandText = "SELECT * FROM Patients WHERE id=@id";
+                cmd.Parameters.Add("@testName", SqlDbType.NChar).Value = testName;
+                cmd.CommandText = "SELECT * FROM Patients WHERE test_name=@testName";
                 conn.Open();
                 rdr = cmd.ExecuteReader();
 
@@ -375,7 +376,7 @@ namespace FinalProject
                 conn.Close();
             }
         }
-        public void updatePatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string diseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion, string testName)
+        public void updatePatient(string testName,string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string diseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
         {
             try
             {
@@ -396,7 +397,7 @@ namespace FinalProject
                 cmd.CommandText = "UPDATE Patients SET id=@id,first_name=@fName,last_name=@lName,pathological_number=@pathologicalNum"
                     + ",run_number=@runNum,tumour_site=@tumourSite,disease_level=@diseaseLevel,previous_treatment=@prevTreatment"
                     + ",current_treatment=@currTreatment,background=@background,conclusion=@conclusion,test_name=@testName "
-                    + "WHERE id=@id AND test_name=@testName";
+                    + "WHERE test_name=@testName";
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
@@ -447,6 +448,89 @@ namespace FinalProject
                 if (rdr.Read())
                 {
                     toReturn = rdr.GetInt32(0);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+            finally
+            {
+                conn.Close();
+                rdr.Close();
+            }
+            return toReturn;
+        }
+
+        internal List<List<string>> getPatientListById(string id)
+        {
+            List<List<String>> toReturn = null;
+            SqlDataReader rdr = null;
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = conn;
+                cmd.Parameters.Add("@id", SqlDbType.NChar).Value = id;
+                cmd.CommandText = "SELECT * FROM Patients WHERE id=@id";
+                conn.Open();
+                rdr = cmd.ExecuteReader();
+                bool first = true;
+                while (rdr.Read())
+                {
+                    if (first)
+                    {
+                        toReturn = new List<List<string>>();
+                        first = false;
+                    }
+                    
+                    List<string> l = new List<string>();
+                    for (int i = 0; i < rdr.FieldCount; i++)
+                    {
+                        l.Add(rdr.GetString(i).Trim());
+                    }
+                    toReturn.Add(l);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+            finally
+            {
+                conn.Close();
+                rdr.Close();
+            }
+            return toReturn;
+        }
+
+        internal List<List<string>> getPatientListByMutation(string mutationId)
+        {
+            List<List<String>> toReturn = null;
+            SqlDataReader rdr = null;
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = conn;
+                cmd.Parameters.Add("@mutationId", SqlDbType.NChar).Value = mutationId;
+                cmd.CommandText = "SELECT * FROM Patients,Matches WHERE Matches.test_name=Patients.test_name AND Matches.mutation_id=@mutationId";
+                conn.Open();
+                rdr = cmd.ExecuteReader();
+                bool first = true;
+                while (rdr.Read())
+                {
+                    Console.WriteLine("xxx");
+                    if (first)
+                    {
+                        toReturn = new List<List<string>>();
+                        first = false;
+                    }
+
+                    List<string> l = new List<string>();
+                    for (int i = 0; i < rdr.FieldCount; i++)
+                    {
+                        l.Add(rdr.GetString(i).Trim());
+                    }
+                    toReturn.Add(l);
                 }
             }
             catch (Exception e)

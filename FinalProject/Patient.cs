@@ -35,6 +35,10 @@ namespace FinalProject
             _currTreatment = currTreatment;
             _conclusion=conclusion;
         }
+        public override string ToString()
+        {
+            return _testName + " " + _fName + " " + _lName;
+        }
         public string TestName
         {
             get

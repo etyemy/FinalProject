@@ -163,9 +163,9 @@ namespace FinalProject
             return new Patient(testName, patientId, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
         }
 
-        internal bool patientExist(string id)
+        internal bool testNameExist(string testName)
         {
-            return _localDbDAL.patientExist(id);
+            return _localDbDAL.patientExist(testName);
         }
         internal int getNumOfPatientWithSameMut(string id)
         {
@@ -176,9 +176,9 @@ namespace FinalProject
         {
             _localDbDAL.addPatient(testName,id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion);
         }
-        public void updatePatient(string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion,string testName)
+        public void updatePatient(string testName,string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
         {
-            _localDbDAL.updatePatient(id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion, testName);
+            _localDbDAL.updatePatient(testName,id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion);
         }
         public void addMatch(string testName, string mutId)
         {
@@ -195,6 +195,62 @@ namespace FinalProject
         private int[] exonStringToIntArray(string exon)
         {
             return Regex.Split(exon, @"\D+").Except(new string[] { "" }).ToArray().Select(x => int.Parse(x)).ToArray();
+        }
+
+        internal List<Patient> getPatientListById(string id)
+        {
+            List<Patient> toReturn = null;
+            List<List<string>> patient = _localDbDAL.getPatientListById(id);
+            if(patient!=null)
+            {
+                toReturn = new List<Patient>();
+                foreach (List<string> l in patient)
+                {
+                    string testName = l.ElementAt(0);
+                    string patientId = l.ElementAt(1);
+                    string fName = l.ElementAt(2);
+                    string lName = l.ElementAt(3);
+                    string pathoNum = l.ElementAt(4);
+                    string runNum = l.ElementAt(5);
+                    string tumourSite = l.ElementAt(6);
+                    string diseaseLevel = l.ElementAt(7);
+                    string background = l.ElementAt(8);
+                    string prevTreatment = l.ElementAt(9);
+                    string currTreatment = l.ElementAt(10);
+                    string conclusion = l.ElementAt(11);
+                    Patient p = new Patient(testName, patientId, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
+                    toReturn.Add(p);
+                }
+            }
+            return toReturn;
+        }
+
+        internal List<Patient> getPatientListWithMutation(string mutationId)
+        {
+            List<Patient> toReturn = null;
+            List<List<string>> patient = _localDbDAL.getPatientListByMutation(mutationId);
+            if (patient != null)
+            {
+                toReturn = new List<Patient>();
+                foreach (List<string> l in patient)
+                {
+                    string testName = l.ElementAt(0);
+                    string patientId = l.ElementAt(1);
+                    string fName = l.ElementAt(2);
+                    string lName = l.ElementAt(3);
+                    string pathoNum = l.ElementAt(4);
+                    string runNum = l.ElementAt(5);
+                    string tumourSite = l.ElementAt(6);
+                    string diseaseLevel = l.ElementAt(7);
+                    string background = l.ElementAt(8);
+                    string prevTreatment = l.ElementAt(9);
+                    string currTreatment = l.ElementAt(10);
+                    string conclusion = l.ElementAt(11);
+                    Patient p = new Patient(testName, patientId, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
+                    toReturn.Add(p);
+                }
+            }
+            return toReturn;
         }
     }
 }
