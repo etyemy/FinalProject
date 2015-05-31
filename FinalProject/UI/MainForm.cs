@@ -18,6 +18,9 @@ namespace FinalProject.UI
         private ArticlesUserControl articlesUserControl;
         private PatientUserControl patientUserControl;
         private MutationUserControl mutationUserControl;
+
+        private List<Mutation> _mutationList;
+        private Patient _currPatient;
         public MainForm()
         {
             InitializeComponent();
@@ -96,6 +99,28 @@ namespace FinalProject.UI
             get
             {
                 return mutationUserControl;
+            }
+        }
+        public Patient CurrPatient
+        {
+            get
+            {
+                return _currPatient;
+            }
+            set
+            {
+                _currPatient = value;
+            }
+        }
+        public List<Mutation> MutationList
+        {
+            get
+            {
+                return _mutationList;
+            }
+            set
+            {
+                _mutationList = value;
             }
         }
     }

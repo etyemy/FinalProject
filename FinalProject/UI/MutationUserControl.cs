@@ -19,6 +19,19 @@ namespace FinalProject.UI
             _mainForm = mainForm;
             _mutationList = null;
             mutationDataGridView.MouseEnter += (s, e) => this.Focus();
+            mutationDataGridView.CellContentClick += dataGridView1_CellClick;
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 14)
+            {
+                string mutationId = _mutationList.ElementAt(e.RowIndex).MutId;
+                List<Patient> patientList = _mainForm.MainBL.getPatientListWithMutation(mutationId);
+                HistoryForm hf = new HistoryForm(patientList,_mainForm);
+                _mainForm.Enabled = false;
+                hf.Show();
+            }
         }
 
         public void initTable(List<Mutation> mutationList)
