@@ -38,7 +38,6 @@ namespace FinalProject.UI
         {
             _mutationList = mutationList;
             fillTable();
-
         }
 
         private void fillTable()
@@ -70,6 +69,7 @@ namespace FinalProject.UI
                     if (!m.CosmicName.Equals("-----"))
                         tempRow.DefaultCellStyle.BackColor = Color.LightCyan;
                     mutationDataGridView.Rows.Add(tempRow);
+                    mutationDataGridView.PerformLayout();
                 }
             }
         }

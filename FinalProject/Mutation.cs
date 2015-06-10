@@ -80,7 +80,7 @@ namespace FinalProject
             catch (MySql.Data.MySqlClient.MySqlException e)
             {
                 Console.WriteLine("Error: {0}", e.ToString());
-                throw e;
+                throw ;
             }
             if (!_refCodon.Equals("No Coding"))
             {

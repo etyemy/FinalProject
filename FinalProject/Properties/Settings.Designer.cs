@@ -46,5 +46,17 @@ namespace FinalProject.Properties {
                 this["CosmicPassword"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DocSavePath {
+            get {
+                return ((string)(this["DocSavePath"]));
+            }
+            set {
+                this["DocSavePath"] = value;
+            }
+        }
     }
 }

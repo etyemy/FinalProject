@@ -6,6 +6,7 @@ using System.IO;
 namespace FinalProject
 {
     class UcscDAL
+
     {
         private MySqlConnection conn = null;
         private MySqlConnectionStringBuilder sb = null;
@@ -24,7 +25,7 @@ namespace FinalProject
             catch (MySqlException e)
             {
                 Console.WriteLine("Error on creation: {0}", e.ToString());
-                throw e;
+                throw ;
             }
             
         }
@@ -62,7 +63,6 @@ namespace FinalProject
                 "WHERE chromosome = '" + chromNum + "' " +
                 "AND grch37_start ='" + position + "' " +
              "AND mut_syntax_cds REGEXP '" + refNuc + ">" + varNuc + "$'";
-            Console.WriteLine(query);
 
             MySqlDataReader rdr = executeQuery(query);
             List<string> cosmicIdList = new List<string>();

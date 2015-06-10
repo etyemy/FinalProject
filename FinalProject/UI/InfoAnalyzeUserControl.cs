@@ -23,7 +23,6 @@ namespace FinalProject.UI
         private MainForm _mainForm;
         public InfoAnalyzeUserControl(MainForm mainForm)
         {
-
             _mainForm = mainForm;
             _mainBL = mainForm.MainBL;
             InitializeComponent();
@@ -35,7 +34,6 @@ namespace FinalProject.UI
             string tempPath = null, fileName; ;
             TextBox tempTextBox = null;
             string[] tempStringArray;
-
             if (clickedButton == null) // just to be on the safe side
                 return;
 
@@ -143,6 +141,7 @@ namespace FinalProject.UI
 
         private void analyzeBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            _mainForm.MutationList = _mutationList;
             _mainForm.MutationUC.clearAll();
             _mainForm.MutationUC.initTable(_mutationList);
             _mainForm.ArticlesUC.initArticleUC(_mutationList);
@@ -174,8 +173,6 @@ namespace FinalProject.UI
                 testName +=  fileName;
             }
             return testName;
-            
-            
         }
 
         private List<string[]> intersectionLists(XLSHandler l1, XLSHandler l2)
@@ -216,7 +213,6 @@ namespace FinalProject.UI
                     if (!found)
                         toReturn.Add(s);
                 }
-
             return toReturn;
         }
         private void saveButton_Click(object sender, EventArgs e)

@@ -7,13 +7,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using FinalProject.FileHendlers;
 
 namespace FinalProject.UI
 {
     public partial class MainForm : Form
     {
         private MainBL _mainBL;
-        
+
         private InfoAnalyzeUserControl infoAnalyzeUserControl;
         private ArticlesUserControl articlesUserControl;
         private PatientUserControl patientUserControl;
@@ -29,7 +30,7 @@ namespace FinalProject.UI
             articlesUserControl = new ArticlesUserControl(this);
             patientUserControl = new PatientUserControl(this);
             mutationUserControl = new MutationUserControl(this);
-            
+
             this.Controls.Add(infoAnalyzeUserControl);
             this.Controls.Add(articlesUserControl);
             this.Controls.Add(patientUserControl);
@@ -41,7 +42,7 @@ namespace FinalProject.UI
             patientUserControl.Left = 5;
 
             infoAnalyzeUserControl.Top = 20;
-            articlesUserControl.Top =280;
+            articlesUserControl.Top = 280;
             patientUserControl.Top = 465;
             mutationUserControl.Top = 80;
 
@@ -54,6 +55,8 @@ namespace FinalProject.UI
         }
         private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            _mutationList = null;
+            _currPatient = null;
             articlesUserControl.clearAll();
             infoAnalyzeUserControl.clearAll();
             patientUserControl.clearAll();
@@ -71,7 +74,7 @@ namespace FinalProject.UI
             {
                 return _mainBL;
             }
-        
+
         }
         public InfoAnalyzeUserControl InfoAnalyzeUC
         {
@@ -122,6 +125,39 @@ namespace FinalProject.UI
             {
                 _mutationList = value;
             }
+        }
+
+        private void ExportMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = Properties.Settings.Default.DocSavePath;
+            if (path.Equals(""))
+                path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"\AutuAnalyzeOutput";
+            Console.WriteLine(path);
+            if (_currPatient == null || _mutationList == null )
+            {
+                MessageBox.Show("No Information To Export");
+            }
+            else
+            {
+                bool includeDetails=false;
+                ToolStripMenuItem clicked = sender as ToolStripMenuItem;
+                if(clicked.Name.Equals("includeDetailsMenuItem"))
+                {
+                        includeDetails = true;
+                }
+                try
+                {
+                    DOCHandler.saveDOC(_currPatient, _mutationList, includeDetails, Properties.Settings.Default.DocSavePath);
+
+                }
+                catch(IOException)
+                {
+                    MessageBox.Show("File Allready Open, Close And Try Again");
+
+                }
+
+            }
+
         }
     }
 }

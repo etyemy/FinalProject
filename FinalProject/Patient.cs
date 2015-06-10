@@ -35,6 +35,7 @@ namespace FinalProject
             _currTreatment = currTreatment;
             _conclusion=conclusion;
         }
+        
         public override string ToString()
         {
             return _testName + " " + _fName + " " + _lName;
@@ -123,6 +124,5 @@ namespace FinalProject
                 return _conclusion;
             }
         }
-
     }
 }

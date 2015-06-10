@@ -28,12 +28,11 @@ namespace FinalProject
             catch (SqlException e)
             {
                 Console.WriteLine("Error on creation: {0}", e.ToString());
-                throw e;
+                throw ;
             }
         }
         public List<String> getGene(string geneName, string chrom)
         {
-
             List<String> toReturn = null;
             SqlDataReader rdr = null;
             try
@@ -45,7 +44,6 @@ namespace FinalProject
                 cmd.CommandText = "SELECT * FROM Gene WHERE chrom=@chrom AND name=@geneName";
                 conn.Open();
                 rdr = cmd.ExecuteReader();
-
                 if (rdr.Read())
                 {
                     toReturn = new List<string>();
@@ -53,7 +51,6 @@ namespace FinalProject
                     {
                         toReturn.Add(rdr.GetString(i));
                     }
-
                 }
             }
             catch (Exception e)
@@ -65,9 +62,6 @@ namespace FinalProject
                 conn.Close();
                 rdr.Close();
             }
-
-
-
             return toReturn;
         }
         public void addGene(string name, string chrom, char strand, string exonStarts, string exonEnds)
@@ -82,7 +76,6 @@ namespace FinalProject
                 cmd.Parameters.Add("@exonStarts", SqlDbType.NChar).Value = exonStarts;
                 cmd.Parameters.Add("@exonEnds", SqlDbType.NChar).Value = exonEnds;
                 cmd.CommandText = "INSERT INTO Gene VALUES (@name,@chrom,@strand,@exonStarts,@exonEnds)";
-
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
@@ -94,13 +87,10 @@ namespace FinalProject
             {
                 conn.Close();
             }
-
-
         }
 
         public List<String> getMutationByDetails(string chrom, int position, char varNuc, char refNuc)
         {
-
             List<String> toReturn = null;
             SqlDataReader rdr = null;
             try
@@ -130,20 +120,17 @@ namespace FinalProject
             }
             catch (Exception e)
             {
-               
+                Console.WriteLine(e.StackTrace);
             }
             finally
             {
                 conn.Close();
                 rdr.Close();
-                
             }
             return toReturn;
-            
         }
         public List<string> getMutationListPerPatient(string testName)
         {
-
             List<string> toReturn = null;
             SqlDataReader rdr = null;
             try
@@ -173,7 +160,6 @@ namespace FinalProject
         }
         public List<String> getMutationByID(string mutId)
         {
-
             List<String> toReturn = null;
             SqlDataReader rdr = null;
 
@@ -185,7 +171,6 @@ namespace FinalProject
                 cmd.CommandText = "SELECT * FROM Mutation WHERE mut_id=@mutId";
                 conn.Open();
                 rdr = cmd.ExecuteReader();
-
                 if (rdr.Read())
                 {
                     toReturn = new List<string>();
@@ -197,7 +182,6 @@ namespace FinalProject
                         else
                             toReturn.Add(toAdd);
                     }
-
                 }
             }
             catch (Exception e)
@@ -246,11 +230,9 @@ namespace FinalProject
             {
                 conn.Close();
             }
-            
         }
         internal bool mutationExist(string chrom, int position, char refNuc, char varNuc)
         {
-
             bool toReturn = false;
             SqlDataReader rdr = null;
             try
@@ -283,7 +265,6 @@ namespace FinalProject
 
         public List<String> getPatientById(string id)
         {
-
             List<String> toReturn = null;
             SqlDataReader rdr = null;
             try
@@ -294,7 +275,6 @@ namespace FinalProject
                 cmd.CommandText = "SELECT * FROM Patients WHERE id=@id";
                 conn.Open();
                 rdr = cmd.ExecuteReader();
-
                 if (rdr.Read())
                 {
                     toReturn = new List<string>();
@@ -317,7 +297,6 @@ namespace FinalProject
         }
         internal bool patientExist(string testName)
         {
-
             bool toReturn = false;
             SqlDataReader rdr = null;
             try
@@ -328,7 +307,6 @@ namespace FinalProject
                 cmd.CommandText = "SELECT * FROM Patients WHERE test_name=@testName";
                 conn.Open();
                 rdr = cmd.ExecuteReader();
-
                 if (rdr.Read())
                 {
                     toReturn = true;

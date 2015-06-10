@@ -120,7 +120,7 @@ namespace FinalProject
             catch (MySql.Data.MySqlClient.MySqlException e)
             {
                 Console.WriteLine("Error: {0}", e.ToString());
-                throw e;
+                throw ;
 
             }
             
@@ -134,7 +134,7 @@ namespace FinalProject
             catch (MySql.Data.MySqlClient.MySqlException e)
             {
                 Console.WriteLine("Error: {0}", e.ToString());
-                throw e;
+                throw ;
             }
         }
 

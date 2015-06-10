@@ -37,8 +37,6 @@ namespace FinalProject.UI
             }
             else
                 MessageBox.Show("No Selection Made");
-
-
         }
 
         private void cancelButton_Click(object sender, EventArgs e)

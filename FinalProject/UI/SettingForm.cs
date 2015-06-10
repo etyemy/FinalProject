@@ -20,6 +20,7 @@ namespace FinalProject
             InitializeComponent();
             emailTextBox.Text = Properties.Settings.Default.CosmicEmail;
             passwordTextBox.Text = Properties.Settings.Default.CosmicPassword;
+            docPathTextBox.Text = Properties.Settings.Default.DocSavePath;
         }
 
         private void SettingForm_Load(object sender, EventArgs e)
@@ -37,9 +38,18 @@ namespace FinalProject
         {
             Properties.Settings.Default.CosmicEmail = emailTextBox.Text;
             Properties.Settings.Default.CosmicPassword = passwordTextBox.Text;
+            Properties.Settings.Default.DocSavePath = docPathTextBox.Text;
             Properties.Settings.Default.Save();
             mainForm.Enabled = true;
             this.Close();
+        }
+
+        private void browseButton_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                docPathTextBox.Text = folderBrowserDialog.SelectedPath;
+            }
         }
     }
 }

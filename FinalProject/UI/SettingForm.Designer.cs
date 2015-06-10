@@ -37,6 +37,10 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.settingsTabControl = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.browseButton = new System.Windows.Forms.Button();
+            this.docPathLabel = new System.Windows.Forms.Label();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.docPathTextBox = new System.Windows.Forms.TextBox();
             this.settingsTabControl.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
@@ -61,7 +65,7 @@
             // 
             // passwordTextBox
             // 
-            this.passwordTextBox.Location = new System.Drawing.Point(99, 41);
+            this.passwordTextBox.Location = new System.Drawing.Point(99, 38);
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Size = new System.Drawing.Size(150, 20);
@@ -69,7 +73,7 @@
             // 
             // emailTextBox
             // 
-            this.emailTextBox.Location = new System.Drawing.Point(99, 15);
+            this.emailTextBox.Location = new System.Drawing.Point(99, 12);
             this.emailTextBox.Name = "emailTextBox";
             this.emailTextBox.Size = new System.Drawing.Size(150, 20);
             this.emailTextBox.TabIndex = 34;
@@ -106,6 +110,9 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.docPathTextBox);
+            this.tabPage2.Controls.Add(this.browseButton);
+            this.tabPage2.Controls.Add(this.docPathLabel);
             this.tabPage2.Controls.Add(this.label1);
             this.tabPage2.Controls.Add(this.emailTextBox);
             this.tabPage2.Controls.Add(this.passwordTextBox);
@@ -117,6 +124,33 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "General";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // browseButton
+            // 
+            this.browseButton.Location = new System.Drawing.Point(331, 87);
+            this.browseButton.Name = "browseButton";
+            this.browseButton.Size = new System.Drawing.Size(75, 23);
+            this.browseButton.TabIndex = 40;
+            this.browseButton.Text = "Browse";
+            this.browseButton.UseVisualStyleBackColor = true;
+            this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
+            // 
+            // docPathLabel
+            // 
+            this.docPathLabel.AutoSize = true;
+            this.docPathLabel.Location = new System.Drawing.Point(7, 92);
+            this.docPathLabel.Name = "docPathLabel";
+            this.docPathLabel.Size = new System.Drawing.Size(84, 13);
+            this.docPathLabel.TabIndex = 39;
+            this.docPathLabel.Text = "Output Directory";
+            // 
+            // docPathTextBox
+            // 
+            this.docPathTextBox.Location = new System.Drawing.Point(97, 89);
+            this.docPathTextBox.Name = "docPathTextBox";
+            this.docPathTextBox.ReadOnly = true;
+            this.docPathTextBox.Size = new System.Drawing.Size(226, 20);
+            this.docPathTextBox.TabIndex = 41;
             // 
             // SettingForm
             // 
@@ -153,6 +187,10 @@
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.TabControl settingsTabControl;
         private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Label docPathLabel;
+        private System.Windows.Forms.Button browseButton;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+        private System.Windows.Forms.TextBox docPathTextBox;
 
     }
 }
