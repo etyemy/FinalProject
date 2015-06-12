@@ -32,19 +32,21 @@
             this._menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearAllMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.includeDetailsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dontIncludeDetailsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.settingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.docxWithDetailsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.docxWithoutDetailsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xlsxMutationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // _menuStrip
             // 
             this._menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.exportToolStripMenuItem});
             this._menuStrip.Location = new System.Drawing.Point(0, 0);
             this._menuStrip.Name = "_menuStrip";
             this._menuStrip.Size = new System.Drawing.Size(1270, 24);
@@ -56,7 +58,6 @@
             this.fileToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearAllMenuItem,
-            this.exportMenuItem,
             this.toolStripSeparator1,
             this.settingMenuItem,
             this.exitMenuItem});
@@ -68,44 +69,20 @@
             // 
             this.clearAllMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.clearAllMenuItem.Name = "clearAllMenuItem";
-            this.clearAllMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.clearAllMenuItem.Size = new System.Drawing.Size(118, 22);
             this.clearAllMenuItem.Text = "Clear All";
             this.clearAllMenuItem.Click += new System.EventHandler(this.clearAllToolStripMenuItem_Click);
-            // 
-            // exportMenuItem
-            // 
-            this.exportMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.exportMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.includeDetailsMenuItem,
-            this.dontIncludeDetailsMenuItem});
-            this.exportMenuItem.Name = "exportMenuItem";
-            this.exportMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exportMenuItem.Text = "Export";
-            // 
-            // includeDetailsMenuItem
-            // 
-            this.includeDetailsMenuItem.Name = "includeDetailsMenuItem";
-            this.includeDetailsMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.includeDetailsMenuItem.Text = "Include details";
-            this.includeDetailsMenuItem.Click += new System.EventHandler(this.ExportMenuItem_Click);
-            // 
-            // dontIncludeDetailsMenuItem
-            // 
-            this.dontIncludeDetailsMenuItem.Name = "dontIncludeDetailsMenuItem";
-            this.dontIncludeDetailsMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.dontIncludeDetailsMenuItem.Text = "Dont include details";
-            this.dontIncludeDetailsMenuItem.Click += new System.EventHandler(this.ExportMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(115, 6);
             // 
             // settingMenuItem
             // 
             this.settingMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.settingMenuItem.Name = "settingMenuItem";
-            this.settingMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingMenuItem.Size = new System.Drawing.Size(118, 22);
             this.settingMenuItem.Text = "Setting";
             this.settingMenuItem.Click += new System.EventHandler(this.settingToolStripMenuItem_Click);
             // 
@@ -113,9 +90,40 @@
             // 
             this.exitMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.exitMenuItem.Name = "exitMenuItem";
-            this.exitMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitMenuItem.Size = new System.Drawing.Size(118, 22);
             this.exitMenuItem.Text = "Exit";
             this.exitMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.docxWithDetailsMenuItem,
+            this.docxWithoutDetailsMenuItem,
+            this.xlsxMutationMenuItem});
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.exportToolStripMenuItem.Text = "Export";
+            // 
+            // docxWithDetailsMenuItem
+            // 
+            this.docxWithDetailsMenuItem.Name = "docxWithDetailsMenuItem";
+            this.docxWithDetailsMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.docxWithDetailsMenuItem.Text = "DOCX - With Details";
+            this.docxWithDetailsMenuItem.Click += new System.EventHandler(this.ExportMenuItem_Click);
+            // 
+            // docxWithoutDetailsMenuItem
+            // 
+            this.docxWithoutDetailsMenuItem.Name = "docxWithoutDetailsMenuItem";
+            this.docxWithoutDetailsMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.docxWithoutDetailsMenuItem.Text = "DOCX - Without Details";
+            this.docxWithoutDetailsMenuItem.Click += new System.EventHandler(this.ExportMenuItem_Click);
+            // 
+            // xlsxMutationMenuItem
+            // 
+            this.xlsxMutationMenuItem.Name = "xlsxMutationMenuItem";
+            this.xlsxMutationMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.xlsxMutationMenuItem.Text = "XLSX - Mutation ";
+            this.xlsxMutationMenuItem.Click += new System.EventHandler(this.ExportMenuItem_Click);
             // 
             // MainForm
             // 
@@ -144,10 +152,11 @@
         private System.Windows.Forms.ToolStripMenuItem clearAllMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exportMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem includeDetailsMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem dontIncludeDetailsMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem docxWithDetailsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem docxWithoutDetailsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem xlsxMutationMenuItem;
 
     }
 }

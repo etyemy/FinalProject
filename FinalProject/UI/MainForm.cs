@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using FinalProject.FileHendlers;
+using System.Runtime.InteropServices;
 
 namespace FinalProject.UI
 {
@@ -130,31 +131,52 @@ namespace FinalProject.UI
         private void ExportMenuItem_Click(object sender, EventArgs e)
         {
             string path = Properties.Settings.Default.DocSavePath;
+            ToolStripMenuItem clicked = sender as ToolStripMenuItem;
+            string clickedName = clicked.Name;
             if (path.Equals(""))
-                path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"\AutuAnalyzeOutput";
-            Console.WriteLine(path);
-            if (_currPatient == null || _mutationList == null )
-            {
-                MessageBox.Show("No Information To Export");
-            }
+                MessageBox.Show("Error, Please select directory to save in settings");
             else
             {
-                bool includeDetails=false;
-                ToolStripMenuItem clicked = sender as ToolStripMenuItem;
-                if(clicked.Name.Equals("includeDetailsMenuItem"))
-                {
-                        includeDetails = true;
-                }
-                try
-                {
-                    DOCHandler.saveDOC(_currPatient, _mutationList, includeDetails, Properties.Settings.Default.DocSavePath);
 
-                }
-                catch(IOException)
+                if (clickedName.Equals("docxWithDetailsMenuItem") || clicked.Name.Equals("docxWithoutDetailsMenuItem"))
                 {
-                    MessageBox.Show("File Allready Open, Close And Try Again");
+                    if (_currPatient == null || _mutationList == null)
+                    {
+                        MessageBox.Show("No Details To Export");
+                    }
+                    else
+                    {
+                        bool includeDetails = false;
+                        if (clickedName.Equals("includeDetailsMenuItem"))
+                        {
+                            includeDetails = true;
+                        }
+                        try
+                        {
+                            DOCExportHandler.saveDOC(_currPatient, _mutationList, includeDetails, Properties.Settings.Default.DocSavePath);
 
+                        }
+                        catch (COMException)
+                        {
+                            MessageBox.Show("File Allready Open, Close And Try Again");
+                        }
+
+                    }
                 }
+                else if(clickedName.Equals("xlsxMutationMenuItem"))
+                {
+                    if (_mutationList == null)
+                    {
+                        MessageBox.Show("No Details To Export");
+                    }
+                    else
+                    {
+                        XLSExportHandler.saveXLS(patientUserControl.TestName,_mutationList);
+                    }
+                }
+
+
+
 
             }
 

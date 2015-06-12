@@ -151,7 +151,6 @@ namespace FinalProject.UI
             _currentTreatmentTextBox.Text = _patient.CurrTreatment;
             _conclusionsTextBox1.Text = _patient.Conclusion;
             patientDetailPanel.Visible = true;
-            _mainForm.CurrPatient = patient;
         }
         public void loadMutationDetails(Patient p)
         {
@@ -160,6 +159,13 @@ namespace FinalProject.UI
             initPatientUC(_mutationList, _patient.TestName);
             _mainForm.MutationUC.initTable(_mutationList);
             _mainForm.ArticlesUC.initArticleUC(_mutationList);
+        }
+        public string TestName
+        {
+            get
+            {
+                return testNmae;
+            }
         }
     }
 }

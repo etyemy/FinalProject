@@ -7,7 +7,7 @@ using System.Text;
 
 namespace FinalProject.FileHendlers
 {
-    public class DOCHandler
+    public class DOCExportHandler
     {
 
         public static void saveDOC(Patient patient, List<Mutation> mutationList, bool includePersonalDetails, string path)
@@ -76,7 +76,6 @@ namespace FinalProject.FileHendlers
                 fullPath += "_withDetails";
             fullPath += ".docx";
             oDoc.SaveAs2(fullPath);
-
             oWord.Quit();
 
         }

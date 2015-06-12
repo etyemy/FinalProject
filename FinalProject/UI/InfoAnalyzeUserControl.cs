@@ -150,7 +150,7 @@ namespace FinalProject.UI
             progressBar1.Value = 100;
             progressBarLabel.Text += ", Complete!";
             analyzeButton.Enabled = true;
-            saveButton.Enabled = true;
+            
         }
 
         private string generateTestName()
@@ -215,24 +215,7 @@ namespace FinalProject.UI
                 }
             return toReturn;
         }
-        private void saveButton_Click(object sender, EventArgs e)
-        {
-            _saveFileDialog.ShowDialog();
-        }
-
-        private void saveFileDialog_FileOk(object sender, CancelEventArgs e)
-        {
-            string name = _saveFileDialog.FileName;
-            if (File.Exists(name))
-                File.Delete(name);
-            StreamWriter writer = new StreamWriter(name);
-            writer.WriteLine("Chrom\tPosition\tGene Name\tRef\tVar\tStrand\tRef Codon\tVar Codon\tRef AA\tVar AA\tCDS Mutation\tAA Mutation\tCosmic Name\tShows");
-            foreach (Mutation m in _mutationList)
-            {
-                writer.WriteLine(m.PrintXLSLine());
-            }
-            writer.Close();
-        }
+       
         public void clearAll()
         {
             _xls1Handler = null;
@@ -243,7 +226,6 @@ namespace FinalProject.UI
             _mutationsDetailsList = null;
             xls1TextBox.Text = "";
             xls2TextBox.Text = "";
-            saveButton.Enabled = false;
             progressBarLabel.Text = "Status:";
             progressBar1.Value = 0;
         }
