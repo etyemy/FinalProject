@@ -29,7 +29,7 @@ namespace FinalProject.UI
         {
             if (listView1.SelectedIndices.Count != 0)
             {
-                _mainForm.PatientUC.loadPatientDetails(_patientList[listView1.SelectedIndices[0]]);
+                _mainForm.PatientUC.loadPatientDetails(_patientList[listView1.SelectedIndices[0]],true);
                 _mainForm.MutationUC.clearAll();
                 _mainForm.PatientUC.loadMutationDetails(_patientList[listView1.SelectedIndices[0]]);
                 _mainForm.Enabled = true;

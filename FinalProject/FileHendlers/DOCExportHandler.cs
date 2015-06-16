@@ -1,9 +1,13 @@
-﻿using Microsoft.Office.Interop.Word;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using DocumentFormat.OpenXml;
+
 
 namespace FinalProject.FileHendlers
 {
@@ -12,139 +16,181 @@ namespace FinalProject.FileHendlers
 
         public static void saveDOC(Patient patient, List<Mutation> mutationList, bool includePersonalDetails, string path)
         {
-            _Application oWord = new Application();
-            Document oDoc = oWord.Documents.Add();
-
-            oDoc.Paragraphs.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
-            oDoc.Paragraphs.ReadingOrder= WdReadingOrder.wdReadingOrderLtr;
-
-            addParagraph(oDoc, "Test Name", true);
-            addParagraph(oDoc, patient.TestName, false);
-
-            
-
-            if (includePersonalDetails)
-            {
-                addParagraph(oDoc, "ID", true);
-                addParagraph(oDoc, patient.PatientID, false);
-
-                addParagraph(oDoc, "First Name", true);
-                addParagraph(oDoc, patient.FName, false);
-
-                addParagraph(oDoc, "Last Name", true);
-                addParagraph(oDoc, patient.LName, false);
-            }
-
-
-            addParagraph(oDoc, "Pathological Number", true);
-            addParagraph(oDoc, patient.PathoNum, false);
-
-            addParagraph(oDoc, "Run Number", true);
-            addParagraph(oDoc, patient.RunNum, false);
-
-            addParagraph(oDoc, "Tumour Site", true);
-            addParagraph(oDoc, patient.TumourSite, false);
-
-            addParagraph(oDoc, "Disease Level", true);
-            addParagraph(oDoc, patient.DiseaseLevel, false);
-
-            addParagraph(oDoc, "Backgroud", true);
-            addParagraph(oDoc, patient.Background, false);
-
-            addParagraph(oDoc, "Previous Treatment", true);
-            addParagraph(oDoc, patient.PrevTreatment, false);
-
-            addParagraph(oDoc, "Current Treatment", true);
-            addParagraph(oDoc, patient.CurrTreatment, false);
-
-            addParagraph(oDoc, "Conclusion", true);
-            addParagraph(oDoc, patient.Conclusion, false);
-
-            addParagraph(oDoc, "\n\n", false);
-            addMutationTable(oDoc, mutationList);
-
-
-
-            foreach (Paragraph p in oWord.ActiveDocument.Paragraphs)
-            {
-                p.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
-            }
-            oDoc.Paragraphs[1].Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-            oDoc.Paragraphs[2].Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-            String fullPath = Properties.Settings.Default.DocSavePath + @"\" + patient.TestName;
+            string fullPath = path + @"\" + patient.TestName;
             if (includePersonalDetails)
                 fullPath += "_withDetails";
             fullPath += ".docx";
-            oDoc.SaveAs2(fullPath);
-            oWord.Quit();
+            WordprocessingDocument myDoc = WordprocessingDocument.Create(fullPath, WordprocessingDocumentType.Document);
+            MainDocumentPart mainPart = myDoc.AddMainDocumentPart();
+            mainPart.Document = new Document();
+            Body body = new Body();
+            Paragraph paragraph = new Paragraph();
+            Run run_paragraph = new Run();
+            paragraph.Append(run_paragraph);
 
-        }
-
-        private static void addMutationTable(Document oDoc, List<Mutation> mutationList)
-        {
-            object oMissing = System.Reflection.Missing.Value;
-            object oEndOfDoc = "\\endofdoc";
-            Table newTable;
-            Range wrdRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-            newTable = oDoc.Tables.Add(wrdRng, mutationList.Count+1,8, ref oMissing, ref oMissing);
-            newTable.Borders.InsideLineStyle = Microsoft.Office.Interop.Word.WdLineStyle.wdLineStyleSingle;
-            newTable.Borders.OutsideLineStyle = Microsoft.Office.Interop.Word.WdLineStyle.wdLineStyleSingle;
-            newTable.AllowAutoFit = true;
-            newTable.Range.Font.Name = "David";
-            newTable.Range.Font.Size = 10;
-            newTable.Rows.HeightRule = WdRowHeightRule.wdRowHeightAtLeast;
-            newTable.Rows.Alignment = WdRowAlignment.wdAlignRowCenter;
-           
-            newTable.Cell(1, 1).Range.Text = "Chromosome";
-            newTable.Cell(1, 1).Range.Font.Bold = -1;
-            newTable.Cell(1, 2).Range.Text = "Position";
-            newTable.Cell(1, 2).Range.Font.Bold = -1;
-            newTable.Cell(1, 3).Range.Text = "Gene Name";
-            newTable.Cell(1, 3).Range.Font.Bold = -1;
-            newTable.Cell(1, 4).Range.Text = "Ref";
-            newTable.Cell(1, 4).Range.Font.Bold = -1;
-            newTable.Cell(1, 5).Range.Text = "Var";
-            newTable.Cell(1, 5).Range.Font.Bold = -1;
-            newTable.Cell(1, 6).Range.Text = "Ref Codon";
-            newTable.Cell(1, 6).Range.Font.Bold = -1;
-            newTable.Cell(1, 7).Range.Text = "Var Codon";
-            newTable.Cell(1, 7).Range.Font.Bold = -1;
-            newTable.Cell(1, 8).Range.Text = "Protein Mutation";
-            newTable.Cell(1, 8).Range.Font.Bold = -1;
-
-            for (int i = 0; i < mutationList.Count;i++ )
+            body.Append(addPara("Test Name",true));
+            body.Append(addPara(patient.TestName,false));
+            if (includePersonalDetails)
             {
-                newTable.Cell(i + 2, 1).Range.Text = mutationList.ElementAt(i).Chrom;
-                newTable.Cell(i + 2, 2).Range.Text = mutationList.ElementAt(i).Position.ToString();
-                newTable.Cell(i + 2, 3).Range.Text = mutationList.ElementAt(i).GeneName;
-                newTable.Cell(i + 2, 4).Range.Text = mutationList.ElementAt(i).Ref.ToString();
-                newTable.Cell(i + 2, 5).Range.Text = mutationList.ElementAt(i).Var.ToString();
-                newTable.Cell(i + 2, 6).Range.Text = mutationList.ElementAt(i).RefCodon;
-                newTable.Cell(i + 2, 7).Range.Text = mutationList.ElementAt(i).VarCodon;
-                newTable.Cell(i + 2, 8).Range.Text = mutationList.ElementAt(i).PMutationName;
-                if(!mutationList.ElementAt(i).CosmicName.Equals("-----"))
-                {
-                    for (int j = 1; j <= 8; j++)
-                        newTable.Cell(i + 2, j).Shading.BackgroundPatternColor = WdColor.wdColorGray25;
-                }
-            }  
-        }
-
-
-        private static void addParagraph(Document oDoc, string text, bool isHeader)
-        {
-            Paragraph paragraph;
-            paragraph = oDoc.Content.Paragraphs.Add();
-            paragraph.Range.Text = text;
-            if (isHeader)
-                paragraph.Range.set_Style(oDoc.Styles[WdBuiltinStyle.wdStyleHeading2]);
-            else
-            {
-                paragraph.Range.Font.Name = "David";
-                paragraph.Range.Font.Size = 11;
+                body.Append(addPara("ID", true));
+                body.Append(addPara(patient.PatientID, false));
+                body.Append(addPara("First Name", true));
+                body.Append(addPara(patient.FName, false));
+                body.Append(addPara("Last Name", true));
+                body.Append(addPara(patient.LName, false));
             }
+            
+            body.Append(addPara("Pathological Number", true));
+            body.Append(addPara(patient.PathoNum, false));
+            body.Append(addPara("Run Number", true));
+            body.Append(addPara(patient.RunNum, false));
+            body.Append(addPara("Tumour Site", true));
+            body.Append(addPara(patient.TumourSite, false));
+            body.Append(addPara("Disease Level", true));
+            body.Append(addPara(patient.DiseaseLevel, false));
+            body.Append(addPara("Backgroud", true));
+            body.Append(addPara(patient.Background, false));
+            body.Append(addPara("Previous Treatment", true));
+            body.Append(addPara(patient.PrevTreatment, false));
+            body.Append(addPara("Current Treatment", true));
+            body.Append(addPara(patient.CurrTreatment, false));
+            body.Append(addPara("Conclusion", true));
+            body.Append(addPara(patient.Conclusion, false));
 
-            paragraph.Range.InsertParagraphAfter();
+            CreateTable(body, mutationList);
+
+            mainPart.Document.Append(body);
+            mainPart.Document.Save();
+            myDoc.Close();
+        }
+        private static Paragraph addPara(string text,bool isHeader)
+        {
+            Paragraph paragraph = new Paragraph();
+            Run run_paragraph = new Run();
+            paragraph.Append(run_paragraph);
+            if(isHeader)
+            {
+                RunProperties runProperties = run_paragraph.AppendChild(new RunProperties());
+                Bold bold = new Bold();
+                bold.Val = OnOffValue.FromBoolean(true);
+                runProperties.AppendChild(bold);
+                FontSize fontSize = new FontSize();
+                fontSize.Val = "26";
+                runProperties.Color = new Color() { Val = "0E6EB8" };
+                runProperties.AppendChild(fontSize);
+            }
+            run_paragraph.AppendChild(new Text(text));
+            if (!isHeader)
+                run_paragraph.AppendChild(new Break());
+            return paragraph;
+        }
+
+        
+
+        private static void CreateTable(Body body, List<Mutation> mutationList)
+        {
+            Table mutationTable = new Table();
+            mutationTable.AppendChild<TableProperties>(getTableProperties());
+            TableRow headerRow = new TableRow();
+            headerRow.Append(makeCell("Chromosome", 1));
+            headerRow.Append(makeCell("Position", 1));
+            headerRow.Append(makeCell("Gene Name", 1));
+            headerRow.Append(makeCell("Ref", 1));
+            headerRow.Append(makeCell("Var", 1));
+            headerRow.Append(makeCell("Ref Codon", 1));
+            headerRow.Append(makeCell("Var Codon", 1));
+            headerRow.Append(makeCell("Mutation", 1));
+            mutationTable.Append(headerRow);
+            foreach (Mutation m in mutationList)
+            {
+                int toColor = 0;
+                if (!m.CosmicName.Equals("-----"))
+                    toColor = 2;
+                TableRow row = new TableRow();
+                row.Append(makeCell(m.Chrom, toColor));
+                row.Append(makeCell(m.Position + "", toColor));
+                row.Append(makeCell(m.GeneName, toColor));
+                row.Append(makeCell(m.Ref + "", toColor));
+                row.Append(makeCell(m.Var + "", toColor));
+                row.Append(makeCell(m.RefCodon, toColor));
+                row.Append(makeCell(m.VarCodon, toColor));
+                row.Append(makeCell(m.PMutationName, toColor));
+                mutationTable.Append(row);
+            }
+            body.Append(mutationTable);
+        }
+
+         private static TableCell makeCell(string p,int colorType)
+        {
+            TableCell cell = new TableCell();
+            if(colorType!=0)
+            {
+                string color = "";
+                if(colorType==1)
+                    color="a9a9a9";
+                else if(colorType==2)
+                    color="ABCDEF";
+                TableCellProperties tcp = new TableCellProperties(
+                    new TableCellWidth { Type = TableWidthUnitValues.Auto, }
+                );
+                Shading shading = new Shading()
+                    {
+                        Color = "auto",
+                        Fill = color,
+                        Val = ShadingPatternValues.Clear
+                    };
+                // Add the Shading object to the TableCellProperties object
+                tcp.Append(shading);
+                cell.Append(tcp);
+            }
+            cell.Append(new TableCellProperties(
+                new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "2400" }));
+            cell.Append(new Paragraph(new Run(new Text(p))));
+            return cell;
+        }
+
+        private static TableProperties getTableProperties()
+        {
+            return new TableProperties(
+                    new TableBorders(
+                        new TopBorder()
+                        {
+                            Val =
+                                new EnumValue<BorderValues>(BorderValues.Single),
+                            Size = 8
+                        },
+                        new BottomBorder()
+                        {
+                            Val =
+                                new EnumValue<BorderValues>(BorderValues.Single),
+                            Size = 8
+                        },
+                        new LeftBorder()
+                        {
+                            Val =
+                                new EnumValue<BorderValues>(BorderValues.Single),
+                            Size = 8
+                        },
+                        new RightBorder()
+                        {
+                            Val =
+                                new EnumValue<BorderValues>(BorderValues.Single),
+                            Size = 8
+                        },
+                        new InsideHorizontalBorder()
+                        {
+                            Val =
+                                new EnumValue<BorderValues>(BorderValues.Single),
+                            Size = 8
+                        },
+                        new InsideVerticalBorder()
+                        {
+                            Val =
+                                new EnumValue<BorderValues>(BorderValues.Single),
+                            Size = 8
+                        }
+                    )
+                );
         }
     }
 }

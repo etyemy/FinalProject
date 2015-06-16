@@ -25,7 +25,7 @@ namespace FinalProject.UI
         public PatientUserControl(Patient p)
         {
             InitializeComponent();
-            loadPatientDetails(p);
+            loadPatientDetails(p,false);
             PatientButtonPanel.Visible = false;
         }
 
@@ -131,8 +131,9 @@ namespace FinalProject.UI
         }
 
 
-        internal void loadPatientDetails(Patient patient)
+        internal void loadPatientDetails(Patient patient, bool fullView)
         {
+            
             _savePatientButton.Enabled = true;
             patientDetailPanel.Visible = true;
 
@@ -151,6 +152,8 @@ namespace FinalProject.UI
             _currentTreatmentTextBox.Text = _patient.CurrTreatment;
             _conclusionsTextBox1.Text = _patient.Conclusion;
             patientDetailPanel.Visible = true;
+            if (fullView)
+                _mainForm.CurrPatient = _patient;
         }
         public void loadMutationDetails(Patient p)
         {

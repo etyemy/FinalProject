@@ -147,7 +147,7 @@ namespace FinalProject.UI
                     else
                     {
                         bool includeDetails = false;
-                        if (clickedName.Equals("includeDetailsMenuItem"))
+                        if (clickedName.Equals("docxWithDetailsMenuItem"))
                         {
                             includeDetails = true;
                         }
