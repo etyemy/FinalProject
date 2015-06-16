@@ -311,10 +311,7 @@ namespace FinalProject
                 toReturn.Add(Convert.ToInt32(Regex.Match(s, @"\d+").Value));
             return toReturn;
         }
-        public string PrintXLSLine()
-        {
-            return _chrom + "\t" + _position + "\t" + _geneName + "\t" + _ref + "\t" + _var + "\t" + _strand + "\t" + _refCodon + "\t" + _varCodon + "\t" + _refAA + "\t" + _varAA + "\t" + _cMutationName+ "\t" + _pMutationName + "\t" + _cosmicName + "\t" + _numOfShows;
-        }
+        
         private string generateMutId()
         {
             DateTime t = DateTime.Now;
@@ -327,6 +324,15 @@ namespace FinalProject
             temp += t.Second;
             temp += t.Millisecond;
             return temp;
+        }
+
+        public static string[] getHeaderForExport()
+        {
+            return new string[] { "Chromosome", "Position", "Gene Name", "Ref", "Var", "Strand", "Ref Codon", "Var Codon", "Ref AA", "Var AA", "Mutation Name", "Cosmic Details" };
+        }
+        public string[] getInfoForExport()
+        {
+            return new string[] { _chrom, _position + "", _geneName, _ref + "", _var + "", _strand + "", _refCodon, _varCodon, _refAA, _varAA, _pMutationName, _cosmicName };
         }
 
     }

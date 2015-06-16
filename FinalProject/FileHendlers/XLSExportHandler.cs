@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,63 +12,61 @@ namespace FinalProject.FileHendlers
     {
         public static void saveXLS(String testName, List<Mutation> mutationList)
         {
-            //Application xlApp = new Application();
-            //var workbooks = xlApp.Workbooks;
-            //Workbook workbook = xlApp.Workbooks.Add(1);
-            //Worksheet worksheet = (Worksheet)workbook.Sheets[1];
+            string fullPath = Properties.Settings.Default.DocSavePath + @"\" + testName;
+            fullPath += ".xlsx";
 
-            //worksheet.Cells[1,1] = "Chromosome";
-            //worksheet.Cells[1,2] = "Position";
-            //worksheet.Cells[1,3] = "Gene Name";
-            //worksheet.Cells[1, 4] = "Ref";
-            //worksheet.Cells[1, 5] = "Var";
-            //worksheet.Cells[1, 6] = "Strand";
-            //worksheet.Cells[1, 7] = "Ref Codon";
-            //worksheet.Cells[1, 8] = "Var Codon";
-            //worksheet.Cells[1, 9] = "Ref AA";
-            //worksheet.Cells[1, 10] = "Var AA";
-            //worksheet.Cells[1, 11] = "AA Mutation";
-            //worksheet.Cells[1, 12] = "CDS Mutation";
-            //worksheet.Cells[1,13] = "COSMIC Name";
+            using (var workbook = SpreadsheetDocument.Create(fullPath, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook))
+            {
+                var workbookPart = workbook.AddWorkbookPart();
 
-            //Range r = worksheet.get_Range("A1", "M1");
-            //r.Font.Bold=true;
-            //r.Font.Size = 13;
-            //r.Interior.Color = System.Drawing.Color.LightGray.ToArgb();
-
-            //for (int i = 0; i < mutationList.Count;i++ )
-            //{
-            //    int row = i + 2;
-            //    Mutation m = mutationList.ElementAt(i);
-            //    worksheet.Cells[row, 1] = m.Chrom;
-            //    worksheet.Cells[row, 2] = m.Position;
-            //    worksheet.Cells[row, 3] = m.GeneName;
-            //    worksheet.Cells[row, 4] = m.Ref;
-            //    worksheet.Cells[row, 5] = m.Var;
-            //    worksheet.Cells[row, 6] = m.Strand;
-            //    worksheet.Cells[row, 7] = m.RefCodon;
-            //    worksheet.Cells[row, 8] = m.VarCodon;
-            //    worksheet.Cells[row, 9] = m.RefAA;
-            //    worksheet.Cells[row, 10] = m.VarAA;
-            //    worksheet.Cells[row, 11] = m.PMutationName;
-            //    worksheet.Cells[row, 12] = m.CMutationName;
-            //    worksheet.Cells[row, 13] = m.CosmicName;
-
-            //    if (!m.CosmicName.Equals("-----"))
-            //        worksheet.get_Range("A" + row, "M" + row).Interior.Color = System.Drawing.Color.LightGreen.ToArgb();
-            //}
-
-            //worksheet.Columns.AutoFit();
+                workbook.WorkbookPart.Workbook = new DocumentFormat.OpenXml.Spreadsheet.Workbook();
+                workbook.WorkbookPart.Workbook.Sheets = new DocumentFormat.OpenXml.Spreadsheet.Sheets();
+                var sheetPart = workbook.WorkbookPart.AddNewPart<WorksheetPart>();
+                var sheetData = new DocumentFormat.OpenXml.Spreadsheet.SheetData();
+                sheetPart.Worksheet = new DocumentFormat.OpenXml.Spreadsheet.Worksheet(sheetData);
+                DocumentFormat.OpenXml.Spreadsheet.Sheets sheets = workbook.WorkbookPart.Workbook.GetFirstChild<DocumentFormat.OpenXml.Spreadsheet.Sheets>();
+                string relationshipId = workbook.WorkbookPart.GetIdOfPart(sheetPart);
+                uint sheetId = 1;
+                if (sheets.Elements<DocumentFormat.OpenXml.Spreadsheet.Sheet>().Count() > 0)
+                {
+                    sheetId =
+                        sheets.Elements<DocumentFormat.OpenXml.Spreadsheet.Sheet>().Select(s => s.SheetId.Value).Max() + 1;
+                }
+                DocumentFormat.OpenXml.Spreadsheet.Sheet sheet = new DocumentFormat.OpenXml.Spreadsheet.Sheet() { Id = relationshipId, SheetId = sheetId, Name = testName };
+                sheets.Append(sheet);
 
 
 
-            //workbook.SaveAs(Properties.Settings.Default.DocSavePath + @"\" + testName + ".xlsx");
-            //workbook.Close();
-            //xlApp.Quit();
 
+                DocumentFormat.OpenXml.Spreadsheet.Row headerRow = new DocumentFormat.OpenXml.Spreadsheet.Row();
+                foreach(string s in Mutation.getHeaderForExport())
+                {
+                    DocumentFormat.OpenXml.Spreadsheet.Cell cell = new DocumentFormat.OpenXml.Spreadsheet.Cell();
+                    cell.DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String;
+                    cell.CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue(s);
+                    headerRow.AppendChild(cell);
+                }
+                sheetData.AppendChild(headerRow);
 
-
-           
+                foreach (Mutation m in mutationList)
+                {
+                    DocumentFormat.OpenXml.Spreadsheet.Row newRow = new DocumentFormat.OpenXml.Spreadsheet.Row();
+                    string[] infoString=m.getInfoForExport();
+                    for(int i=0;i<infoString.Length;i++)
+                    
+                    {
+                        DocumentFormat.OpenXml.Spreadsheet.Cell cell1 = new DocumentFormat.OpenXml.Spreadsheet.Cell();
+                        if(i==1)
+                            cell1.DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.Number;
+                        else
+                        cell1.DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String;
+                        cell1.CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue(infoString[i]); 
+                        newRow.AppendChild(cell1);
+                    }
+                    
+                    sheetData.AppendChild(newRow);
+                }
+            }
         }
     }
 }

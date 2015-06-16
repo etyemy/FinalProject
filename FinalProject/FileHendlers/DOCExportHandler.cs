@@ -14,9 +14,9 @@ namespace FinalProject.FileHendlers
     public class DOCExportHandler
     {
 
-        public static void saveDOC(Patient patient, List<Mutation> mutationList, bool includePersonalDetails, string path)
+        public static void saveDOC(Patient patient, List<Mutation> mutationList, bool includePersonalDetails)
         {
-            string fullPath = path + @"\" + patient.TestName;
+            string fullPath = Properties.Settings.Default.DocSavePath + @"\" + patient.TestName;
             if (includePersonalDetails)
                 fullPath += "_withDetails";
             fullPath += ".docx";

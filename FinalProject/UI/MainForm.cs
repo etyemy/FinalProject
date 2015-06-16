@@ -153,7 +153,7 @@ namespace FinalProject.UI
                         }
                         try
                         {
-                            DOCExportHandler.saveDOC(_currPatient, _mutationList, includeDetails, Properties.Settings.Default.DocSavePath);
+                            DOCExportHandler.saveDOC(_currPatient, _mutationList, includeDetails);
 
                         }
                         catch (COMException)
