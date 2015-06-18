@@ -15,58 +15,129 @@ namespace FinalProject.FileHendlers
             string fullPath = Properties.Settings.Default.DocSavePath + @"\" + testName;
             fullPath += ".xlsx";
 
-            using (var workbook = SpreadsheetDocument.Create(fullPath, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook))
+            using (var workbook = SpreadsheetDocument.Create(fullPath, SpreadsheetDocumentType.Workbook))
             {
-                var workbookPart = workbook.AddWorkbookPart();
 
-                workbook.WorkbookPart.Workbook = new DocumentFormat.OpenXml.Spreadsheet.Workbook();
-                workbook.WorkbookPart.Workbook.Sheets = new DocumentFormat.OpenXml.Spreadsheet.Sheets();
+                WorkbookPart mainPart = workbook.AddWorkbookPart();
+                mainPart.Workbook = new Workbook();
+                WorkbookStylesPart stylePart = mainPart.AddNewPart
+                          <WorkbookStylesPart>();
+                stylePart.Stylesheet = GenerateStyleSheet();
+                stylePart.Stylesheet.Save();
+
+                workbook.WorkbookPart.Workbook.Sheets = new Sheets();
                 var sheetPart = workbook.WorkbookPart.AddNewPart<WorksheetPart>();
-                var sheetData = new DocumentFormat.OpenXml.Spreadsheet.SheetData();
-                sheetPart.Worksheet = new DocumentFormat.OpenXml.Spreadsheet.Worksheet(sheetData);
-                DocumentFormat.OpenXml.Spreadsheet.Sheets sheets = workbook.WorkbookPart.Workbook.GetFirstChild<DocumentFormat.OpenXml.Spreadsheet.Sheets>();
+                var sheetData = new SheetData();
+                sheetPart.Worksheet = new Worksheet(sheetData);
+                Sheets sheets = workbook.WorkbookPart.Workbook.GetFirstChild<Sheets>();
                 string relationshipId = workbook.WorkbookPart.GetIdOfPart(sheetPart);
                 uint sheetId = 1;
-                if (sheets.Elements<DocumentFormat.OpenXml.Spreadsheet.Sheet>().Count() > 0)
+                if (sheets.Elements<Sheet>().Count() > 0)
                 {
                     sheetId =
-                        sheets.Elements<DocumentFormat.OpenXml.Spreadsheet.Sheet>().Select(s => s.SheetId.Value).Max() + 1;
+                        sheets.Elements<Sheet>().Select(s => s.SheetId.Value).Max() + 1;
                 }
-                DocumentFormat.OpenXml.Spreadsheet.Sheet sheet = new DocumentFormat.OpenXml.Spreadsheet.Sheet() { Id = relationshipId, SheetId = sheetId, Name = testName };
+                Sheet sheet = new Sheet() { Id = relationshipId, SheetId = sheetId, Name = testName };
                 sheets.Append(sheet);
 
 
 
 
-                DocumentFormat.OpenXml.Spreadsheet.Row headerRow = new DocumentFormat.OpenXml.Spreadsheet.Row();
-                foreach(string s in Mutation.getHeaderForExport())
+                Row headerRow = new Row();
+                foreach (string s in Mutation.getHeaderForExport())
                 {
-                    DocumentFormat.OpenXml.Spreadsheet.Cell cell = new DocumentFormat.OpenXml.Spreadsheet.Cell();
-                    cell.DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String;
-                    cell.CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue(s);
+                    Cell cell = new Cell();
+                    cell.DataType = CellValues.String;
+                    cell.CellValue = new CellValue(s);
+                    cell.StyleIndex = 1;
                     headerRow.AppendChild(cell);
                 }
                 sheetData.AppendChild(headerRow);
 
                 foreach (Mutation m in mutationList)
                 {
-                    DocumentFormat.OpenXml.Spreadsheet.Row newRow = new DocumentFormat.OpenXml.Spreadsheet.Row();
-                    string[] infoString=m.getInfoForExport();
-                    for(int i=0;i<infoString.Length;i++)
-                    
+                    Row newRow = new Row();
+                    string[] infoString = m.getInfoForExport();
+                    for (int i = 0; i < infoString.Length; i++)
                     {
-                        DocumentFormat.OpenXml.Spreadsheet.Cell cell1 = new DocumentFormat.OpenXml.Spreadsheet.Cell();
-                        if(i==1)
-                            cell1.DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.Number;
+                        Cell cell1 = new Cell();
+                        if (i == 1)
+                            cell1.DataType = CellValues.Number;
                         else
-                        cell1.DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String;
-                        cell1.CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue(infoString[i]); 
+                            cell1.DataType = CellValues.String;
+                        cell1.CellValue = new CellValue(infoString[i]);
+                        if (!m.CosmicName.Equals("-----"))
+                            cell1.StyleIndex = 2;
+                        else
+                            cell1.StyleIndex = 3;
                         newRow.AppendChild(cell1);
                     }
-                    
+
                     sheetData.AppendChild(newRow);
                 }
             }
+        }
+        private static Stylesheet GenerateStyleSheet()
+        {
+            return new Stylesheet(
+                new Fonts(
+                    new Font(                                                               // Index 0 - The default font.
+                        new FontSize() { Val = 11 },
+                        new Color() { Rgb = new HexBinaryValue() { Value = "000000" } },
+                        new FontName() { Val = "Calibri" }),
+                   new Font(
+                        new Bold(),                                                         // Index 1 - Header.
+                        new FontSize() { Val = 11 },
+                        new Color() { Rgb = new HexBinaryValue() { Value = "000000" } },
+                        new FontName() { Val = "Calibri" })
+                ),
+                new Fills(
+                    new Fill(                                                           // Index 0 - Regular row.
+                        new PatternFill() { PatternType = PatternValues.None }),
+                    new Fill(                                                           // Index 1 - Header row
+                        new PatternFill(
+                            new ForegroundColor() { Rgb = new HexBinaryValue() { Value = "A9A9A9" } }
+                        ) { PatternType = PatternValues.Solid }),
+                    new Fill(                                                           // Index 2 - Important Mutation row .
+                        new PatternFill(
+                            new ForegroundColor() { Rgb = new HexBinaryValue() { Value = "ABCDEF" } }
+                        ) { PatternType = PatternValues.Solid }),
+                    new Fill(                                                           // Index 2 - Important Mutation row .
+                        new PatternFill(
+                            new ForegroundColor() { Rgb = new HexBinaryValue() { Value = "FFFFFF" } }
+                        ) { PatternType = PatternValues.Solid })
+                ),
+                new Borders(
+                    new Border(                                                         // Index 0 - The default border.
+                        new LeftBorder(),
+                        new RightBorder(),
+                        new TopBorder(),
+                        new BottomBorder(),
+                        new DiagonalBorder()),
+            new Border(                                                         // Index 1 - Applies a Left, Right, Top, Bottom border to a cell
+                new LeftBorder(
+                    new Color() { Auto = true }
+                ) { Style = BorderStyleValues.Thin },
+                new RightBorder(
+                    new Color() { Auto = true }
+                ) { Style = BorderStyleValues.Thin },
+                new TopBorder(
+                    new Color() { Auto = true }
+                ) { Style = BorderStyleValues.Thin },
+                new BottomBorder(
+                    new Color() { Auto = true }
+                ) { Style = BorderStyleValues.Thin },
+                new DiagonalBorder())
+
+                ),
+                new CellFormats(
+                    new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 0, FillId = 0, BorderId = 1, ApplyAlignment = true, ApplyBorder = true, ApplyFill = true },
+                    new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 1, FillId = 1, BorderId = 1, ApplyAlignment = true, ApplyBorder = true, ApplyFill = true },
+                    new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 0, FillId = 2, BorderId = 1, ApplyAlignment = true, ApplyBorder = true, ApplyFill = true },
+                    new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 0, FillId = 3, BorderId = 1, ApplyAlignment = true, ApplyBorder = true, ApplyFill = true }
+
+                )
+            ); // return
         }
     }
 }

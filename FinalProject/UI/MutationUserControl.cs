@@ -67,7 +67,7 @@ namespace FinalProject.UI
                         tempRow.Cells[14] = new DataGridViewTextBoxCell();
                     tempRow.Cells[14].Value = historyNum;
                     if (!m.CosmicName.Equals("-----"))
-                        tempRow.DefaultCellStyle.BackColor = Color.LightCyan;
+                        tempRow.DefaultCellStyle.BackColor = System.Drawing.ColorTranslator.FromHtml("#ABCDEF");
                     mutationDataGridView.Rows.Add(tempRow);
                     mutationDataGridView.PerformLayout();
                 }

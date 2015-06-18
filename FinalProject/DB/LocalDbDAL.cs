@@ -496,7 +496,6 @@ namespace FinalProject
                 bool first = true;
                 while (rdr.Read())
                 {
-                    Console.WriteLine("xxx");
                     if (first)
                     {
                         toReturn = new List<List<string>>();
