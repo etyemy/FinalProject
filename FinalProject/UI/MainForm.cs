@@ -134,7 +134,11 @@ namespace FinalProject.UI
             ToolStripMenuItem clicked = sender as ToolStripMenuItem;
             string clickedName = clicked.Name;
             if (path.Equals(""))
-                MessageBox.Show("Error, Please select directory to save in settings");
+                MessageBox.Show("Error, Please select directory to save in settings",
+                                "Error",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Exclamation,
+                                MessageBoxDefaultButton.Button1);
             else
             {
 
@@ -158,12 +162,16 @@ namespace FinalProject.UI
                         }
                         catch (IOException)
                         {
-                            MessageBox.Show("File Allready Open, Close And Try Again");
+                            MessageBox.Show("File Allready Open, Close And Try Again.",
+                                "Error",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Exclamation,
+                                MessageBoxDefaultButton.Button1);
                         }
 
                     }
                 }
-                else if(clickedName.Equals("xlsxMutationMenuItem"))
+                else if (clickedName.Equals("xlsxMutationMenuItem"))
                 {
                     if (_mutationList == null)
                     {
@@ -178,10 +186,12 @@ namespace FinalProject.UI
                         }
                         catch (IOException)
                         {
-                            MessageBox.Show("File Allready Open, Close And Try Again");
+                            MessageBox.Show("File Allready Open, Close And Try Again.",
+                                "Error",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Exclamation,
+                                MessageBoxDefaultButton.Button1);
                         }
-                       
-
                     }
                 }
             }

@@ -45,7 +45,11 @@ namespace FinalProject.UI
                 }
             }
             else
-                MessageBox.Show("Wrong ID, No patient found");
+                MessageBox.Show("Wrong ID, No patient found.",
+                                  "Error",
+                                  MessageBoxButtons.OK,
+                                  MessageBoxIcon.Exclamation,
+                                  MessageBoxDefaultButton.Button1);
         }
 
         private void _savePatientButton_Click(object sender, EventArgs e)

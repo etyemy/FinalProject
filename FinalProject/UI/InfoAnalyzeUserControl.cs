@@ -56,7 +56,12 @@ namespace FinalProject.UI
 
                 if (_xls2Path == _xls1Path)
                 {
-                    MessageBox.Show("Same File Selected", "Error");
+                    MessageBox.Show("Same File Selected.",
+                                "Error",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Exclamation,
+                                MessageBoxDefaultButton.Button1);
+                    
                 }
                 else
                 {
@@ -83,7 +88,13 @@ namespace FinalProject.UI
             Boolean startAnalyze = false;
             if (_xls1Path == null && _xls2Path == null)
             {
-                MessageBox.Show("No files selected", "Error");
+                MessageBox.Show("No files selected.",
+                                  "Error",
+                                  MessageBoxButtons.OK,
+                                  MessageBoxIcon.Exclamation,
+                                  MessageBoxDefaultButton.Button1);
+                    
+              
             }
             else if (_xls1Path == null ^ _xls2Path == null)
             {
