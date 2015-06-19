@@ -28,7 +28,7 @@ namespace FinalProject
             catch (SqlException e)
             {
                 Console.WriteLine("Error on creation: {0}", e.ToString());
-                throw ;
+                throw;
             }
         }
         public List<String> getGene(string geneName, string chrom)
@@ -60,7 +60,8 @@ namespace FinalProject
             finally
             {
                 conn.Close();
-                rdr.Close();
+                if (rdr != null)
+                    rdr.Close();
             }
             return toReturn;
         }
@@ -125,7 +126,8 @@ namespace FinalProject
             finally
             {
                 conn.Close();
-                rdr.Close();
+                if (rdr != null)
+                    rdr.Close();
             }
             return toReturn;
         }
@@ -154,7 +156,8 @@ namespace FinalProject
             finally
             {
                 conn.Close();
-                rdr.Close();
+                if (rdr != null)
+                    rdr.Close();
             }
             return toReturn;
         }
@@ -191,7 +194,8 @@ namespace FinalProject
             finally
             {
                 conn.Close();
-                rdr.Close();
+                if (rdr != null)
+                    rdr.Close();
             }
             return toReturn;
         }
@@ -258,7 +262,8 @@ namespace FinalProject
             finally
             {
                 conn.Close();
-                rdr.Close();
+                if (rdr != null)
+                    rdr.Close();
             }
             return toReturn;
         }
@@ -291,7 +296,8 @@ namespace FinalProject
             finally
             {
                 conn.Close();
-                rdr.Close();
+                if (rdr != null)
+                    rdr.Close();
             }
             return toReturn;
         }
@@ -319,7 +325,8 @@ namespace FinalProject
             finally
             {
                 conn.Close();
-                rdr.Close();
+                if (rdr != null)
+                    rdr.Close();
             }
             return toReturn;
         }
@@ -354,7 +361,7 @@ namespace FinalProject
                 conn.Close();
             }
         }
-        public void updatePatient(string testName,string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string diseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
+        public void updatePatient(string testName, string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string diseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
         {
             try
             {
@@ -379,7 +386,7 @@ namespace FinalProject
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
-           catch (Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.StackTrace);
             }
@@ -435,7 +442,8 @@ namespace FinalProject
             finally
             {
                 conn.Close();
-                rdr.Close();
+                if (rdr != null)
+                    rdr.Close();
             }
             return toReturn;
         }
@@ -460,7 +468,7 @@ namespace FinalProject
                         toReturn = new List<List<string>>();
                         first = false;
                     }
-                    
+
                     List<string> l = new List<string>();
                     for (int i = 0; i < rdr.FieldCount; i++)
                     {
@@ -476,7 +484,8 @@ namespace FinalProject
             finally
             {
                 conn.Close();
-                rdr.Close();
+                if (rdr != null)
+                    rdr.Close();
             }
             return toReturn;
         }
@@ -517,7 +526,8 @@ namespace FinalProject
             finally
             {
                 conn.Close();
-                rdr.Close();
+                if (rdr != null)
+                    rdr.Close();
             }
             return toReturn;
         }

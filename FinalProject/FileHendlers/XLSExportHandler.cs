@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace FinalProject.FileHendlers
 {
@@ -15,34 +16,24 @@ namespace FinalProject.FileHendlers
             string fullPath = Properties.Settings.Default.DocSavePath + @"\" + testName;
             fullPath += ".xlsx";
 
-            using (var workbook = SpreadsheetDocument.Create(fullPath, SpreadsheetDocumentType.Workbook))
+            using (SpreadsheetDocument xl = SpreadsheetDocument.Create(fullPath, SpreadsheetDocumentType.Workbook))
             {
+                WorkbookPart wbp = xl.AddWorkbookPart();
+                WorksheetPart wsp = wbp.AddNewPart<WorksheetPart>();
+                Workbook wb = new Workbook();
+                FileVersion fv = new FileVersion();
+                fv.ApplicationName = "Microsoft Office Excel";
+                Worksheet ws = new Worksheet();
+                SheetData sd = new SheetData();
 
-                WorkbookPart mainPart = workbook.AddWorkbookPart();
-                mainPart.Workbook = new Workbook();
-                WorkbookStylesPart stylePart = mainPart.AddNewPart
-                          <WorkbookStylesPart>();
-                stylePart.Stylesheet = GenerateStyleSheet();
-                stylePart.Stylesheet.Save();
+                WorkbookStylesPart wbsp = wbp.AddNewPart<WorkbookStylesPart>();
+                wbsp.Stylesheet = GenerateStyleSheet();
+                wbsp.Stylesheet.Save();
 
-                workbook.WorkbookPart.Workbook.Sheets = new Sheets();
-                var sheetPart = workbook.WorkbookPart.AddNewPart<WorksheetPart>();
-                var sheetData = new SheetData();
-                sheetPart.Worksheet = new Worksheet(sheetData);
-                Sheets sheets = workbook.WorkbookPart.Workbook.GetFirstChild<Sheets>();
-                string relationshipId = workbook.WorkbookPart.GetIdOfPart(sheetPart);
-                uint sheetId = 1;
-                if (sheets.Elements<Sheet>().Count() > 0)
-                {
-                    sheetId =
-                        sheets.Elements<Sheet>().Select(s => s.SheetId.Value).Max() + 1;
-                }
-                Sheet sheet = new Sheet() { Id = relationshipId, SheetId = sheetId, Name = testName };
-                sheets.Append(sheet);
+                
 
-
-
-
+                string[] longestWordPerColumn = new string[12];
+                int k = 0;
                 Row headerRow = new Row();
                 foreach (string s in Mutation.getHeaderForExport())
                 {
@@ -51,9 +42,10 @@ namespace FinalProject.FileHendlers
                     cell.CellValue = new CellValue(s);
                     cell.StyleIndex = 1;
                     headerRow.AppendChild(cell);
+                    longestWordPerColumn[k] = s;
+                    k++;
                 }
-                sheetData.AppendChild(headerRow);
-
+                sd.AppendChild(headerRow);
                 foreach (Mutation m in mutationList)
                 {
                     Row newRow = new Row();
@@ -71,50 +63,84 @@ namespace FinalProject.FileHendlers
                         else
                             cell1.StyleIndex = 3;
                         newRow.AppendChild(cell1);
+                        if (longestWordPerColumn[i].Length < infoString[i].Length)
+                            longestWordPerColumn[i] = infoString[i];
                     }
-
-                    sheetData.AppendChild(newRow);
+                    sd.AppendChild(newRow);
                 }
+
+                Columns columns = new Columns();
+                for (int i = 0; i < 12; i++)
+                {
+                    columns.Append(CreateColumnData((UInt32)i + 1, (UInt32)i + 1, GetWidth("Calibri", 11, longestWordPerColumn[i])));
+                }
+                ws.Append(columns);
+
+
+                ws.Append(sd);
+                wsp.Worksheet = ws;
+                wsp.Worksheet.Save();
+                Sheets sheets = new Sheets();
+                Sheet sheet = new Sheet();
+                sheet.Name = "Sheet1";
+                sheet.SheetId = 1;
+                sheet.Id = wbp.GetIdOfPart(wsp);
+                sheets.Append(sheet);
+                wb.Append(fv);
+                wb.Append(sheets);
+
+                xl.WorkbookPart.Workbook = wb;
+                xl.WorkbookPart.Workbook.Save();
+                xl.Close();
             }
         }
+
         private static Stylesheet GenerateStyleSheet()
         {
             return new Stylesheet(
                 new Fonts(
-                    new Font(                                                               // Index 0 - The default font.
+                // Index 0 - The default font.
+                    new Font(                                                               
                         new FontSize() { Val = 11 },
                         new Color() { Rgb = new HexBinaryValue() { Value = "000000" } },
                         new FontName() { Val = "Calibri" }),
+                        // Index 1 - Header.
                    new Font(
-                        new Bold(),                                                         // Index 1 - Header.
+                        new Bold(),                                                         
                         new FontSize() { Val = 11 },
                         new Color() { Rgb = new HexBinaryValue() { Value = "000000" } },
                         new FontName() { Val = "Calibri" })
                 ),
                 new Fills(
-                    new Fill(                                                           // Index 0 - Regular row.
+                // Index 0 - Regular row.
+                    new Fill(
                         new PatternFill() { PatternType = PatternValues.None }),
-                    new Fill(                                                           // Index 1 - Header row
+                // Index 1 - Header row
+                    new Fill(
                         new PatternFill(
                             new ForegroundColor() { Rgb = new HexBinaryValue() { Value = "A9A9A9" } }
                         ) { PatternType = PatternValues.Solid }),
-                    new Fill(                                                           // Index 2 - Important Mutation row .
+                // Index 2 - Important Mutation row .
+                    new Fill(
                         new PatternFill(
                             new ForegroundColor() { Rgb = new HexBinaryValue() { Value = "ABCDEF" } }
                         ) { PatternType = PatternValues.Solid }),
-                    new Fill(                                                           // Index 2 - Important Mutation row .
+                // Index 3 - Regular Mutation row .
+                    new Fill(
                         new PatternFill(
                             new ForegroundColor() { Rgb = new HexBinaryValue() { Value = "FFFFFF" } }
                         ) { PatternType = PatternValues.Solid })
                 ),
                 new Borders(
-                    new Border(                                                         // Index 0 - The default border.
+                // Index 0 - The default border.
+                    new Border(
                         new LeftBorder(),
                         new RightBorder(),
                         new TopBorder(),
                         new BottomBorder(),
                         new DiagonalBorder()),
-            new Border(                                                         // Index 1 - Applies a Left, Right, Top, Bottom border to a cell
+                // Index 1 - Applies a Left, Right, Top, Bottom border to a cell
+            new Border(
                 new LeftBorder(
                     new Color() { Auto = true }
                 ) { Style = BorderStyleValues.Thin },
@@ -131,13 +157,36 @@ namespace FinalProject.FileHendlers
 
                 ),
                 new CellFormats(
-                    new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 0, FillId = 0, BorderId = 1, ApplyAlignment = true, ApplyBorder = true, ApplyFill = true },
-                    new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 1, FillId = 1, BorderId = 1, ApplyAlignment = true, ApplyBorder = true, ApplyFill = true },
-                    new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 0, FillId = 2, BorderId = 1, ApplyAlignment = true, ApplyBorder = true, ApplyFill = true },
-                    new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 0, FillId = 3, BorderId = 1, ApplyAlignment = true, ApplyBorder = true, ApplyFill = true }
+                    new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 0, FillId = 0, BorderId = 0 },
+                    new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 1, FillId = 1, BorderId = 1, ApplyAlignment = true, ApplyBorder = true },
+                    new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 0, FillId = 2, BorderId = 1, ApplyAlignment = true, ApplyBorder = true },
+                    new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 0, FillId = 3, BorderId = 1, ApplyAlignment = true, ApplyBorder = true }
 
                 )
             ); // return
+        }
+        private static Column CreateColumnData(UInt32 StartColumnIndex, UInt32 EndColumnIndex, double ColumnWidth)
+        {
+            Column column;
+            column = new Column();
+            column.Min = StartColumnIndex;
+            column.Max = EndColumnIndex;
+            column.Width = ColumnWidth;
+            column.CustomWidth = true;
+            return column;
+        }
+        private static double GetWidth(string font, int fontSize, string text)
+        {
+            System.Drawing.Font stringFont = new System.Drawing.Font(font, fontSize);
+            return GetWidth(stringFont, text);
+        }
+
+        private static double GetWidth(System.Drawing.Font stringFont, string text)
+        {
+            System.Drawing.Size textSize = TextRenderer.MeasureText(text, stringFont);
+            double width = (double)(((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
+            width = (double)decimal.Round((decimal)width + 0.2M, 2);
+            return width;
         }
     }
 }
