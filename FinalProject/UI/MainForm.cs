@@ -154,9 +154,9 @@ namespace FinalProject.UI
                         try
                         {
                             DOCExportHandler.saveDOC(_currPatient, _mutationList, includeDetails);
-
+                            MessageBox.Show("File Saved Successfully To: " + Properties.Settings.Default.DocSavePath);
                         }
-                        catch (COMException)
+                        catch (IOException)
                         {
                             MessageBox.Show("File Allready Open, Close And Try Again");
                         }
@@ -171,15 +171,20 @@ namespace FinalProject.UI
                     }
                     else
                     {
-                        XLSExportHandler.saveXLS(patientUserControl.TestName,_mutationList);
+                        try
+                        {
+                            XLSExportHandler.saveXLS(patientUserControl.TestName, _mutationList);
+                            MessageBox.Show("File Saved Successfully To: " + Properties.Settings.Default.DocSavePath);
+                        }
+                        catch (IOException)
+                        {
+                            MessageBox.Show("File Allready Open, Close And Try Again");
+                        }
+                       
+
                     }
                 }
-
-
-
-
             }
-
         }
     }
 }

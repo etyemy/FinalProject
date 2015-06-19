@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -13,86 +14,94 @@ namespace FinalProject.FileHendlers
     {
         public static void saveXLS(String testName, List<Mutation> mutationList)
         {
+            SpreadsheetDocument xl = null;
             string fullPath = Properties.Settings.Default.DocSavePath + @"\" + testName;
             fullPath += ".xlsx";
-
-            using (SpreadsheetDocument xl = SpreadsheetDocument.Create(fullPath, SpreadsheetDocumentType.Workbook))
+            try
             {
-                WorkbookPart wbp = xl.AddWorkbookPart();
-                WorksheetPart wsp = wbp.AddNewPart<WorksheetPart>();
-                Workbook wb = new Workbook();
-                FileVersion fv = new FileVersion();
-                fv.ApplicationName = "Microsoft Office Excel";
-                Worksheet ws = new Worksheet();
-                SheetData sd = new SheetData();
-
-                WorkbookStylesPart wbsp = wbp.AddNewPart<WorkbookStylesPart>();
-                wbsp.Stylesheet = GenerateStyleSheet();
-                wbsp.Stylesheet.Save();
-
-                
-
-                string[] longestWordPerColumn = new string[12];
-                int k = 0;
-                Row headerRow = new Row();
-                foreach (string s in Mutation.getHeaderForExport())
-                {
-                    Cell cell = new Cell();
-                    cell.DataType = CellValues.String;
-                    cell.CellValue = new CellValue(s);
-                    cell.StyleIndex = 1;
-                    headerRow.AppendChild(cell);
-                    longestWordPerColumn[k] = s;
-                    k++;
-                }
-                sd.AppendChild(headerRow);
-                foreach (Mutation m in mutationList)
-                {
-                    Row newRow = new Row();
-                    string[] infoString = m.getInfoForExport();
-                    for (int i = 0; i < infoString.Length; i++)
-                    {
-                        Cell cell1 = new Cell();
-                        if (i == 1)
-                            cell1.DataType = CellValues.Number;
-                        else
-                            cell1.DataType = CellValues.String;
-                        cell1.CellValue = new CellValue(infoString[i]);
-                        if (!m.CosmicName.Equals("-----"))
-                            cell1.StyleIndex = 2;
-                        else
-                            cell1.StyleIndex = 3;
-                        newRow.AppendChild(cell1);
-                        if (longestWordPerColumn[i].Length < infoString[i].Length)
-                            longestWordPerColumn[i] = infoString[i];
-                    }
-                    sd.AppendChild(newRow);
-                }
-
-                Columns columns = new Columns();
-                for (int i = 0; i < 12; i++)
-                {
-                    columns.Append(CreateColumnData((UInt32)i + 1, (UInt32)i + 1, GetWidth("Calibri", 11, longestWordPerColumn[i])));
-                }
-                ws.Append(columns);
-
-
-                ws.Append(sd);
-                wsp.Worksheet = ws;
-                wsp.Worksheet.Save();
-                Sheets sheets = new Sheets();
-                Sheet sheet = new Sheet();
-                sheet.Name = "Sheet1";
-                sheet.SheetId = 1;
-                sheet.Id = wbp.GetIdOfPart(wsp);
-                sheets.Append(sheet);
-                wb.Append(fv);
-                wb.Append(sheets);
-
-                xl.WorkbookPart.Workbook = wb;
-                xl.WorkbookPart.Workbook.Save();
-                xl.Close();
+                xl = SpreadsheetDocument.Create(fullPath, SpreadsheetDocumentType.Workbook);
             }
+            catch (IOException e)
+            {
+                throw e;
+            }
+
+
+            WorkbookPart wbp = xl.AddWorkbookPart();
+            WorksheetPart wsp = wbp.AddNewPart<WorksheetPart>();
+            Workbook wb = new Workbook();
+            FileVersion fv = new FileVersion();
+            fv.ApplicationName = "Microsoft Office Excel";
+            Worksheet ws = new Worksheet();
+            SheetData sd = new SheetData();
+
+            WorkbookStylesPart wbsp = wbp.AddNewPart<WorkbookStylesPart>();
+            wbsp.Stylesheet = GenerateStyleSheet();
+            wbsp.Stylesheet.Save();
+
+
+
+            string[] longestWordPerColumn = new string[12];
+            int k = 0;
+            Row headerRow = new Row();
+            foreach (string s in Mutation.getHeaderForExport())
+            {
+                Cell cell = new Cell();
+                cell.DataType = CellValues.String;
+                cell.CellValue = new CellValue(s);
+                cell.StyleIndex = 1;
+                headerRow.AppendChild(cell);
+                longestWordPerColumn[k] = s;
+                k++;
+            }
+            sd.AppendChild(headerRow);
+            foreach (Mutation m in mutationList)
+            {
+                Row newRow = new Row();
+                string[] infoString = m.getInfoForExport();
+                for (int i = 0; i < infoString.Length; i++)
+                {
+                    Cell cell1 = new Cell();
+                    if (i == 1)
+                        cell1.DataType = CellValues.Number;
+                    else
+                        cell1.DataType = CellValues.String;
+                    cell1.CellValue = new CellValue(infoString[i]);
+                    if (!m.CosmicName.Equals("-----"))
+                        cell1.StyleIndex = 2;
+                    else
+                        cell1.StyleIndex = 3;
+                    newRow.AppendChild(cell1);
+                    if (longestWordPerColumn[i].Length < infoString[i].Length)
+                        longestWordPerColumn[i] = infoString[i];
+                }
+                sd.AppendChild(newRow);
+            }
+
+            Columns columns = new Columns();
+            for (int i = 0; i < 12; i++)
+            {
+                columns.Append(CreateColumnData((UInt32)i + 1, (UInt32)i + 1, GetWidth("Calibri", 11, longestWordPerColumn[i])));
+            }
+            ws.Append(columns);
+
+
+            ws.Append(sd);
+            wsp.Worksheet = ws;
+            wsp.Worksheet.Save();
+            Sheets sheets = new Sheets();
+            Sheet sheet = new Sheet();
+            sheet.Name = "Sheet1";
+            sheet.SheetId = 1;
+            sheet.Id = wbp.GetIdOfPart(wsp);
+            sheets.Append(sheet);
+            wb.Append(fv);
+            wb.Append(sheets);
+
+            xl.WorkbookPart.Workbook = wb;
+            xl.WorkbookPart.Workbook.Save();
+            xl.Close();
+
         }
 
         private static Stylesheet GenerateStyleSheet()
@@ -100,13 +109,13 @@ namespace FinalProject.FileHendlers
             return new Stylesheet(
                 new Fonts(
                 // Index 0 - The default font.
-                    new Font(                                                               
+                    new Font(
                         new FontSize() { Val = 11 },
                         new Color() { Rgb = new HexBinaryValue() { Value = "000000" } },
                         new FontName() { Val = "Calibri" }),
-                        // Index 1 - Header.
+                // Index 1 - Header.
                    new Font(
-                        new Bold(),                                                         
+                        new Bold(),
                         new FontSize() { Val = 11 },
                         new Color() { Rgb = new HexBinaryValue() { Value = "000000" } },
                         new FontName() { Val = "Calibri" })

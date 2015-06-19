@@ -16,11 +16,19 @@ namespace FinalProject.FileHendlers
 
         public static void saveDOC(Patient patient, List<Mutation> mutationList, bool includePersonalDetails)
         {
+            WordprocessingDocument myDoc = null;
             string fullPath = Properties.Settings.Default.DocSavePath + @"\" + patient.TestName;
             if (includePersonalDetails)
                 fullPath += "_withDetails";
             fullPath += ".docx";
-            WordprocessingDocument myDoc = WordprocessingDocument.Create(fullPath, WordprocessingDocumentType.Document);
+            try
+            {
+                myDoc = WordprocessingDocument.Create(fullPath, WordprocessingDocumentType.Document);
+            }
+            catch(IOException e)
+            {
+                throw e;
+            }
             MainDocumentPart mainPart = myDoc.AddMainDocumentPart();
             mainPart.Document = new Document();
             Body body = new Body();
