@@ -13,19 +13,23 @@ namespace FinalProject.UI
     {
         MainForm _mainForm;
         int nextPosition = 15;
-        public HistoryForm(List<Patient> patientList,MainForm mainForm)
+        public HistoryForm(List<Patient> patientList, MainForm mainForm)
         {
-            _mainForm = mainForm;
-            InitializeComponent();
-            foreach(Patient p in patientList)
+            if (patientList != null)
             {
-                PatientUserControl puc = new PatientUserControl(p);
-                this.Controls.Add(puc);
-                puc.Top = nextPosition;
-                puc.Left = -200;
-                nextPosition += 215;
-                puc.BackColor = Color.LightBlue;
-                puc.BorderStyle = BorderStyle.Fixed3D;
+                _mainForm = mainForm;
+                InitializeComponent();
+                foreach (Patient p in patientList)
+                {
+                    PatientUserControl puc = new PatientUserControl(p);
+                    this.Controls.Add(puc);
+                    puc.Top = nextPosition;
+                    puc.Left = -200;
+                    nextPosition += 215;
+                    puc.BackColor = System.Drawing.ColorTranslator.FromHtml("#ABCDEF");
+                    puc.BorderStyle = BorderStyle.Fixed3D;
+                }
+
             }
         }
 

@@ -21,9 +21,9 @@ namespace FinalProject.FileHendlers
             {
                 xl = SpreadsheetDocument.Create(fullPath, SpreadsheetDocumentType.Workbook);
             }
-            catch (IOException e)
+            catch (IOException )
             {
-                throw e;
+                throw ;
             }
 
 

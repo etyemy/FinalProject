@@ -25,9 +25,9 @@ namespace FinalProject.FileHendlers
             {
                 myDoc = WordprocessingDocument.Create(fullPath, WordprocessingDocumentType.Document);
             }
-            catch(IOException e)
+            catch(IOException )
             {
-                throw e;
+                throw ;
             }
             MainDocumentPart mainPart = myDoc.AddMainDocumentPart();
             mainPart.Document = new Document();
