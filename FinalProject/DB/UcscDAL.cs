@@ -6,116 +6,88 @@ using System.IO;
 namespace FinalProject
 {
     class UcscDAL
-
     {
-        private MySqlConnection conn = null;
-        private MySqlConnectionStringBuilder sb = null;
-        private MySqlCommand cmd = null;
+        static string connectionString = @"server=genome-mysql.cse.ucsc.edu;user id=genome;database=hg19";
 
-        public UcscDAL()
+        public static List<String> getGene(string geneName, string chrom)
         {
-            sb = new MySqlConnectionStringBuilder();
-            sb.Server = "genome-mysql.cse.ucsc.edu";
-            sb.UserID = "genome";
-            sb.Database = "hg19";
-            try
-            {
-                conn = new MySqlConnection(sb.ToString());
-            }
-            catch (MySqlException e)
-            {
-                Console.WriteLine("Error on creation: {0}", e.ToString());
-                throw ;
-            }
-            
-        }
-        
-        public List<String> getGene(string geneName, string chrom)
-        {
-            conn.Open();
-            List<String> toReturn =null;
-            string query =
-                "SELECT strand, MIN(cdsStart), MAX(cdsEnd), MAX(exonCount), exonStarts, exonEnds " +
-                "FROM refGene " +
-                "WHERE chrom='" + chrom + "' " +
-                "AND name2='" + geneName + "'";
-            MySqlDataReader rdr = executeQuery(query);
-            if (rdr.Read())
-            {
-                toReturn = new List<string>();
-                for (int i = 0; i < rdr.FieldCount; i++)
-                {
-                    toReturn.Add(rdr.GetString(i));
-                }
-            }
-            conn.Close();    
-            rdr.Close();
-            return toReturn;
-        }
-        
-        public List<String> getCosmicDetails(string chromNum, int position,char refNuc,char varNuc)
-        {
-            conn.Open();
             List<String> toReturn = null;
-            string query =
-                "SELECT cosmic_mutation_id, mut_syntax_aa, mut_syntax_cds, tumour_site " +
-                "FROM cosmicRaw " +
-                "WHERE chromosome = '" + chromNum + "' " +
-                "AND grch37_start ='" + position + "' " +
-             "AND mut_syntax_cds REGEXP '" + refNuc + ">" + varNuc + "$'";
-
-            MySqlDataReader rdr = executeQuery(query);
-            List<string> cosmicIdList = new List<string>();
-            string cosmicIDs = "";
-            bool firstTime = true;
-            while (rdr.Read())
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            using (MySqlCommand cmd = conn.CreateCommand())
             {
-                if(firstTime)
+                conn.Open();
+                cmd.Parameters.AddWithValue("@chrom", chrom);
+                cmd.Parameters.AddWithValue("@geneName", geneName);
+                cmd.CommandText = "SELECT strand, MIN(cdsStart), MAX(cdsEnd), MAX(exonCount), exonStarts, exonEnds " +
+                    "FROM refGene " +
+                "WHERE chrom=@chrom " +
+                "AND name2=@geneName";
+                using (MySqlDataReader rdr = cmd.ExecuteReader())
                 {
-                    toReturn = new List<string>();
-                    toReturn.Add(rdr.GetString(0));
-                    toReturn.Add(rdr.GetString(1));
-                    toReturn.Add(rdr.GetString(2));
-                    toReturn.Add(rdr.GetString(3));
-                    cosmicIdList.Add(rdr.GetString(0));
-                    firstTime = false;
-                }
-
-                else
-                {
-                    bool found = false;
-                    foreach (string s in cosmicIdList)
-                        if (s.Trim().Equals(rdr.GetString(0).Trim()))
-                            found = true;
-                    if (!found)
+                    if (rdr.Read())
                     {
-                        toReturn[0] += " " + rdr.GetString(0);
-                        cosmicIdList.Add(rdr.GetString(0));
+                        toReturn = new List<string>();
+                        for (int i = 0; i < rdr.FieldCount; i++)
+                        {
+                            toReturn.Add(rdr.GetString(i));
+                        }
                     }
-                        
                 }
-                
-                
             }
-            if(toReturn!=null)
-                toReturn.Add(cosmicIDs);
-            conn.Close();
-            rdr.Close();
             return toReturn;
         }
 
-        private MySqlDataReader executeQuery(string query)
+        public static List<String> getCosmicDetails(string chromNum, int position, char refNuc, char varNuc)
         {
-            try
+            List<String> toReturn = null;
+            string mutSyntaxRegex = refNuc + ">" + varNuc + "$";
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            using (MySqlCommand cmd = conn.CreateCommand())
             {
-                cmd = new MySqlCommand(query, conn);
-                return cmd.ExecuteReader();
+                conn.Open();
+                cmd.Parameters.AddWithValue("@chromNum", chromNum);
+                cmd.Parameters.AddWithValue("@position", position);
+                cmd.Parameters.AddWithValue("@mutSyntaxRegex", mutSyntaxRegex);
+                cmd.CommandText = "SELECT cosmic_mutation_id, mut_syntax_aa, mut_syntax_cds, tumour_site " +
+                "FROM cosmicRaw " +
+                "WHERE chromosome = @chromNum " +
+                "AND grch37_start =@position " +
+                "AND mut_syntax_cds REGEXP @mutSyntaxRegex";
+                using (MySqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    List<string> cosmicIdList = new List<string>();
+                    string cosmicIDs = "";
+                    bool firstTime = true;
+                    while (rdr.Read())
+                    {
+                        if (firstTime)
+                        {
+                            toReturn = new List<string>();
+                            toReturn.Add(rdr.GetString(0));
+                            toReturn.Add(rdr.GetString(1));
+                            toReturn.Add(rdr.GetString(2));
+                            toReturn.Add(rdr.GetString(3));
+                            cosmicIdList.Add(rdr.GetString(0));
+                            firstTime = false;
+                        }
+                        else
+                        {
+                            bool found = false;
+                            foreach (string s in cosmicIdList)
+                                if (s.Trim().Equals(rdr.GetString(0).Trim()))
+                                    found = true;
+                            if (!found)
+                            {
+                                toReturn[0] += " " + rdr.GetString(0);
+                                cosmicIdList.Add(rdr.GetString(0));
+                            }
+                        }
+                    }
+                    if (toReturn != null)
+                        toReturn.Add(cosmicIDs);
+                }
             }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine("Error on executing: {0}", ex.ToString());
-                return null;
-            }
+            return toReturn;
         }
     }
 }
