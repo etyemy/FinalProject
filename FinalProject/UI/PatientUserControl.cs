@@ -12,14 +12,12 @@ namespace FinalProject.UI
     public partial class PatientUserControl : UserControl
     {
         MainForm _mainForm;
-        MainBL _mainBL;
         List<Mutation> _mutationList = null;
         Patient _patient;
         string testNmae;
         public PatientUserControl(MainForm mainForm)
         {
             _mainForm = mainForm;
-            _mainBL = mainForm.MainBL;
             InitializeComponent();
         }
         public PatientUserControl(Patient p)
@@ -33,7 +31,7 @@ namespace FinalProject.UI
         private void _searchPatientButton_Click(object sender, EventArgs e)
         {
             string patientId = idToLoadTextBox.Text;
-            List<Patient> patientList = _mainBL.getPatientListById(patientId);
+            List<Patient> patientList = MainBL.getPatientListById(patientId);
             if (patientList != null)
             {
                 _mainForm.Enabled = false;
@@ -67,25 +65,25 @@ namespace FinalProject.UI
             string background = _backgroundTextBox.Text;
             string conclusion = _conclusionsTextBox1.Text;
             Patient p = new Patient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
-            if (_mainBL.testNameExist(testNmae))
+            if (MainBL.patientExistByTestName(testNmae))
             {
                 if (MessageBox.Show("TEST NAME allready exist, Overwrite?", "Notice", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    _mainBL.updatePatient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
+                    MainBL.updatePatient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
                     _mainForm.CurrPatient = p;
-                    _mutationList = _mainBL.getMutationListByTestName(p.TestName);
+                    _mutationList = MainBL.getMutationListByTestName(p.TestName);
                     _mainForm.MutationList = _mutationList;
                     MessageBox.Show("Patient saved successfully");
                 }
             }
             else
             {
-                _mainBL.addPatient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, prevTreatment, currTreatment, background, conclusion);
+                MainBL.addPatient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, prevTreatment, currTreatment, background, conclusion);
                 _mainForm.CurrPatient = p;
                 _mainForm.MutationList = _mutationList;
                 foreach (Mutation m in _mutationList)
                 {
-                    _mainBL.addMatch(testName, m.MutId);
+                    MainBL.addMatch(testName, m.MutId);
                 }
                 MessageBox.Show("Patient saved successfully");
             }
@@ -161,7 +159,7 @@ namespace FinalProject.UI
         }
         public void loadMutationDetails(Patient p)
         {
-            _mutationList = _mainBL.getMutationListByTestName(_patient.TestName);
+            _mutationList = MainBL.getMutationListByTestName(_patient.TestName);
             _mainForm.MutationList = _mutationList;
             initPatientUC(_mutationList, _patient.TestName);
             _mainForm.MutationUC.initTable(_mutationList);

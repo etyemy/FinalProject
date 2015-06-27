@@ -128,10 +128,10 @@ namespace FinalProject.UI
                     string geneName = s[(int)XlsMinPlace.GeneName];
                     char refNuc = s[(int)XlsMinPlace.Ref][0];
                     char varNuc = s[(int)XlsMinPlace.Var][0];
-                    Mutation tempMutation = _mainBL.getMutationByDetails(chrom, position, refNuc, varNuc);
+                    Mutation tempMutation = MainBL.getMutationByDetails(chrom, position, refNuc, varNuc);
                     if (tempMutation == null)
                     {
-                        tempMutation = new Mutation(_mainBL, chrom, position, geneName, refNuc, varNuc);
+                        tempMutation = new Mutation(chrom, position, geneName, refNuc, varNuc);
                     }
                     tempMutation.NumOfShows = Convert.ToInt16(s[(int)XlsMinPlace.NumOfShows]);
                     _mutationList.Add(tempMutation);

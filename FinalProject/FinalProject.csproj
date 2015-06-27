@@ -171,7 +171,7 @@
     </Compile>
     <Compile Include="WebServices\CosmicWebService.cs" />
     <Compile Include="Gene.cs" />
-    <Compile Include="DB\LocalDbDAL.cs" />
+    <Compile Include="DataBaseLayers\LocalDbDAL.cs" />
     <Compile Include="UI\SettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -179,11 +179,11 @@
       <DependentUpon>SettingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FileHendlers\TSVHandler.cs" />
-    <Compile Include="DB\MainBL.cs" />
+    <Compile Include="DataBaseLayers\MainBL.cs" />
     <Compile Include="Mutation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DB\UcscDAL.cs" />
+    <Compile Include="DataBaseLayers\UcscDAL.cs" />
     <Compile Include="WebServices\UcscWebServices.cs" />
     <Compile Include="FileHendlers\CSVHandler.cs" />
     <EmbeddedResource Include="UI\ArticlesUserControl.resx">

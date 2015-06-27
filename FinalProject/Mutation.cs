@@ -32,7 +32,7 @@ namespace FinalProject
 
         private int _numOfShows = 1;
 
-        public Mutation(MainBL ucscBL, string chrom, int position, string geneSym, char refNuc, char varNuc)
+        public Mutation(string chrom, int position, string geneSym, char refNuc, char varNuc)
         {
             _mutId = generateMutId();
             _chrom = chrom;
@@ -41,9 +41,9 @@ namespace FinalProject
             _geneName = geneSym;
             _ref = refNuc;
             _var = varNuc;
-            extractExtraData(ucscBL);
-            if(!ucscBL.mutationExist(this))
-                ucscBL.addMutation(this);
+            extractExtraData();
+            if (!MainBL.mutationExist(this))
+                MainBL.addMutation(this);
         }
         public Mutation(string mutId,string chrom,int position,string geneName,char refNuc,char varNuc,char strand,string chromNum,string refCodon,string varCodon,string refAA,string varAA,string pMutationName,string cMutationName,string cosmicName,string tumourSite)
         {
@@ -64,10 +64,13 @@ namespace FinalProject
             _cosmicName = cosmicName;
             _tumourSite = tumourSite;
         }
-        public void extractExtraData(MainBL MainBL)
+        public void extractExtraData()
         {
             try
             {
+                _gene = MainBL.getGene(_geneName, _chrom);
+                if (_gene == null)
+                    MainBL.addGene(_geneName, _chrom);
                 _gene = MainBL.getGene(_geneName, _chrom);
                 _strand = _gene.Strand;
                 if(_strand.Equals('+'))

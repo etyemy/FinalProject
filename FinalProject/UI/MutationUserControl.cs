@@ -27,7 +27,7 @@ namespace FinalProject.UI
             if (e.ColumnIndex == 14)
             {
                 string mutationId = _mutationList.ElementAt(e.RowIndex).MutId;
-                List<Patient> patientList = _mainForm.MainBL.getPatientListWithMutation(mutationId);
+                List<Patient> patientList = MainBL.getPatientListWithMutation(mutationId);
                 HistoryForm hf = new HistoryForm(patientList,_mainForm);
                 _mainForm.Enabled = false;
                 hf.Show();
@@ -62,7 +62,7 @@ namespace FinalProject.UI
                     tempRow.Cells[11].Value = m.CMutationName;
                     tempRow.Cells[12].Value = m.CosmicName;
                     tempRow.Cells[13].Value = m.NumOfShows;
-                    int historyNum=_mainForm.MainBL.getNumOfPatientWithSameMut(m.MutId);
+                    int historyNum = MainBL.getNumOfPatientWithSameMut(m.MutId); 
                     if (historyNum == 0)
                         tempRow.Cells[14] = new DataGridViewTextBoxCell();
                     tempRow.Cells[14].Value = historyNum;

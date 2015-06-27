@@ -9,12 +9,7 @@ namespace FinalProject
 {
     public class MainBL
     {
-        
-        public MainBL()
-        {
-            
-        }
-        public Mutation getMutationByDetails(string chrom, int position, char varNuc, char refNuc)
+        public static Mutation getMutationByDetails(string chrom, int position, char varNuc, char refNuc)
         {
             Mutation toReturn = null;
             List<String> mutationDetails = LocalDbDAL.getMutationByDetails(chrom, position, refNuc, varNuc);
@@ -41,7 +36,7 @@ namespace FinalProject
             
             return toReturn;
         }
-        public List<Mutation> getMutationListByTestName(string testName)
+        public static List<Mutation> getMutationListByTestName(string testName)
         {
             List<string> tempList = LocalDbDAL.getMutationListPerPatient(testName);
             List<Mutation> toReturn =new List<Mutation>();
@@ -50,7 +45,7 @@ namespace FinalProject
             return toReturn;
 
         }
-        public Mutation getMutationById(string mutId)
+         public static Mutation getMutationById(string mutId)
         {
             Mutation toReturn = null;
             List<String> mutationDetails = LocalDbDAL.getMutationByID(mutId);
@@ -77,36 +72,36 @@ namespace FinalProject
 
             return toReturn;
         }
-        public void addMutation(Mutation m)
+        public static void addMutation(Mutation m)
         {
             LocalDbDAL.addMutation(m.MutId,m.Chrom,m.Position,m.GeneName,m.Ref,m.Var,m.Strand,m.ChromNum,m.RefCodon,m.VarCodon,m.RefAA,m.VarAA,m.PMutationName,m.CMutationName,m.CosmicName,m.TumourSite);
         }
+        public static void addGene(string geneName, string chrom)
+        {
+            List<String> geneStrings;
+            geneStrings = UcscDAL.getGene(geneName, chrom);
+            if (geneStrings != null)
+            {
+                char strand = Convert.ToChar(geneStrings[0]);
+                int cdsStart = int.Parse(geneStrings[1]);
+                int cdsEnd = int.Parse(geneStrings[2]);
+                int[] exonStars = exonStringToIntArray(geneStrings[4]);
+                int[] exonEnds = exonStringToIntArray(geneStrings[5]);
+                Gene g = new Gene(geneName, chrom, strand, cdsStart, cdsEnd, exonStars, exonEnds);
+                string tempExonStarts = exonIntArrayToString(g.ExonStarts);
+                string tempExonEnds = exonIntArrayToString(g.ExonEnds);
 
-        public Gene getGene(string geneName, string chrom)
+                LocalDbDAL.addGene(geneName, chrom, strand, tempExonStarts, tempExonEnds);
+            }
+        }
+        public static Gene getGene(string geneName, string chrom)
         {
             Gene g=null;
             List<String> geneStrings;
             try
             {
                 geneStrings = LocalDbDAL.getGene(geneName, chrom);
-                if (geneStrings == null)
-                {
-                    geneStrings = UcscDAL.getGene(geneName, chrom);
-                    if (geneStrings != null)
-                    {
-                        char strand = Convert.ToChar(geneStrings[0]);
-                        int cdsStart = int.Parse(geneStrings[1]);
-                        int cdsEnd = int.Parse(geneStrings[2]);
-                        int[] exonStars = exonStringToIntArray(geneStrings[4]);
-                        int[] exonEnds = exonStringToIntArray(geneStrings[5]);
-                        g = new Gene(geneName, chrom, strand, cdsStart, cdsEnd, exonStars, exonEnds);
-                        string tempExonStarts = exonIntArrayToString(g.ExonStarts);
-                        string tempExonEnds = exonIntArrayToString(g.ExonEnds);
-
-                        LocalDbDAL.addGene(geneName, chrom, strand, tempExonStarts, tempExonEnds);
-                    }
-                }
-                else
+                if (geneStrings != null)
                 {
                     char strand = Convert.ToChar(geneStrings[2]);
                     int[] exonStarts = exonStringToIntArray(geneStrings[3]);
@@ -123,7 +118,7 @@ namespace FinalProject
             }
             
         }
-        public List<String> getCosmicDetails(string chromNum, int position, char refNuc, char varNuc)
+        public static List<String> getCosmicDetails(string chromNum, int position, char refNuc, char varNuc)
         {
             try
             {
@@ -136,12 +131,12 @@ namespace FinalProject
             }
         }
 
-        internal bool mutationExist(Mutation mutation)
+        public static bool mutationExist(Mutation mutation)
         {
             return LocalDbDAL.mutationExist(mutation.Chrom,mutation.Position,mutation.Ref,mutation.Var);
         }
 
-        public Patient getPatientById(string id)
+        public static Patient getPatientById(string id)
         {
             List<string> patient = LocalDbDAL.getPatientById(id);
             
@@ -161,41 +156,41 @@ namespace FinalProject
             return new Patient(testName, patientId, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
         }
 
-        internal bool testNameExist(string testName)
+        public static bool patientExistByTestName(string testName)
         {
             return LocalDbDAL.patientExist(testName);
         }
-        internal int getNumOfPatientWithSameMut(string id)
+        public static int getNumOfPatientWithSameMut(string id)
         {
             return LocalDbDAL.getNumOfTestsWithSameMut(id);
         }
 
-        public void addPatient(string testName,string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
+        public static void addPatient(string testName,string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
         {
             LocalDbDAL.addPatient(testName,id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion);
         }
-        public void updatePatient(string testName,string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
+        public static void updatePatient(string testName,string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
         {
             LocalDbDAL.updatePatient(testName,id, fName, lName, pathologicalNum, runNum, tumourSite, deseaseLevel, prevTreatment, currTreatment, background, conclusion);
         }
-        public void addMatch(string testName, string mutId)
+        public static void addMatch(string testName, string mutId)
         {
             LocalDbDAL.addMatch(testName, mutId);
         }
 
-        private string exonIntArrayToString(int[] p)
+        public static string exonIntArrayToString(int[] p)
         {
             string toReturn = "";
             foreach (int n in p)
                 toReturn += n + " ";
             return toReturn;
         }
-        private int[] exonStringToIntArray(string exon)
+        public static int[] exonStringToIntArray(string exon)
         {
             return Regex.Split(exon, @"\D+").Except(new string[] { "" }).ToArray().Select(x => int.Parse(x)).ToArray();
         }
 
-        internal List<Patient> getPatientListById(string id)
+        public static List<Patient> getPatientListById(string id)
         {
             List<Patient> toReturn = null;
             List<List<string>> patient = LocalDbDAL.getPatientListById(id);
@@ -223,7 +218,7 @@ namespace FinalProject
             return toReturn;
         }
 
-        internal List<Patient> getPatientListWithMutation(string mutationId)
+        public  static List<Patient> getPatientListWithMutation(string mutationId)
         {
             List<Patient> toReturn = null;
             List<List<string>> patient = LocalDbDAL.getPatientListByMutation(mutationId);
