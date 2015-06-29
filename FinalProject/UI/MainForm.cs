@@ -14,8 +14,6 @@ namespace FinalProject.UI
 {
     public partial class MainForm : Form
     {
-        private MainBL _mainBL;
-
         private InfoAnalyzeUserControl infoAnalyzeUserControl;
         private ArticlesUserControl articlesUserControl;
         private PatientUserControl patientUserControl;
@@ -26,7 +24,6 @@ namespace FinalProject.UI
         public MainForm()
         {
             InitializeComponent();
-            _mainBL = new MainBL();
             infoAnalyzeUserControl = new InfoAnalyzeUserControl(this);
             articlesUserControl = new ArticlesUserControl(this);
             patientUserControl = new PatientUserControl(this);
@@ -46,7 +43,6 @@ namespace FinalProject.UI
             articlesUserControl.Top = 280;
             patientUserControl.Top = 465;
             mutationUserControl.Top = 80;
-
         }
         private void settingToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -69,21 +65,6 @@ namespace FinalProject.UI
             this.Close();
         }
 
-        public MainBL MainBL
-        {
-            get
-            {
-                return _mainBL;
-            }
-
-        }
-        public InfoAnalyzeUserControl InfoAnalyzeUC
-        {
-            get
-            {
-                return infoAnalyzeUserControl;
-            }
-        }
         public ArticlesUserControl ArticlesUC
         {
             get

@@ -18,13 +18,11 @@ namespace FinalProject.UI
         private string _xls1Path = null;
         private string _xls2Path = null;
         private List<Mutation> _mutationList = null;
-        private MainBL _mainBL;
         List<string[]> _mutationsDetailsList = null;
         private MainForm _mainForm;
         public InfoAnalyzeUserControl(MainForm mainForm)
         {
             _mainForm = mainForm;
-            _mainBL = mainForm.MainBL;
             InitializeComponent();
         }
 
@@ -61,7 +59,6 @@ namespace FinalProject.UI
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Exclamation,
                                 MessageBoxDefaultButton.Button1);
-                    
                 }
                 else
                 {
@@ -93,7 +90,6 @@ namespace FinalProject.UI
                                   MessageBoxButtons.OK,
                                   MessageBoxIcon.Exclamation,
                                   MessageBoxDefaultButton.Button1);
-                    
               
             }
             else if (_xls1Path == null ^ _xls2Path == null)

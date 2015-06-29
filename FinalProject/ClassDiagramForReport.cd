@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="FinalProject.AminoAcid" Collapsed="true">
+    <Position X="6.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AminoAcid.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.Article" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAARBoBAAEAMgAAAAAIAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Article.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.LocalDbDAL" Collapsed="true">
+    <Position X="8.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACJABAAAIAAAkAQAAAAABAQAIACAhAAAAAAAAAEAA=</HashCode>
+      <FileName>DataBaseLayers\LocalDbDAL.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.MainBL" Collapsed="true">
+    <Position X="7" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACCJgBAAAIAAAgAgAAAAABAQAIAGABAAAAAAAEQAAA=</HashCode>
+      <FileName>DataBaseLayers\MainBL.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.UcscDAL" Collapsed="true">
+    <Position X="8.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAIAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>DataBaseLayers\UcscDAL.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.XLSHandler" Collapsed="true">
+    <Position X="4.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAQAAAAAgAA=</HashCode>
+      <FileName>FileHendlers\CSVHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.TSVHandler" Collapsed="true">
+    <Position X="4.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>FileHendlers\TSVHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.Mutation" Collapsed="true">
+    <Position X="4.25" Y="1.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EAhAAgCAoBGDAgWkiEIACoAgSII4AEBCACAAkQAAhgA=</HashCode>
+      <FileName>Mutation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.Patient" Collapsed="true">
+    <Position X="4.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAJQAIARAAABCEBAARAIAEAgBAAQQAAAAggUAARAA=</HashCode>
+      <FileName>Patient.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.ArticleTabPage" Collapsed="true">
+    <Position X="4.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAQAAAEAEAAAAAAIAACAAAAAAAAAEAAAACAAAA=</HashCode>
+      <FileName>UI\ArticleTabPage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.SettingForm" Collapsed="true">
+    <Position X="2.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACCAAAAAACQAABAAAiCAACACAABIBAAAACAIQBEAABA=</HashCode>
+      <FileName>UI\SettingForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.CosmicWebService" Collapsed="true">
+    <Position X="6.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAQAAAAAAAAAAAAAAAAAICAAAIAAAAAAQAAAAA=</HashCode>
+      <FileName>WebServices\CosmicWebService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.UcscWebServices" Collapsed="true">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAQAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WebServices\UcscWebServices.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.FileHendlers.DOCExportHandler" Collapsed="true">
+    <Position X="2.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEABAAAAAAIAAAAAAAAAAAAAAAAAQE=</HashCode>
+      <FileName>FileHendlers\DOCExportHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.FileHendlers.XLSExportHandler" Collapsed="true">
+    <Position X="2.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAEIAEAA=</HashCode>
+      <FileName>FileHendlers\XLSExportHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.UI.ArticlesUserControl" Collapsed="true">
+    <Position X="2.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAACAAAAWAAAAEAAQDCACoCIAAAAAAAASAAAAAAQEA=</HashCode>
+      <FileName>UI\ArticlesUserControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.UI.FilterArticlesForm" Collapsed="true">
+    <Position X="4.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAEAAQCQAAAAAAgCAIAACAAAYBAAAAAAQQAAAAAA=</HashCode>
+      <FileName>UI\FilterArticlesForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.UI.HistoryForm" Collapsed="true">
+    <Position X="4.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACCAAAAAAAACAAAACAAAAAAAAAQEAAAAAAAA=</HashCode>
+      <FileName>UI\HistoryForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.UI.InfoAnalyzeUserControl" Collapsed="true">
+    <Position X="2.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAUAGAAADMACAHgIEgCQBCBIAEABQAAAAAAQAA=</HashCode>
+      <FileName>UI\InfoAnalyzeUserControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.UI.MainForm" Collapsed="true">
+    <Position X="0.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAIEOAEAACACAQAAAkCAAAAKBAkiAIABAAAYAQAQQAA=</HashCode>
+      <FileName>UI\MainForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.UI.MutationUserControl" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgABEAAFAGBEAAAAgACCAhgCAAAACAAAAQAAAAWZQAA=</HashCode>
+      <FileName>UI\MutationUserControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.UI.PatientUserControl" Collapsed="true">
+    <Position X="2.25" Y="6.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>lAQCgAABLGsKAgCggADAgAACACABAgcCI0ACCMBFQAA=</HashCode>
+      <FileName>UI\PatientUserControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FinalProject.UI.SearchResultForm" Collapsed="true">
+    <Position X="4.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACQAAAAEAACAAAACAAAAAAAAAQARAIAAgAA=</HashCode>
+      <FileName>UI\SearchResultForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
