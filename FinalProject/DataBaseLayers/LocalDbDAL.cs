@@ -285,7 +285,7 @@ namespace FinalProject
             }
         }
 
-        public static int getNumOfTestsWithSameMut(string mutId)
+        public static int getNumOfPatientWithSameMutation(string mutId)
         {
             int toReturn = 0;
             using (SqlConnection conn = new SqlConnection(connectionString))

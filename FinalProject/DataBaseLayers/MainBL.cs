@@ -136,33 +136,15 @@ namespace FinalProject
             return LocalDbDAL.mutationExist(mutation.Chrom,mutation.Position,mutation.Ref,mutation.Var);
         }
 
-        public static Patient getPatientById(string id)
-        {
-            List<string> patient = LocalDbDAL.getPatientById(id);
-            
-            string testName = patient.ElementAt(0);
-            string patientId = patient.ElementAt(1);
-            string fName = patient.ElementAt(2);
-            string lName = patient.ElementAt(3);
-            string pathoNum = patient.ElementAt(4);
-            string runNum = patient.ElementAt(5);
-            string tumourSite = patient.ElementAt(6);
-            string diseaseLevel = patient.ElementAt(7);
-            string background = patient.ElementAt(8);
-            string prevTreatment = patient.ElementAt(9);
-            string currTreatment = patient.ElementAt(10);
-            string conclusion = patient.ElementAt(11);
-
-            return new Patient(testName, patientId, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
-        }
+        
 
         public static bool patientExistByTestName(string testName)
         {
             return LocalDbDAL.patientExist(testName);
         }
-        public static int getNumOfPatientWithSameMut(string id)
+        public static int getNumOfPatientWithSameMutation(string mutationId)
         {
-            return LocalDbDAL.getNumOfTestsWithSameMut(id);
+            return LocalDbDAL.getNumOfPatientWithSameMutation(mutationId);
         }
 
         public static void addPatient(string testName,string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string deseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
