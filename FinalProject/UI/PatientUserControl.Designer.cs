@@ -51,7 +51,7 @@
             this._lastNameTextBox = new System.Windows.Forms.TextBox();
             this._firstNameLabel = new System.Windows.Forms.Label();
             this._firstNameTextBox = new System.Windows.Forms.TextBox();
-            this.idLabel = new System.Windows.Forms.Label();
+            this._idLabel = new System.Windows.Forms.Label();
             this._idTextBox = new System.Windows.Forms.TextBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.testNameLabel = new System.Windows.Forms.Label();
@@ -69,6 +69,7 @@
             this.idToLoadTextBox.Name = "idToLoadTextBox";
             this.idToLoadTextBox.Size = new System.Drawing.Size(87, 20);
             this.idToLoadTextBox.TabIndex = 94;
+            this.idToLoadTextBox.TextChanged += new System.EventHandler(this.DigitTextBox_TextChanged);
             // 
             // _savePatientButton
             // 
@@ -197,6 +198,7 @@
             this._tumourSiteTextBox.Name = "_tumourSiteTextBox";
             this._tumourSiteTextBox.Size = new System.Drawing.Size(100, 20);
             this._tumourSiteTextBox.TabIndex = 80;
+            this._tumourSiteTextBox.TextChanged += new System.EventHandler(this.SmallDetailsTextBox_TextChanged);
             // 
             // _runNoLabel
             // 
@@ -214,6 +216,7 @@
             this._runNoTextBox.Name = "_runNoTextBox";
             this._runNoTextBox.Size = new System.Drawing.Size(100, 20);
             this._runNoTextBox.TabIndex = 78;
+            this._runNoTextBox.TextChanged += new System.EventHandler(this.SmallDetailsTextBox_TextChanged);
             // 
             // _pathologicalNoLabel
             // 
@@ -231,6 +234,7 @@
             this._pathologicalNoTextBox.Name = "_pathologicalNoTextBox";
             this._pathologicalNoTextBox.Size = new System.Drawing.Size(100, 20);
             this._pathologicalNoTextBox.TabIndex = 76;
+            this._pathologicalNoTextBox.TextChanged += new System.EventHandler(this.SmallDetailsTextBox_TextChanged);
             // 
             // _lastNameLabel
             // 
@@ -248,6 +252,7 @@
             this._lastNameTextBox.Name = "_lastNameTextBox";
             this._lastNameTextBox.Size = new System.Drawing.Size(100, 20);
             this._lastNameTextBox.TabIndex = 74;
+            this._lastNameTextBox.TextChanged += new System.EventHandler(this.SmallDetailsTextBox_TextChanged);
             // 
             // _firstNameLabel
             // 
@@ -265,16 +270,17 @@
             this._firstNameTextBox.Name = "_firstNameTextBox";
             this._firstNameTextBox.Size = new System.Drawing.Size(100, 20);
             this._firstNameTextBox.TabIndex = 72;
+            this._firstNameTextBox.TextChanged += new System.EventHandler(this.SmallDetailsTextBox_TextChanged);
             // 
-            // idLabel
+            // _idLabel
             // 
-            this.idLabel.AutoSize = true;
-            this.idLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.idLabel.Location = new System.Drawing.Point(3, 39);
-            this.idLabel.Name = "idLabel";
-            this.idLabel.Size = new System.Drawing.Size(20, 13);
-            this.idLabel.TabIndex = 71;
-            this.idLabel.Text = "ID";
+            this._idLabel.AutoSize = true;
+            this._idLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this._idLabel.Location = new System.Drawing.Point(3, 39);
+            this._idLabel.Name = "_idLabel";
+            this._idLabel.Size = new System.Drawing.Size(20, 13);
+            this._idLabel.TabIndex = 71;
+            this._idLabel.Text = "ID";
             // 
             // _idTextBox
             // 
@@ -282,6 +288,7 @@
             this._idTextBox.Name = "_idTextBox";
             this._idTextBox.Size = new System.Drawing.Size(100, 20);
             this._idTextBox.TabIndex = 70;
+            this._idTextBox.TextChanged += new System.EventHandler(this.DigitTextBox_TextChanged);
             // 
             // testNameLabel
             // 
@@ -329,7 +336,7 @@
             this.patientDetailPanel.Controls.Add(this._testNameTextBox);
             this.patientDetailPanel.Controls.Add(this._idTextBox);
             this.patientDetailPanel.Controls.Add(this.testNameLabel);
-            this.patientDetailPanel.Controls.Add(this.idLabel);
+            this.patientDetailPanel.Controls.Add(this._idLabel);
             this.patientDetailPanel.Controls.Add(this._firstNameTextBox);
             this.patientDetailPanel.Controls.Add(this._coclusionsLabel);
             this.patientDetailPanel.Controls.Add(this._firstNameLabel);
@@ -397,7 +404,7 @@
         private System.Windows.Forms.TextBox _lastNameTextBox;
         private System.Windows.Forms.Label _firstNameLabel;
         private System.Windows.Forms.TextBox _firstNameTextBox;
-        private System.Windows.Forms.Label idLabel;
+        private System.Windows.Forms.Label _idLabel;
         private System.Windows.Forms.TextBox _idTextBox;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label testNameLabel;

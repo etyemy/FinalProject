@@ -12,15 +12,15 @@ namespace FinalProject
      public class LocalDbDAL
     {
         //Connection string for debbuging mode
-        //static string connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Dev\Visual_Projects\FinalProject\FinalProject\Database.mdf;Integrated Security=True";
+        static string connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Dev\Visual_Projects\FinalProject\FinalProject\Database.mdf;Integrated Security=True";
 
         //Connection string for publish
         //static string connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
 
 
         //Connection string for install
-        static string path = ProgramFilesx86() + @"\Azrieli\AutoAnalyze\Database\Database.mdf";
-        static string connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename="+path+";Integrated Security=True";
+        //static string path = ProgramFilesx86() + @"\Azrieli\AutoAnalyze\Database\Database.mdf";
+        //static string connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename="+path+";Integrated Security=True";
 
         public static List<String> getGene(string geneName, string chrom)
         {
@@ -64,7 +64,6 @@ namespace FinalProject
 
         public static List<String> getMutationByDetails(string chrom, int position, char varNuc, char refNuc)
         {
-            Console.WriteLine(path);
             List<String> toReturn = null;
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = conn.CreateCommand())
