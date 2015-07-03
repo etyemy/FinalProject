@@ -18,10 +18,6 @@ namespace FinalProject
         //static string connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
 
 
-        //Connection string for install
-        //static string path = ProgramFilesx86() + @"\Azrieli\AutoAnalyze\Database\Database.mdf";
-        //static string connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename="+path+";Integrated Security=True";
-
         public static List<String> getGene(string geneName, string chrom)
         {
             List<String> toReturn = null;
