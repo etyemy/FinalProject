@@ -48,7 +48,7 @@ namespace FinalProject
                 cmd.Parameters.AddWithValue("@chromNum", chromNum);
                 cmd.Parameters.AddWithValue("@position", position);
                 cmd.Parameters.AddWithValue("@mutSyntaxRegex", mutSyntaxRegex);
-                cmd.CommandText = "SELECT cosmic_mutation_id, mut_syntax_aa, mut_syntax_cds, tumour_site " +
+                cmd.CommandText = "SELECT cosmic_mutation_id, mut_syntax_aa, mut_syntax_cds " +
                 "FROM cosmicRaw " +
                 "WHERE chromosome = @chromNum " +
                 "AND grch37_start =@position " +
@@ -66,7 +66,6 @@ namespace FinalProject
                             toReturn.Add(rdr.GetString(0));
                             toReturn.Add(rdr.GetString(1));
                             toReturn.Add(rdr.GetString(2));
-                            toReturn.Add(rdr.GetString(3));
                             cosmicIdList.Add(rdr.GetString(0));
                             firstTime = false;
                         }

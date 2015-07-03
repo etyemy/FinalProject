@@ -30,8 +30,7 @@ namespace FinalProject
                 string tempPMutationName = mutationDetails.ElementAt(12);
                 string tempCMutationName = mutationDetails.ElementAt(13);
                 string tempCosmicName = mutationDetails.ElementAt(14);
-                string tempTumourSite = mutationDetails.ElementAt(15);
-                toReturn = new Mutation(mutId,tempChrom, tempPosition, tempGeneName, tempRefNuc, tempVarNuc,tempStrand,tempChromNum, tempRefCodon, tempVarCodon, tempRefAA, tempVarAA, tempPMutationName, tempCMutationName, tempCosmicName, tempTumourSite);
+                toReturn = new Mutation(mutId,tempChrom, tempPosition, tempGeneName, tempRefNuc, tempVarNuc,tempStrand,tempChromNum, tempRefCodon, tempVarCodon, tempRefAA, tempVarAA, tempPMutationName, tempCMutationName, tempCosmicName);
             }
             
             return toReturn;
@@ -66,15 +65,14 @@ namespace FinalProject
                 string tempPMutationName = mutationDetails.ElementAt(12);
                 string tempCMutationName = mutationDetails.ElementAt(13);
                 string tempCosmicName = mutationDetails.ElementAt(14);
-                string tempTumourSite = mutationDetails.ElementAt(15);
-                toReturn = new Mutation(tempMutId, tempChrom, tempPosition, tempGeneName, tempRefNuc, tempVarNuc, tempStrand, tempChromNum, tempRefCodon, tempVarCodon, tempRefAA, tempVarAA, tempPMutationName, tempCMutationName, tempCosmicName, tempTumourSite);
+                toReturn = new Mutation(tempMutId, tempChrom, tempPosition, tempGeneName, tempRefNuc, tempVarNuc, tempStrand, tempChromNum, tempRefCodon, tempVarCodon, tempRefAA, tempVarAA, tempPMutationName, tempCMutationName, tempCosmicName);
             }
 
             return toReturn;
         }
         public static void addMutation(Mutation m)
         {
-            LocalDbDAL.addMutation(m.MutId,m.Chrom,m.Position,m.GeneName,m.Ref,m.Var,m.Strand,m.ChromNum,m.RefCodon,m.VarCodon,m.RefAA,m.VarAA,m.PMutationName,m.CMutationName,m.CosmicName,m.TumourSite);
+            LocalDbDAL.addMutation(m.MutId,m.Chrom,m.Position,m.GeneName,m.Ref,m.Var,m.Strand,m.ChromNum,m.RefCodon,m.VarCodon,m.RefAA,m.VarAA,m.PMutationName,m.CMutationName,m.CosmicName);
         }
         public static void addGene(string geneName, string chrom)
         {

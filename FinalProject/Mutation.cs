@@ -28,24 +28,25 @@ namespace FinalProject
         private string _pMutationName;
         private string _cMutationName;
         private string _cosmicName;
-        private string _tumourSite;
 
         private int _numOfShows = 1;
 
         public Mutation(string chrom, int position, string geneSym, char refNuc, char varNuc)
         {
-            _mutId = generateMutId();
+            
             _chrom = chrom;
             _chromNum = chrom.Replace("chr", "");
             _position = position;
             _geneName = geneSym;
             _ref = refNuc;
             _var = varNuc;
+            _mutId = this.generateMutId();
+            Console.WriteLine(_mutId);
             extractExtraData();
             if (!MainBL.mutationExist(this))
                 MainBL.addMutation(this);
         }
-        public Mutation(string mutId,string chrom,int position,string geneName,char refNuc,char varNuc,char strand,string chromNum,string refCodon,string varCodon,string refAA,string varAA,string pMutationName,string cMutationName,string cosmicName,string tumourSite)
+        public Mutation(string mutId,string chrom,int position,string geneName,char refNuc,char varNuc,char strand,string chromNum,string refCodon,string varCodon,string refAA,string varAA,string pMutationName,string cMutationName,string cosmicName)
         {
             _mutId = mutId;
             _chrom = chrom;
@@ -62,7 +63,6 @@ namespace FinalProject
             _pMutationName = pMutationName;
             _cMutationName = cMutationName;
             _cosmicName = cosmicName;
-            _tumourSite = tumourSite;
         }
         public void extractExtraData()
         {
@@ -100,14 +100,12 @@ namespace FinalProject
                 _cosmicName = _cosmicDetails.ElementAt(0);
                 _pMutationName = _cosmicDetails.ElementAt(1);
                 _cMutationName = _cosmicDetails.ElementAt(2);
-                _tumourSite = _cosmicDetails.ElementAt(3);
             }
             else
             {
                 _cosmicName = "-----";
                 _pMutationName = "-----";
                 _cMutationName = "-----";
-                _tumourSite = "-----";
             }
         }
         
@@ -292,13 +290,7 @@ namespace FinalProject
                 _numOfShows = value;
             }
         }
-        public string TumourSite
-        {
-            get
-            {
-                return _tumourSite;
-            }
-        }
+       
         public string MutId
         {
             get
@@ -317,16 +309,7 @@ namespace FinalProject
         
         private string generateMutId()
         {
-            DateTime t = DateTime.Now;
-            string temp = "";
-            temp += t.Year;
-            temp += t.Month;
-            temp += t.Day;
-            temp += t.Hour;
-            temp += t.Minute;
-            temp += t.Second;
-            temp += t.Millisecond;
-            return temp;
+            return ""+_chrom+_position+_var+_ref;
         }
 
         public static string[] getHeaderForExport()

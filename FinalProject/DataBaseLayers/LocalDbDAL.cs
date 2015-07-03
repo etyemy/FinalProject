@@ -134,7 +134,7 @@ namespace FinalProject
             }
             return toReturn;
         }
-        public static void addMutation(string mutId, string chrom, int position, string geneName, char refNuc, char varNuc, char strand, string chromNum, string refCodon, string varCodon, string refAA, string varAA, string pMutationName, string cMutationName, string cosmicName, string tumourSite)
+        public static void addMutation(string mutId, string chrom, int position, string geneName, char refNuc, char varNuc, char strand, string chromNum, string refCodon, string varCodon, string refAA, string varAA, string pMutationName, string cMutationName, string cosmicName)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = conn.CreateCommand())
@@ -155,8 +155,7 @@ namespace FinalProject
                 cmd.Parameters.Add("@pMutationName", SqlDbType.NChar).Value = pMutationName;
                 cmd.Parameters.Add("@cMutationName", SqlDbType.NChar).Value = cMutationName;
                 cmd.Parameters.Add("@cosmicName", SqlDbType.NChar).Value = cosmicName;
-                cmd.Parameters.Add("@tumourSite", SqlDbType.NChar).Value = tumourSite;
-                cmd.CommandText = "INSERT INTO Mutation VALUES(@mutId,@chrom,@position,@geneName,@refNuc,@varNuc,@strand,@chromNum,@refCodon,@varCodon,@refAA,@varAA,@pMutationName,@cMutationName,@cosmicName,@tumourSite)";
+                cmd.CommandText = "INSERT INTO Mutation VALUES(@mutId,@chrom,@position,@geneName,@refNuc,@varNuc,@strand,@chromNum,@refCodon,@varCodon,@refAA,@varAA,@pMutationName,@cMutationName,@cosmicName)";
                 cmd.ExecuteNonQuery();
             }
         }
