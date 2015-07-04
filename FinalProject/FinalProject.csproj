@@ -117,6 +117,7 @@
     <Compile Include="Article.cs" />
     <Compile Include="FileHendlers\DOCExportHandler.cs" />
     <Compile Include="FileHendlers\XLSExportHandler.cs" />
+    <Compile Include="GeneralMethods.cs" />
     <Compile Include="Patient.cs" />
     <Compile Include="UI\ArticlesUserControl.cs">
       <SubType>UserControl</SubType>

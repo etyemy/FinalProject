@@ -31,23 +31,27 @@ namespace FinalProject.UI
         private void _searchPatientButton_Click(object sender, EventArgs e)
         {
             string patientId = idToLoadTextBox.Text;
-            List<Patient> patientList = MainBL.getPatientListById(patientId);
-            if (patientList != null)
+            try
             {
-                _mainForm.Enabled = false;
-                SearchResultForm srf = new SearchResultForm(patientList, _mainForm);
-                srf.Show();
-                foreach (Patient p in patientList)
+                List<Patient> patientList = MainBL.getPatientListById(patientId);
+                if (patientList != null)
                 {
-                    Console.WriteLine(p.ToString());
+                    _mainForm.Enabled = false;
+                    SearchResultForm srf = new SearchResultForm(patientList, _mainForm);
+                    srf.Show();
+                    foreach (Patient p in patientList)
+                    {
+                        Console.WriteLine(p.ToString());
+                    }
                 }
+                else
+                    GeneralMethods.showErrorMessageBox("Wrong ID, No patient found.");
             }
-            else
-                MessageBox.Show("Wrong ID, No patient found.",
-                                  "Error",
-                                  MessageBoxButtons.OK,
-                                  MessageBoxIcon.Exclamation,
-                                  MessageBoxDefaultButton.Button1);
+            catch (Exception)
+            {
+                GeneralMethods.showErrorMessageBox("Something Went Wrong, Please try Again");
+            }
+               
         }
 
         private void _savePatientButton_Click(object sender, EventArgs e)
@@ -67,28 +71,42 @@ namespace FinalProject.UI
             if (!(id.Equals("") || fName.Equals("") || lName.Equals("") || pathoNum.Equals("") || runNum.Equals("") || tumourSite.Equals("")))
             {
                 Patient p = new Patient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
-                if (MainBL.patientExistByTestName(testNmae))
+                try
                 {
-                    if (MessageBox.Show("TEST NAME allready exist, Overwrite?", "Notice", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MainBL.patientExistByTestName(testNmae))
                     {
-                        MainBL.updatePatient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
+                        if (MessageBox.Show("TEST NAME allready exist, Overwrite?", "Notice", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+
+                            MainBL.updatePatient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
+                            _mainForm.CurrPatient = p;
+                            _mutationList = MainBL.getMutationListByTestName(p.TestName);
+                            _mainForm.MutationList = _mutationList;
+                            MessageBox.Show("Patient saved successfully");
+
+
+                        }
+                    }
+                    else
+                    {
+
+                        MainBL.addPatient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, prevTreatment, currTreatment, background, conclusion);
                         _mainForm.CurrPatient = p;
-                        _mutationList = MainBL.getMutationListByTestName(p.TestName);
                         _mainForm.MutationList = _mutationList;
+                        foreach (Mutation m in _mutationList)
+                        {
+                            MainBL.addMatch(testName, m.MutId);
+                        }
                         MessageBox.Show("Patient saved successfully");
+
                     }
                 }
-                else
+                catch (Exception)
                 {
-                    MainBL.addPatient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, prevTreatment, currTreatment, background, conclusion);
-                    _mainForm.CurrPatient = p;
-                    _mainForm.MutationList = _mutationList;
-                    foreach (Mutation m in _mutationList)
-                    {
-                        MainBL.addMatch(testName, m.MutId);
-                    }
-                    MessageBox.Show("Patient saved successfully");
+                    GeneralMethods.showErrorMessageBox("Something Went Wrong, Please try Again");
                 }
+               
+                
             }
             else
             {
@@ -202,11 +220,20 @@ namespace FinalProject.UI
         }
         public void loadMutationDetails(Patient p)
         {
-            _mutationList = MainBL.getMutationListByTestName(_patient.TestName);
-            _mainForm.MutationList = _mutationList;
-            initPatientUC(_mutationList, _patient.TestName);
-            _mainForm.MutationUC.initTable(_mutationList);
-            _mainForm.ArticlesUC.initArticleUC(_mutationList);
+            try
+            {
+                _mutationList = MainBL.getMutationListByTestName(_patient.TestName);
+                _mainForm.MutationList = _mutationList;
+                initPatientUC(_mutationList, _patient.TestName);
+                _mainForm.MutationUC.initTable(_mutationList);
+                _mainForm.ArticlesUC.initArticleUC(_mutationList);
+            }
+            catch (Exception)
+            {
+                GeneralMethods.showErrorMessageBox("Something Went Wrong, Please try Again");
+
+            }
+            
         }
         public string TestName
         {

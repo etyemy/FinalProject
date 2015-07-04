@@ -117,13 +117,14 @@ namespace FinalProject.UI
             int i = 1;
             foreach (string[] s in _mutationsDetailsList)
             {
+                string chrom = s[(int)XlsMinPlace.Chrom];
+                int position = Convert.ToInt32(s[(int)XlsMinPlace.Position]);
+                string geneName = s[(int)XlsMinPlace.GeneName];
+                char refNuc = s[(int)XlsMinPlace.Ref][0];
+                char varNuc = s[(int)XlsMinPlace.Var][0];
                 try
                 {
-                    string chrom = s[(int)XlsMinPlace.Chrom];
-                    int position = Convert.ToInt32(s[(int)XlsMinPlace.Position]);
-                    string geneName = s[(int)XlsMinPlace.GeneName];
-                    char refNuc = s[(int)XlsMinPlace.Ref][0];
-                    char varNuc = s[(int)XlsMinPlace.Var][0];
+                    
                     Mutation tempMutation = MainBL.getMutationByDetails(chrom, position, refNuc, varNuc);
                     if (tempMutation == null)
                     {
@@ -134,9 +135,10 @@ namespace FinalProject.UI
                     _analyzeBackgroundWorker.ReportProgress(i);
                     i++;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine("Error: {0}", ex.ToString());
+                    GeneralMethods.showErrorMessageBox("Something Went Wrong, Please try Again");
+                    break;
                 }
             }
         }

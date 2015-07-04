@@ -12,6 +12,8 @@ namespace FinalProject
         public static List<String> getGene(string geneName, string chrom)
         {
             List<String> toReturn = null;
+            try
+            {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             using (MySqlCommand cmd = conn.CreateCommand())
             {
@@ -34,12 +36,20 @@ namespace FinalProject
                     }
                 }
             }
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
             return toReturn;
         }
 
         public static List<String> getCosmicDetails(string chromNum, int position, char refNuc, char varNuc)
         {
             List<String> toReturn = null;
+            try
+            {
             string mutSyntaxRegex = refNuc + ">" + varNuc + "$";
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             using (MySqlCommand cmd = conn.CreateCommand())
@@ -85,6 +95,12 @@ namespace FinalProject
                     if (toReturn != null)
                         toReturn.Add(cosmicIDs);
                 }
+            }
+
+            }
+            catch (Exception)
+            {
+                throw;
             }
             return toReturn;
         }

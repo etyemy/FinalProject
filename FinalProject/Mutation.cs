@@ -41,10 +41,17 @@ namespace FinalProject
             _ref = refNuc;
             _var = varNuc;
             _mutId = this.generateMutId();
-            Console.WriteLine(_mutId);
-            extractExtraData();
-            if (!MainBL.mutationExist(this))
-                MainBL.addMutation(this);
+            try
+            {
+                extractExtraData();
+                if (!MainBL.mutationExist(this))
+                    MainBL.addMutation(this);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            
         }
         public Mutation(string mutId,string chrom,int position,string geneName,char refNuc,char varNuc,char strand,string chromNum,string refCodon,string varCodon,string refAA,string varAA,string pMutationName,string cMutationName,string cosmicName)
         {
@@ -82,7 +89,6 @@ namespace FinalProject
             }
             catch (MySql.Data.MySqlClient.MySqlException e)
             {
-                Console.WriteLine("Error: {0}", e.ToString());
                 throw ;
             }
             if (!_refCodon.Equals("No Coding"))
