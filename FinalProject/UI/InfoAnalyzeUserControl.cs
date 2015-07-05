@@ -20,6 +20,7 @@ namespace FinalProject.UI
         private List<Mutation> _mutationList = null;
         List<string[]> _mutationsDetailsList = null;
         private MainForm _mainForm;
+        private bool hadError;
         public InfoAnalyzeUserControl(MainForm mainForm)
         {
             _mainForm = mainForm;
@@ -113,6 +114,7 @@ namespace FinalProject.UI
         }
         private void analyzeBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            hadError = false;
             _mutationList = new List<Mutation>();
             int i = 1;
             foreach (string[] s in _mutationsDetailsList)
@@ -137,6 +139,7 @@ namespace FinalProject.UI
                 }
                 catch (Exception)
                 {
+                    hadError = true;
                     GeneralMethods.showErrorMessageBox("Something Went Wrong, Please try Again");
                     break;
                 }
@@ -153,12 +156,21 @@ namespace FinalProject.UI
             _mainForm.MutationList = _mutationList;
             _mainForm.MutationUC.clearAll();
             _mainForm.MutationUC.initTable(_mutationList);
-            _mainForm.ArticlesUC.initArticleUC(_mutationList);
             _mainForm.PatientUC.clearAll();
             _mainForm.PatientUC.initPatientUC(_mutationList,generateTestName());
-            progressBar1.Value = 100;
-            progressBarLabel.Text += ", Complete!";
+            if (hadError)
+            {
+                progressBar1.Value = 0;
+                progressBarLabel.Text = "Status: ";
+            }
+            else
+            {
+                _mainForm.ArticlesUC.initArticleUC(_mutationList);
+                progressBar1.Value = 100;
+                progressBarLabel.Text += ", Complete!";
+            }
             analyzeButton.Enabled = true;
+
             
         }
 

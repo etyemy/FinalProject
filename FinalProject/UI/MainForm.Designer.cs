@@ -39,6 +39,7 @@
             this.docxWithDetailsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.docxWithoutDetailsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xlsxMutationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,7 +47,8 @@
             // 
             this._menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.exportToolStripMenuItem});
+            this.exportToolStripMenuItem,
+            this.aboutToolStripMenuItem});
             this._menuStrip.Location = new System.Drawing.Point(0, 0);
             this._menuStrip.Name = "_menuStrip";
             this._menuStrip.Size = new System.Drawing.Size(1270, 24);
@@ -125,6 +127,13 @@
             this.xlsxMutationMenuItem.Text = "XLSX - Mutation ";
             this.xlsxMutationMenuItem.Click += new System.EventHandler(this.ExportMenuItem_Click);
             // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -157,6 +166,7 @@
         private System.Windows.Forms.ToolStripMenuItem docxWithDetailsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem docxWithoutDetailsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem xlsxMutationMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 
     }
 }

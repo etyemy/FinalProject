@@ -177,5 +177,16 @@ namespace FinalProject.UI
                 }
             }
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {  
+            MessageBox.Show("                        AutoAnalyze\n"+
+                            "                              2015\n\n"+
+                            "                        Created By \n\n"+
+                            "                    Moti Monsonego\n\n"+
+                            "       Azrieli - College Of Engineering\n\n"+
+                            "       Email: motimonso@gmail.com", "About");
+
+        }
     }
 }

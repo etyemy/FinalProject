@@ -42,11 +42,7 @@ namespace FinalProject
                 return loginToCosmic(email, password,times-1);
             }
         }
-        public void logoutFromCosmic()
-        {
-            _cookieContainer = new CookieContainer();
-        }
-
+        
         public bool isLogedIn()
         {
             string pageSource = getPageSource("http://cancer.sanger.ac.uk/cosmic/user_info","GET");
@@ -81,7 +77,6 @@ namespace FinalProject
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error on creation: {0}", e.ToString());
                 return null;
             }
            
