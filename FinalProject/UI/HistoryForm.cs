@@ -9,10 +9,16 @@ using System.Windows.Forms;
 
 namespace FinalProject.UI
 {
+    /*
+     * History Form .
+     * Main purpose - show all the patints that share the same mutation.
+     */
     public partial class HistoryForm : Form
     {
         MainForm _mainForm;
         int nextPosition = 15;
+        //Initialize the form with all patient from patientList.
+        //Use the PatientUserControl without the button, only details to show.
         public HistoryForm(List<Patient> patientList, MainForm mainForm)
         {
             if (patientList != null)
@@ -33,6 +39,7 @@ namespace FinalProject.UI
             }
         }
 
+        //Close the form.
         private void HistoryForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _mainForm.Enabled = true;

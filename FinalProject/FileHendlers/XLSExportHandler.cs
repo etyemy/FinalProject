@@ -10,12 +10,17 @@ using System.Windows.Forms;
 
 namespace FinalProject.FileHendlers
 {
+    /*
+     * XLSExportHandler class.
+     * Main purpose - export mutation details to XLSX file.
+     */
     class XLSExportHandler
     {
+        //Main class function, export the mutationList to XLSX file, sets file name to testName.
         public static void saveXLS(String testName, List<Mutation> mutationList)
         {
             SpreadsheetDocument xl = null;
-            string fullPath = Properties.Settings.Default.DocSavePath + @"\" + testName;
+            string fullPath = Properties.Settings.Default.ExportSavePath + @"\" + testName;
             fullPath += ".xlsx";
             try
             {
@@ -25,8 +30,6 @@ namespace FinalProject.FileHendlers
             {
                 throw ;
             }
-
-
             WorkbookPart wbp = xl.AddWorkbookPart();
             WorksheetPart wsp = wbp.AddNewPart<WorksheetPart>();
             Workbook wb = new Workbook();
@@ -34,15 +37,16 @@ namespace FinalProject.FileHendlers
             fv.ApplicationName = "Microsoft Office Excel";
             Worksheet ws = new Worksheet();
             SheetData sd = new SheetData();
-
             WorkbookStylesPart wbsp = wbp.AddNewPart<WorkbookStylesPart>();
             wbsp.Stylesheet = GenerateStyleSheet();
             wbsp.Stylesheet.Save();
 
-
-
+            //save the longest width for each column.
             string[] longestWordPerColumn = new string[12];
+
             int k = 0;
+
+            //create and add header row.
             Row headerRow = new Row();
             foreach (string s in Mutation.getHeaderForExport())
             {
@@ -55,6 +59,8 @@ namespace FinalProject.FileHendlers
                 k++;
             }
             sd.AppendChild(headerRow);
+
+            //create and add rows for each mutation.
             foreach (Mutation m in mutationList)
             {
                 Row newRow = new Row();
@@ -78,6 +84,7 @@ namespace FinalProject.FileHendlers
                 sd.AppendChild(newRow);
             }
 
+            //Sets the column width to longest width for each column.
             Columns columns = new Columns();
             for (int i = 0; i < 12; i++)
             {
@@ -97,13 +104,12 @@ namespace FinalProject.FileHendlers
             sheets.Append(sheet);
             wb.Append(fv);
             wb.Append(sheets);
-
             xl.WorkbookPart.Workbook = wb;
             xl.WorkbookPart.Workbook.Save();
             xl.Close();
-
         }
 
+        //Create Stylesheet 
         private static Stylesheet GenerateStyleSheet()
         {
             return new Stylesheet(
@@ -163,17 +169,16 @@ namespace FinalProject.FileHendlers
                     new Color() { Auto = true }
                 ) { Style = BorderStyleValues.Thin },
                 new DiagonalBorder())
-
                 ),
                 new CellFormats(
                     new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 0, FillId = 0, BorderId = 0 },
                     new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 1, FillId = 1, BorderId = 1, ApplyAlignment = true, ApplyBorder = true },
                     new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 0, FillId = 2, BorderId = 1, ApplyAlignment = true, ApplyBorder = true },
                     new CellFormat(new Alignment() { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Center }) { FontId = 0, FillId = 3, BorderId = 1, ApplyAlignment = true, ApplyBorder = true }
-
                 )
-            ); // return
+            ); 
         }
+        //create column with custom width.
         private static Column CreateColumnData(UInt32 StartColumnIndex, UInt32 EndColumnIndex, double ColumnWidth)
         {
             Column column;
@@ -184,14 +189,11 @@ namespace FinalProject.FileHendlers
             column.CustomWidth = true;
             return column;
         }
+
+        //get width of the text in the cell, use for fitting the cells width with the text.
         private static double GetWidth(string font, int fontSize, string text)
         {
             System.Drawing.Font stringFont = new System.Drawing.Font(font, fontSize);
-            return GetWidth(stringFont, text);
-        }
-
-        private static double GetWidth(System.Drawing.Font stringFont, string text)
-        {
             System.Drawing.Size textSize = TextRenderer.MeasureText(text, stringFont);
             double width = (double)(((textSize.Width / (double)7) * 256) - (128 / 7)) / 256;
             width = (double)decimal.Round((decimal)width + 0.2M, 2);

@@ -8,7 +8,10 @@ using System.Text;
 
 namespace FinalProject
 {
-
+    /*
+     * LocalDbDAL class.
+     * Main purpose - Data Access Layer for local database.
+     */
     public class LocalDbDAL
     {
         //Connection string for debbuging mode
@@ -17,7 +20,7 @@ namespace FinalProject
         //Connection string for publish
         static string connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
 
-
+        //Get gene by gene name and chromosome, if not exist return null.
         public static List<String> getGene(string geneName, string chrom)
         {
             List<String> toReturn = null;
@@ -50,6 +53,8 @@ namespace FinalProject
             return toReturn;
 
         }
+
+        //Add new gene to database.
         public static void addGene(string name, string chrom, char strand, string exonStarts, string exonEnds)
         {
             try
@@ -74,72 +79,8 @@ namespace FinalProject
                 throw;
             }
         }
-        public static List<String> getMutationByDetails(string chrom, int position, char varNuc, char refNuc)
-        {
-            List<String> toReturn = null;
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                using (SqlCommand cmd = conn.CreateCommand())
-                {
-                    conn.Open();
-                    cmd.Parameters.Add("@chrom", SqlDbType.NChar).Value = chrom;
-                    cmd.Parameters.Add("@position", SqlDbType.NChar).Value = position;
-                    cmd.Parameters.Add("@ref", SqlDbType.NChar).Value = refNuc;
-                    cmd.Parameters.Add("@var", SqlDbType.NChar).Value = varNuc;
-                    cmd.CommandText = "SELECT * FROM Mutation WHERE chrom=@chrom AND position=@position AND ref=@ref AND var=@var";
-                    using (SqlDataReader rdr = cmd.ExecuteReader())
-                    {
-                        if (rdr.Read())
-                        {
-                            toReturn = new List<string>();
-                            for (int i = 0; i < rdr.FieldCount; i++)
-                            {
-                                string toAdd = rdr.GetString(i).Trim();
-                                if (toAdd.Equals(""))
-                                    toReturn.Add(null);
-                                else
-                                    toReturn.Add(toAdd);
-                            }
-                        }
-                    }
-                }
 
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return toReturn;
-        }
-        public static List<string> getMutationListPerPatient(string testName)
-        {
-            List<String> toReturn = null;
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                using (SqlCommand cmd = conn.CreateCommand())
-                {
-                    conn.Open();
-                    cmd.Parameters.Add("@testName", SqlDbType.NChar).Value = testName;
-                    cmd.CommandText = "SELECT mutation_id FROM Matches WHERE test_name=@testName";
-                    using (SqlDataReader rdr = cmd.ExecuteReader())
-                    {
-                        toReturn = new List<string>();
-                        while (rdr.Read())
-                        {
-                            toReturn.Add(rdr.GetString(0).Trim());
-                        }
-                    }
-                }
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return toReturn;
-        }
+        //Get mutation by mutation id, if not exist return null.
         public static List<String> getMutationByID(string mutId)
         {
             List<String> toReturn = null;
@@ -175,6 +116,76 @@ namespace FinalProject
             }
             return toReturn;
         }
+
+        //Get mutation by full details, if not exist return null.
+        public static List<String> getMutationByDetails(string chrom, int position, char varNuc, char refNuc)
+        {
+            List<String> toReturn = null;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    cmd.Parameters.Add("@chrom", SqlDbType.NChar).Value = chrom;
+                    cmd.Parameters.Add("@position", SqlDbType.NChar).Value = position;
+                    cmd.Parameters.Add("@ref", SqlDbType.NChar).Value = refNuc;
+                    cmd.Parameters.Add("@var", SqlDbType.NChar).Value = varNuc;
+                    cmd.CommandText = "SELECT * FROM Mutation WHERE chrom=@chrom AND position=@position AND ref=@ref AND var=@var";
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+                        if (rdr.Read())
+                        {
+                            toReturn = new List<string>();
+                            for (int i = 0; i < rdr.FieldCount; i++)
+                            {
+                                string toAdd = rdr.GetString(i).Trim();
+                                if (toAdd.Equals(""))
+                                    toReturn.Add(null);
+                                else
+                                    toReturn.Add(toAdd);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return toReturn;
+        }
+
+        //Get the list of the mutations that matches test name. return null if test name not exist.
+        public static List<string> getMutationListPerPatient(string testName)
+        {
+            List<String> toReturn = null;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    cmd.Parameters.Add("@testName", SqlDbType.NChar).Value = testName;
+                    cmd.CommandText = "SELECT mutation_id FROM Matches WHERE test_name=@testName";
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+                        toReturn = new List<string>();
+                        while (rdr.Read())
+                        {
+                            toReturn.Add(rdr.GetString(0).Trim());
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return toReturn;
+        }
+
+        //Add new mutation to database.
         public static void addMutation(string mutId, string chrom, int position, string geneName, char refNuc, char varNuc, char strand, string chromNum, string refCodon, string varCodon, string refAA, string varAA, string pMutationName, string cMutationName, string cosmicName)
         {
             try
@@ -208,6 +219,8 @@ namespace FinalProject
                 throw;
             }
         }
+
+        //Return true if mutation is allready in database,false otherwise.
         public static bool mutationExist(string chrom, int position, char refNuc, char varNuc)
         {
             bool toReturn = false;
@@ -230,7 +243,6 @@ namespace FinalProject
                         }
                     }
                 }
-
             }
             catch (Exception)
             {
@@ -239,7 +251,7 @@ namespace FinalProject
             return toReturn;
         }
 
-
+        //Return true if patient exist in database,false otherwise. search by test name.
         public static bool patientExist(string testName)
         {
             bool toReturn = false;
@@ -267,6 +279,8 @@ namespace FinalProject
             }
             return toReturn;
         }
+
+        //Add new patient to database.
         public static void addPatient(string testName, string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string diseaseLevel, string background, string prevTreatment, string currTreatment, string conclusion)
         {
             try
@@ -290,13 +304,14 @@ namespace FinalProject
                     cmd.CommandText = "INSERT INTO Patients VALUES (@testName,@id,@fName,@lName,@pathologicalNum,@runNum,@tumourSite,@diseaseLevel,@background,@prevTreatment,@currTreatment,@conclusion)";
                     cmd.ExecuteNonQuery();
                 }
-
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+        //Update exist patient.
         public static void updatePatient(string testName, string id, string fName, string lName, string pathologicalNum, string runNum, string tumourSite, string diseaseLevel, string prevTreatment, string currTreatment, string background, string conclusion)
         {
             try
@@ -323,13 +338,14 @@ namespace FinalProject
                         + "WHERE test_name=@testName";
                     cmd.ExecuteNonQuery();
                 }
-
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+        //Add match of test name an mutation id to Matches table.
         public static void addMatch(string testName, string mutId)
         {
             try
@@ -343,7 +359,6 @@ namespace FinalProject
                     cmd.CommandText = "INSERT into Matches VALUES (@testName,@mutId)";
                     cmd.ExecuteNonQuery();
                 }
-
             }
             catch (Exception)
             {
@@ -351,6 +366,7 @@ namespace FinalProject
             }
         }
 
+        //Count number of patient that matches mutation, by mutation id.
         public static int getNumOfPatientWithSameMutation(string mutId)
         {
             int toReturn = 0;
@@ -370,7 +386,6 @@ namespace FinalProject
                         }
                     }
                 }
-
             }
             catch (Exception)
             {
@@ -379,6 +394,7 @@ namespace FinalProject
             return toReturn;
         }
 
+        //Get all tests for specific patient, search by patient id.
         public static List<List<string>> getPatientListById(string id)
         {
             List<List<String>> toReturn = null;
@@ -400,7 +416,6 @@ namespace FinalProject
                                 toReturn = new List<List<string>>();
                                 first = false;
                             }
-
                             List<string> l = new List<string>();
                             for (int i = 0; i < rdr.FieldCount; i++)
                             {
@@ -410,7 +425,6 @@ namespace FinalProject
                         }
                     }
                 }
-
             }
             catch (Exception)
             {
@@ -419,6 +433,7 @@ namespace FinalProject
             return toReturn;
         }
 
+        //Get all patients that matches same mutation, search by mutation id.
         public static List<List<string>> getPatientListByMutation(string mutationId)
         {
             List<List<String>> toReturn = null;

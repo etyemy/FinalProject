@@ -10,24 +10,34 @@ using System.IO;
 
 namespace FinalProject.UI
 {
+    /*
+    * Info Analyze UserControl.
+    * Main purpose - analyze data that recived from csv files.
+    * Second purpose - show show the analized data in MutatinUserControl.
+    * Part of MainForm. 
+    */
     public partial class InfoAnalyzeUserControl : UserControl
     {
         enum XlsMinPlace { Chrom = 0, Position, GeneName, Ref, Var, NumOfShows };
-        private XLSHandler _xls1Handler = null;
-        private XLSHandler _xls2Handler = null;
+
+        private List<string[]> _csv1Mutations = null;
+        private List<string[]> _csv2Mutations = null;
+
         private string _xls1Path = null;
         private string _xls2Path = null;
         private List<Mutation> _mutationList = null;
         List<string[]> _mutationsDetailsList = null;
         private MainForm _mainForm;
         private bool hadError;
+
         public InfoAnalyzeUserControl(MainForm mainForm)
         {
             _mainForm = mainForm;
             InitializeComponent();
         }
 
-        private void LoadXlsButton_Click(object sender, EventArgs e)
+        //Occurs when csv1 or csv2 load button clicked, 
+        private void LoadCsvButton_Click(object sender, EventArgs e)
         {
             Button clickedButton = sender as Button;
             string tempPath = null, fileName; ;
@@ -55,23 +65,21 @@ namespace FinalProject.UI
 
                 if (_xls2Path == _xls1Path)
                 {
-                    MessageBox.Show("Same File Selected.",
-                                "Error",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Exclamation,
-                                MessageBoxDefaultButton.Button1);
+                    GeneralMethods.showErrorMessageBox("Same File Selected.");
                 }
                 else
                 {
                     tempTextBox.Text = fileName;
                     if (clickedButton == Xls1Button)
-                        _xls1Handler = new XLSHandler(tempPath);
-                    else if (clickedButton == Xls2Button)
-                        _xls2Handler = new XLSHandler(tempPath);
+                        _csv1Mutations=CSVHandler.getMutationsImportantDetails(tempPath);
+                   else if (clickedButton == Xls2Button)
+                        _csv2Mutations=CSVHandler.getMutationsImportantDetails(tempPath);
+
                 }
             }
         }
 
+        //Show Open File Dialog for file selecting.
         private string getFilePath()
         {
             if (_openFileDialog.ShowDialog() == DialogResult.OK)
@@ -81,18 +89,16 @@ namespace FinalProject.UI
             return null;
         }
 
+        //Gets the selected files, analyze and show the results.
         private void analyzeButton_Click(object sender, EventArgs e)
         {
             Boolean startAnalyze = false;
+            //if 2 files loaded.
             if (_xls1Path == null && _xls2Path == null)
             {
-                MessageBox.Show("No files selected.",
-                                  "Error",
-                                  MessageBoxButtons.OK,
-                                  MessageBoxIcon.Exclamation,
-                                  MessageBoxDefaultButton.Button1);
-              
+                GeneralMethods.showErrorMessageBox("No files selected.");
             }
+            //If only 1 file loaded.
             else if (_xls1Path == null ^ _xls2Path == null)
             {
                 if (MessageBox.Show("Only one file selected, Continue?", "Notice", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -100,18 +106,21 @@ namespace FinalProject.UI
                     startAnalyze = true;
                 }
             }
+            //If no file loaded
             else
             {
                 startAnalyze = true;
             }
             if (startAnalyze)
             {
-                _mutationsDetailsList = intersectionLists(_xls1Handler, _xls2Handler);
+                _mutationsDetailsList = intersectionLists(_csv1Mutations, _csv2Mutations);
                 analyzeButton.Enabled = false;
                 _mainForm.ArticlesUC.clearAll();
                 _analyzeBackgroundWorker.RunWorkerAsync();
             }
         }
+
+        //Analyze Background Worker start. use Backgroun Worker to keep UI active while analizing.
         private void analyzeBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             hadError = false;
@@ -126,7 +135,6 @@ namespace FinalProject.UI
                 char varNuc = s[(int)XlsMinPlace.Var][0];
                 try
                 {
-                    
                     Mutation tempMutation = MainBL.getMutationByDetails(chrom, position, refNuc, varNuc);
                     if (tempMutation == null)
                     {
@@ -145,12 +153,14 @@ namespace FinalProject.UI
                 }
             }
         }
+        //Report analyze progress.
         private void analyzeBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             this.progressBarLabel.Text = "Status: Analyzing Line: " + (e.ProgressPercentage) + " of " + _mutationsDetailsList.Count;
             progressBar1.Value = (100 / _mutationsDetailsList.Count) * e.ProgressPercentage;
         }
 
+        //Finish the analyze, sets the mutation table and clear the rest.
         private void analyzeBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             _mainForm.MutationList = _mutationList;
@@ -170,10 +180,8 @@ namespace FinalProject.UI
                 progressBarLabel.Text += ", Complete!";
             }
             analyzeButton.Enabled = true;
-
-            
         }
-
+        //generate the test name from csv file names.
         private string generateTestName()
         {
             string testName = "";
@@ -196,16 +204,17 @@ namespace FinalProject.UI
             return testName;
         }
 
-        private List<string[]> intersectionLists(XLSHandler l1, XLSHandler l2)
+        //inersect 2 mutation list from csvHandlers,create 1 list and sets the numOfShows in each mutation.
+        private List<string[]> intersectionLists(List<string[]> csvMut1, List<string[]> csvMut2)
         {
             bool twoFiles = true;
             List<string[]> toReturn = new List<string[]>();
-            if (l1 == null ^ l2 == null)
+            if (csvMut1 == null ^ csvMut2 == null)
             {
                 twoFiles = false;
             }
-            if (l1 != null)
-                foreach (string[] s in l1.XlsMin)
+            if (csvMut1 != null)
+                foreach (string[] s in csvMut1)
                 {
                     bool found = false;
                     foreach (string[] d in toReturn)
@@ -218,8 +227,8 @@ namespace FinalProject.UI
                     if (!found)
                         toReturn.Add(s);
                 }
-            if (l2 != null)
-                foreach (string[] s in l2.XlsMin)
+            if (csvMut2 != null)
+                foreach (string[] s in csvMut2)
                 {
                     bool found = false;
                     foreach (string[] d in toReturn)
@@ -237,10 +246,11 @@ namespace FinalProject.UI
             return toReturn;
         }
        
+        //Clear all analyze data
         public void clearAll()
         {
-            _xls1Handler = null;
-            _xls2Handler = null;
+            _csv1Mutations = null;
+            _csv2Mutations = null;
             _xls1Path = null;
             _xls2Path = null;
             _mutationList = null;

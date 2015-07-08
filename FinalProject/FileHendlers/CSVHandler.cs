@@ -4,41 +4,36 @@ using System.IO;
 
 namespace FinalProject
 {
-    class XLSHandler
+    /*
+     * CSVHandler class.
+     * Main purpose - Handle csv file that holds mutation data.
+     */
+    class CSVHandler
     {
-        enum XLSCol { Chrom = 0, Position, Ref, Variant, AlleleCall, Filter1, Frequency, Quality, Filter2, Type, AlleleSource, AlleleName, GeneID };
+        enum CsvColumn { Chrom = 0, Position, Ref, Variant, AlleleCall, Filter1, Frequency, Quality, Filter2, Type, AlleleSource, AlleleName, GeneID };
 
-        private List<string[]> _xlsMin;
-        string _xlsPath;
-        public XLSHandler(string xlsPath)
+        //Constructor, get the csv path and return only the important fields.
+        public static List<string[]> getMutationsImportantDetails(string csvPath)
         {
-            _xlsMin = new List<string[]>();
-            _xlsPath = xlsPath;
-            StreamReader reader = new StreamReader(_xlsPath);
+            List<string[]> _csvMin = new List<string[]>();
+            StreamReader reader = new StreamReader(csvPath);
             string header = reader.ReadLine();
             string line;
             while ((line = reader.ReadLine()) != null)
             {
                 string[] parts = line.Split(',');
-                if (parts[(int)XLSCol.Type].Equals("SNP"))
+                if (parts[(int)CsvColumn.Type].Equals("SNP"))
                 {
-                    string chrom = parts[(int)XLSCol.Chrom];
-                    string position = parts[(int)XLSCol.Position];
-                    string geneName = parts[(int)XLSCol.GeneID];
-                    string refNuc = parts[(int)XLSCol.Ref];
-                    string varNuc = parts[(int)XLSCol.Variant];
+                    string chrom = parts[(int)CsvColumn.Chrom];
+                    string position = parts[(int)CsvColumn.Position];
+                    string geneName = parts[(int)CsvColumn.GeneID];
+                    string refNuc = parts[(int)CsvColumn.Ref];
+                    string varNuc = parts[(int)CsvColumn.Variant];
                     string[] a = new string[6] { chrom, position, geneName, refNuc, varNuc,"1" };
-                    _xlsMin.Add(a);
+                    _csvMin.Add(a);
                 }
             }
+            return _csvMin;
         }
-        public List<string[]> XlsMin
-        {
-            get
-            {
-                return _xlsMin;
-            }
-        }
-
     }
 }

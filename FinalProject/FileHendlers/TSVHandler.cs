@@ -7,13 +7,18 @@ using System.Threading.Tasks;
 
 namespace FinalProject
 {
+    /*
+     * TSVHandler class.
+     * Main purpose - Handle tsv file that holds articles data.
+     */
     public class TSVHandler
     {
-        private List<Article> _allArticles;
         enum TSVCol { Title = 0, Author, Year, Journal, Status, CosmicID, PubmedID };
-        public TSVHandler(string tsvString)
+
+        //Main function, get tsv string, parse it and return list of Articles.
+        public static List<Article> getArticleListFromTsv(string tsvString)
         {
-            _allArticles = new List<Article>();
+            List<Article>  toReturn = new List<Article>();
             string[] lines = tsvString.Split('\n');
             for(int i=1;i<lines.Length-1;i++)
             {
@@ -25,15 +30,9 @@ namespace FinalProject
                 string cosmicId = lineParts[(int)TSVCol.CosmicID];
                 string pubmedId = lineParts[(int)TSVCol.PubmedID];
                 Article article = new Article(title, author, year, journal, cosmicId, pubmedId);
-                _allArticles.Add(article);
+                toReturn.Add(article);
             }
-        }
-        public List<Article> AllArticles
-        {
-            get
-            {
-                return new List<Article>(_allArticles);
-            }
+            return toReturn;
         }
     }
 }

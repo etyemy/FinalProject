@@ -6,11 +6,17 @@ using System.Windows.Forms;
 
 namespace FinalProject
 {
-   public class ArticleTabPage:TabPage
+    /*
+      * ArticleTabPage TabPage .
+      * Main purpose - Implements customize TabPage for articles.
+      */
+    public class ArticleTabPage:TabPage
     {
         private List<Article> _articleList;
         private Dictionary<string, bool> _journalToView;
         private DataGridView dataGridView;
+
+        //Initilize the TabPage with it components, fill the table with articles details and set the TabPage title.
         public ArticleTabPage(string tabName, List<Article> list)
         {
             this.MouseEnter += (s, e) => this.Focus();
@@ -55,6 +61,8 @@ namespace FinalProject
 
             this.Controls.Add(dataGridView);
         }
+
+        //Occurs when article title clicked, open the article source in default browser.
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == 0)
@@ -63,10 +71,8 @@ namespace FinalProject
             }
                 
         }
-        public Dictionary<string ,bool> getJournalToView()
-        {
-            return _journalToView;
-        }
+        
+        //Fill the table with articles details.
         public void fillTable()
         {
             dataGridView.Rows.Clear();
@@ -89,6 +95,7 @@ namespace FinalProject
             dataGridView.Refresh();
         }
 
+        //Open the FilterArticlesForm for current TabPage.
         internal void filterTable()
         {
             foreach(DataGridViewRow row in dataGridView.Rows)
@@ -100,15 +107,9 @@ namespace FinalProject
             }
         }
 
-        private void InitializeComponent()
+        public Dictionary<string, bool> getJournalToView()
         {
-            this.SuspendLayout();
-            // 
-            // ArticleTabPage
-            // 
-            this.BackColor = System.Drawing.SystemColors.Control;
-            this.ResumeLayout(false);
-
+            return _journalToView;
         }
     }
 }

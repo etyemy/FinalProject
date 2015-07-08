@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace FinalProject
 {
+    /*
+     * Gene class holds the gene details.
+     * Main purpose - easy transfer of gene details
+     */
     public class Gene
     {
         private string _name;
@@ -16,6 +20,7 @@ namespace FinalProject
         private int[] _exonStarts;
         private int[] _exonEnds;
 
+        //First constructor - get raw gene data, calculate and fix the exons positions.
         public Gene(string name, string chrom, char strand, int cdsStart, int cdsEnd, int[] exonStarts, int[] exonEnds)
         {
             _name = name;
@@ -25,7 +30,8 @@ namespace FinalProject
             _cdsEnd = cdsEnd;
             fixExonStartEnd(exonStarts, exonEnds);
         }
-        public Gene(string name, string chrom, char strand,  int[] exonStarts, int[] exonEnds)
+        //Second constructor - get gene data from local database, exons allready fixed.
+        public Gene(string name, string chrom, char strand, int[] exonStarts, int[] exonEnds)
         {
             _name = name;
             _chrom = chrom;
@@ -69,28 +75,30 @@ namespace FinalProject
             _exonStarts = tempStarts.ToArray();
             _exonEnds = tempEnds.ToArray();
         }
-       
+
+        //Calculate the offset in the codon, get index and return 0 for first place,1 for second place, 2 for third place, -1 for non codon position 
         public int getOffsetInCodon(int index)
         {
             int lengthToIndex = getLengthToIndex(index);
-            if (lengthToIndex>-1)
+            if (lengthToIndex > -1)
             {
                 if (_strand.Equals('+'))
-                    return (lengthToIndex-1) % 3;
+                    return (lengthToIndex - 1) % 3;
                 else
                 {
-                    int negOffset=(lengthToIndex) % 3;
+                    int negOffset = (lengthToIndex) % 3;
                     if (negOffset == 2)
                         return 0;
                     else if (negOffset == 0)
                         return 2;
                     else
                         return 1;
-                } 
+                }
             }
             return -1;
         }
 
+        //return the length from the start of the gene to index, for both '-' and '+' strand
         public int getLengthToIndex(int index)
         {
             int lengthToIndex = 0;
@@ -133,26 +141,8 @@ namespace FinalProject
             return -1;
         }
 
-        public int[] ExonStarts
-        {
-            get
-            {
-                return _exonStarts;
-            }
-        }
-        public int[] ExonEnds
-        {
-            get
-            {
-                return _exonEnds;
-            }
-        }
-        public char Strand
-        {
-            get
-            {
-                return _strand;
-            }
-        }
+        public int[] ExonStarts { get { return _exonStarts; } }
+        public int[] ExonEnds { get { return _exonEnds; } }
+        public char Strand { get { return _strand; } }
     }
 }

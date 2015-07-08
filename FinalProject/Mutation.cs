@@ -7,16 +7,23 @@ using System.Threading.Tasks;
 
 namespace FinalProject
 {
+    /*
+     * Mutation class holds the mutation details.
+     * Main purpose - easy transfer of mutation details
+     */
     public class Mutation
     {
+        //mutation id use as primary key for database, id structure: _chrom_position_ref_var
         private string _mutId;
 
+        //Basic details of mutation, details source from csv file.
         private string _chrom;
         private int _position;
         private string _geneName;
         private char _ref;
         private char _var;
 
+        //Extra details of Mutation, genarated with extractExtraData method
         private List<String> _cosmicDetails;
         private Gene _gene;
         private char _strand;
@@ -28,12 +35,11 @@ namespace FinalProject
         private string _pMutationName;
         private string _cMutationName;
         private string _cosmicName;
-
         private int _numOfShows = 1;
 
+        //First constructor - gets the basic mutation data generate all the extra data, use for new mutation that not exist in local database.
         public Mutation(string chrom, int position, string geneSym, char refNuc, char varNuc)
         {
-            
             _chrom = chrom;
             _chromNum = chrom.Replace("chr", "");
             _position = position;
@@ -51,9 +57,10 @@ namespace FinalProject
             {
                 throw;
             }
-            
         }
-        public Mutation(string mutId,string chrom,int position,string geneName,char refNuc,char varNuc,char strand,string chromNum,string refCodon,string varCodon,string refAA,string varAA,string pMutationName,string cMutationName,string cosmicName)
+
+        //Second constructor - gets all mutation details, use for known mutation that exit in local database.
+        public Mutation(string mutId, string chrom, int position, string geneName, char refNuc, char varNuc, char strand, string chromNum, string refCodon, string varCodon, string refAA, string varAA, string pMutationName, string cMutationName, string cosmicName)
         {
             _mutId = mutId;
             _chrom = chrom;
@@ -71,30 +78,34 @@ namespace FinalProject
             _cMutationName = cMutationName;
             _cosmicName = cosmicName;
         }
+
+        //Method that use the basic details of the mutation and generate all extra details.
         public void extractExtraData()
         {
             try
             {
+                //get gene details from lodal db, if not exit create new gene and add it to locel db
                 _gene = MainBL.getGene(_geneName, _chrom);
                 if (_gene == null)
-                    MainBL.addGene(_geneName, _chrom);
-                _gene = MainBL.getGene(_geneName, _chrom);
+                    _gene = MainBL.addGene(_geneName, _chrom);
+
                 _strand = _gene.Strand;
-                if(_strand.Equals('+'))
-                    _cosmicDetails = MainBL.getCosmicDetails(_chromNum, _position, _ref,_var);
+                if (_strand.Equals('+'))
+                    _cosmicDetails = MainBL.getCosmicDetails(_chromNum, _position, _ref, _var);
                 else if (_strand.Equals('-'))
-                    _cosmicDetails = MainBL.getCosmicDetails(_chromNum, _position, OppositeNuc(_ref),OppositeNuc(_var));
+                    _cosmicDetails = MainBL.getCosmicDetails(_chromNum, _position, OppositeNuc(_ref), OppositeNuc(_var));
 
                 setVarRefCodons(_gene.getOffsetInCodon(_position));
             }
-            catch (MySql.Data.MySqlClient.MySqlException e)
+            catch (Exception)
             {
-                throw ;
+                throw;
             }
+            //sets the rest of the mutation details.
             if (!_refCodon.Equals("No Coding"))
             {
-                _varAA = AminoAcid.getAminoAcid(_varCodon);
-                _refAA = AminoAcid.getAminoAcid(_refCodon);
+                _varAA = GeneralMethods.getAminoAcid(_varCodon);
+                _refAA = GeneralMethods.getAminoAcid(_refCodon);
             }
             else
             {
@@ -114,7 +125,8 @@ namespace FinalProject
                 _cMutationName = "-----";
             }
         }
-        
+
+        //Method that sets the var codon and the ref codon of the mutation by using _chrom, _position and offset.
         private void setVarRefCodons(int offset)
         {
             if (offset != -1)
@@ -127,8 +139,8 @@ namespace FinalProject
 
                 if (_gene.Strand.Equals('-'))
                 {
-                    _refCodon = reverseString(OppositeCodon(_refCodon));
-                    _varCodon = reverseString(OppositeCodon(_varCodon));
+                    _refCodon = GeneralMethods.reverseString(OppositeCodon(_refCodon));
+                    _varCodon = GeneralMethods.reverseString(OppositeCodon(_varCodon));
                 }
             }
             else
@@ -137,14 +149,8 @@ namespace FinalProject
                 _varCodon = "No Coding";
             }
         }
-        
-        private string reverseString(string toReverse)
-        {
-            char[] arr = toReverse.ToCharArray();
-            Array.Reverse(arr);
-            return new string(arr);
-        }
 
+        //Function that get 3 character string that represent codon, return the oppssite codon, use when strand is '-'.
         private string OppositeCodon(string p)
         {
             string toReturn = "";
@@ -170,6 +176,8 @@ namespace FinalProject
             }
             return toReturn;
         }
+
+        //Function that get single character that represent nucliotide, return the oppssite nucliotide.
         private char OppositeNuc(char c)
         {
             switch (c)
@@ -186,146 +194,53 @@ namespace FinalProject
                     return ' ';
             }
         }
-        
-        public string Chrom
-        {
-            get
-            {
-                return _chrom;
-            }
-        }
-        public int Position
-        {
-            get
-            {
-                return _position;
-            }
-        }
-        public string GeneName
-        {
-            get
-            {
-                return _geneName;
-            }
-        }
-        public char Var
-        {
-            get
-            {
-                return _var;
-            }
-        }
-        public char Ref
-        {
-            get
-            {
-                return _ref;
-            }
-        }
-        public char Strand
-        {
-            get
-            {
-                return _strand;
-            }
-        }
-        public string ChromNum
-        {
-            get
-            {
-                return _chromNum;
-            }
-        }
-        public string RefCodon
-        {
-            get
-            {
-                return _refCodon;
-            }
-        }
-        public string VarCodon
-        {
-            get
-            {
-                return _varCodon;
-            }
-        }
-        public string VarAA
-        {
-            get
-            {
-                return _varAA;
-            }
-        }
-        public string RefAA
-        {
-            get
-            {
-                return _refAA;
-            }
-        }
-        public string PMutationName
-        {
-            get
-            {
-                return _pMutationName;
-            }
-        }
-        public string CMutationName
-        {
-            get
-            {
-                return _cMutationName;
-            }
-        }
-        public string CosmicName
-        {
-            get
-            {
-                return _cosmicName;
-            }
-        }
-        public int NumOfShows
-        {
-            get
-            {
-                return _numOfShows;
-            }
-            set
-            {
-                _numOfShows = value;
-            }
-        }
-       
-        public string MutId
-        {
-            get
-            {
-                return _mutId;
-            }
-        }
+
+        //Method that use cosmicId field and return all ids numbers.
         public List<int> getCosmicNums()
         {
-            List<int> toReturn=new List<int>();
+            List<int> toReturn = new List<int>();
             string[] cosmicId = _cosmicName.Split(' ');
             foreach (string s in cosmicId)
                 toReturn.Add(Convert.ToInt32(Regex.Match(s, @"\d+").Value));
             return toReturn;
         }
-        
+
+        //Method that generate the mutation id.
         private string generateMutId()
         {
-            return ""+_chrom+_position+_var+_ref;
+            return "" + _chrom + _position + _var + _ref;
         }
 
+        //Function that returns the headers for all tables exporting.
         public static string[] getHeaderForExport()
         {
             return new string[] { "Chromosome", "Position", "Gene Name", "Ref", "Var", "Strand", "Ref Codon", "Var Codon", "Ref AA", "Var AA", "Mutation Name", "Cosmic Details" };
         }
+        //Function that returns the mutation details for all tables exporting.
         public string[] getInfoForExport()
         {
             return new string[] { _chrom, _position + "", _geneName, _ref + "", _var + "", _strand + "", _refCodon, _varCodon, _refAA, _varAA, _pMutationName, _cosmicName };
         }
 
+        public string Chrom { get { return _chrom; } }
+        public int Position { get { return _position; } }
+        public string GeneName { get { return _geneName; } }
+        public char Var { get { return _var; } }
+        public char Ref { get { return _ref; } }
+        public char Strand { get { return _strand; } }
+        public string ChromNum { get { return _chromNum; } }
+        public string RefCodon { get { return _refCodon; } }
+        public string VarCodon { get { return _varCodon; } }
+        public string VarAA { get { return _varAA; } }
+        public string RefAA { get { return _refAA; } }
+        public string PMutationName { get { return _pMutationName; } }
+        public string CMutationName { get { return _cMutationName; } }
+        public string CosmicName { get { return _cosmicName; } }
+        public string MutId { get { return _mutId; } }
+        public int NumOfShows
+        {
+            get { return _numOfShows; }
+            set { _numOfShows = value; }
+        }
     }
 }

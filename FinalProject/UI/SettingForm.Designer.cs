@@ -40,7 +40,7 @@
             this.browseButton = new System.Windows.Forms.Button();
             this.docPathLabel = new System.Windows.Forms.Label();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.docPathTextBox = new System.Windows.Forms.TextBox();
+            this.exportPathTextBox = new System.Windows.Forms.TextBox();
             this.settingsTabControl.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
@@ -97,7 +97,7 @@
             this.cancelButton.TabIndex = 39;
             this.cancelButton.Text = "cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.button2_Click);
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // settingsTabControl
             // 
@@ -110,7 +110,7 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.docPathTextBox);
+            this.tabPage2.Controls.Add(this.exportPathTextBox);
             this.tabPage2.Controls.Add(this.browseButton);
             this.tabPage2.Controls.Add(this.docPathLabel);
             this.tabPage2.Controls.Add(this.label1);
@@ -146,11 +146,11 @@
             // 
             // docPathTextBox
             // 
-            this.docPathTextBox.Location = new System.Drawing.Point(97, 89);
-            this.docPathTextBox.Name = "docPathTextBox";
-            this.docPathTextBox.ReadOnly = true;
-            this.docPathTextBox.Size = new System.Drawing.Size(226, 20);
-            this.docPathTextBox.TabIndex = 41;
+            this.exportPathTextBox.Location = new System.Drawing.Point(97, 89);
+            this.exportPathTextBox.Name = "docPathTextBox";
+            this.exportPathTextBox.ReadOnly = true;
+            this.exportPathTextBox.Size = new System.Drawing.Size(226, 20);
+            this.exportPathTextBox.TabIndex = 41;
             // 
             // SettingForm
             // 
@@ -190,7 +190,7 @@
         private System.Windows.Forms.Label docPathLabel;
         private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
-        private System.Windows.Forms.TextBox docPathTextBox;
+        private System.Windows.Forms.TextBox exportPathTextBox;
 
     }
 }

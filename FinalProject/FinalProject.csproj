@@ -113,7 +113,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AminoAcid.cs" />
     <Compile Include="Article.cs" />
     <Compile Include="FileHendlers\DOCExportHandler.cs" />
     <Compile Include="FileHendlers\XLSExportHandler.cs" />

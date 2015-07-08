@@ -12,6 +12,10 @@ using System.Runtime.InteropServices;
 
 namespace FinalProject.UI
 {
+    /*
+     * Main Form .
+     * Main purpose - Implement the main Interface of the software.
+     */
     public partial class MainForm : Form
     {
         private InfoAnalyzeUserControl infoAnalyzeUserControl;
@@ -21,6 +25,8 @@ namespace FinalProject.UI
 
         private List<Mutation> _mutationList;
         private Patient _currPatient;
+
+        //Initialize the MainForm with all User Controls, positioning them on the form
         public MainForm()
         {
             InitializeComponent();
@@ -44,12 +50,16 @@ namespace FinalProject.UI
             patientUserControl.Top = 465;
             mutationUserControl.Top = 80;
         }
+        
+        //Open the settings form,disable main form.
         private void settingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Enabled = false;
             SettingForm settingForm = new SettingForm(this);
             settingForm.Show();
         }
+
+        //Clear all data from MainForm.
         private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _mutationList = null;
@@ -60,69 +70,23 @@ namespace FinalProject.UI
             mutationUserControl.clearAll();
         }
 
+        //Exit the program.
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        public ArticlesUserControl ArticlesUC
-        {
-            get
-            {
-                return articlesUserControl;
-            }
-        }
-        public PatientUserControl PatientUC
-        {
-            get
-            {
-                return patientUserControl;
-            }
-        }
-        public MutationUserControl MutationUC
-        {
-            get
-            {
-                return mutationUserControl;
-            }
-        }
-        public Patient CurrPatient
-        {
-            get
-            {
-                return _currPatient;
-            }
-            set
-            {
-                _currPatient = value;
-            }
-        }
-        public List<Mutation> MutationList
-        {
-            get
-            {
-                return _mutationList;
-            }
-            set
-            {
-                _mutationList = value;
-            }
-        }
-
+        //Handle the exporting of data to XLSX and DOCX files
         private void ExportMenuItem_Click(object sender, EventArgs e)
         {
-            string path = Properties.Settings.Default.DocSavePath;
+            string path = Properties.Settings.Default.ExportSavePath;
             ToolStripMenuItem clicked = sender as ToolStripMenuItem;
             string clickedName = clicked.Name;
             if (path.Equals(""))
-                MessageBox.Show("Error, Please select directory to save in settings",
-                                "Error",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Exclamation,
-                                MessageBoxDefaultButton.Button1);
+                GeneralMethods.showErrorMessageBox("Error, Please select directory to save in settings");
             else
             {
-
+                //If Export to DOCX selected.
                 if (clickedName.Equals("docxWithDetailsMenuItem") || clicked.Name.Equals("docxWithoutDetailsMenuItem"))
                 {
                     if (_currPatient == null || _mutationList == null)
@@ -139,19 +103,15 @@ namespace FinalProject.UI
                         try
                         {
                             DOCExportHandler.saveDOC(_currPatient, _mutationList, includeDetails);
-                            MessageBox.Show("File Saved Successfully To: " + Properties.Settings.Default.DocSavePath);
+                            MessageBox.Show("File Saved Successfully To: " + Properties.Settings.Default.ExportSavePath);
                         }
                         catch (IOException)
                         {
-                            MessageBox.Show("File Allready Open, Close And Try Again.",
-                                "Error",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Exclamation,
-                                MessageBoxDefaultButton.Button1);
+                            GeneralMethods.showErrorMessageBox("Error, Please select directory to save in settings");
                         }
-
                     }
                 }
+                //If Export to XLSX selected.
                 else if (clickedName.Equals("xlsxMutationMenuItem"))
                 {
                     if (_mutationList == null)
@@ -163,30 +123,41 @@ namespace FinalProject.UI
                         try
                         {
                             XLSExportHandler.saveXLS(patientUserControl.TestName, _mutationList);
-                            MessageBox.Show("File Saved Successfully To: " + Properties.Settings.Default.DocSavePath);
+                            MessageBox.Show("File Saved Successfully To: " + Properties.Settings.Default.ExportSavePath);
                         }
                         catch (IOException)
                         {
-                            MessageBox.Show("File Allready Open, Close And Try Again.",
-                                "Error",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Exclamation,
-                                MessageBoxDefaultButton.Button1);
+                            GeneralMethods.showErrorMessageBox("Error, Please select directory to save in settings");
                         }
                     }
                 }
             }
         }
-
+        //Show the about message.
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {  
-            MessageBox.Show("                        AutoAnalyze\n"+
-                            "                              2015\n\n"+
-                            "                        Created By \n\n"+
-                            "                    Moti Monsonego\n\n"+
-                            "       Azrieli - College Of Engineering\n\n"+
+        {
+            MessageBox.Show("                        AutoAnalyze\n" +
+                            "                              2015\n\n" +
+                            "                        Created By \n\n" +
+                            "                    Moti Monsonego\n\n" +
+                            "       Azrieli - College Of Engineering\n\n" +
                             "       Email: motimonso@gmail.com", "About");
 
         }
+
+        public ArticlesUserControl ArticlesUC{get{return articlesUserControl;}}
+        public PatientUserControl PatientUC{get{return patientUserControl;}}
+        public MutationUserControl MutationUC{get{return mutationUserControl;}}
+        public Patient CurrPatient{
+            get{return _currPatient;}
+            set{_currPatient = value;}
+        }
+        public List<Mutation> MutationList
+        {
+            get{return _mutationList;}
+            set{_mutationList = value;}
+        }
+
+        
     }
 }

@@ -9,10 +9,16 @@ using System.Windows.Forms;
 
 namespace FinalProject.UI
 {
+    /*
+    * Patient UserControl.
+    * Main purpose - show mutations details in MainForm.
+    * Part of MainForm. 
+    */
     public partial class MutationUserControl : UserControl
     {
         private List<Mutation> _mutationList;
         private MainForm _mainForm;
+        //initialize the MutationUserControl
         public MutationUserControl(MainForm mainForm)
         {
             InitializeComponent();
@@ -22,6 +28,7 @@ namespace FinalProject.UI
             mutationDataGridView.CellContentClick += dataGridView1_CellClick;
         }
 
+        //occurs when cell clicked in dataGridView, use only in history field,Open the history form for current mutation.
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == 14)
@@ -42,18 +49,13 @@ namespace FinalProject.UI
                 
             }
         }
-
+        //Initialize the table with the details from the mutation list.
         public void initTable(List<Mutation> mutationList)
         {
             _mutationList = mutationList;
-            fillTable();
-        }
-
-        private void fillTable()
-        {
-            if(_mutationList!=null)
+            if (_mutationList != null)
             {
-                foreach(Mutation m in _mutationList)
+                foreach (Mutation m in _mutationList)
                 {
                     DataGridViewRow tempRow = new DataGridViewRow();
                     tempRow.CreateCells(mutationDataGridView);
@@ -82,14 +84,15 @@ namespace FinalProject.UI
                         mutationDataGridView.Rows.Add(tempRow);
                         mutationDataGridView.PerformLayout();
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         GeneralMethods.showErrorMessageBox("Something Went Wrong, Please try Again");
                     }
-                    
                 }
             }
         }
+
+        //Clear all the data from the table
         public void clearAll()
         {
             _mutationList = null;

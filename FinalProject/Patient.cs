@@ -5,6 +5,11 @@ using System.Text;
 
 namespace FinalProject
 {
+    /*
+     * Patient class holds all patient details
+     * Contains only constractor and getters 
+     * Main purpose - easy transfer of patient details
+     */
     public class Patient
     {
         string _testName;
@@ -33,96 +38,24 @@ namespace FinalProject
             _background = background;
             _prevTreatment = prevTreatment;
             _currTreatment = currTreatment;
-            _conclusion=conclusion;
+            _conclusion = conclusion;
         }
-        
+
         public override string ToString()
         {
             return _testName + " " + _fName + " " + _lName;
         }
-        public string TestName
-        {
-            get
-            {
-                return _testName;
-            }
-        }
-        public string PatientID
-        {
-            get
-            {
-                return _patientId;
-            }
-        }
-        public string FName
-        {
-            get
-            {
-                return _fName;
-            }
-        }
-        public string LName
-        {
-            get
-            {
-                return _lName;
-            }
-        }
-        public string PathoNum
-        {
-            get
-            {
-                return _pathoNum;
-            }
-        }
-        public string RunNum
-        {
-            get
-            {
-                return _runNum;
-            }
-        }
-        public string TumourSite
-        {
-            get
-            {
-                return _tumourSite;
-            }
-        }
-        public string DiseaseLevel
-        {
-            get
-            {
-                return _diseaseLevel;
-            }
-        }
-        public string Background
-        {
-            get
-            {
-                return _background;
-            }
-        }
-        public string PrevTreatment
-        {
-            get
-            {
-                return _prevTreatment;
-            }
-        }
-        public string CurrTreatment
-        {
-            get
-            {
-                return _currTreatment;
-            }
-        }
-        public string Conclusion
-        {
-            get
-            {
-                return _conclusion;
-            }
-        }
+        public string TestName { get { return _testName; } }
+        public string PatientID { get { return _patientId; } }
+        public string FName { get { return _fName; } }
+        public string LName { get { return _lName; } }
+        public string PathoNum { get { return _pathoNum; } }
+        public string RunNum { get { return _runNum; } }
+        public string TumourSite { get { return _tumourSite; } }
+        public string DiseaseLevel { get { return _diseaseLevel; } }
+        public string Background { get { return _background; } }
+        public string PrevTreatment { get { return _prevTreatment; } }
+        public string CurrTreatment { get { return _currTreatment; } }
+        public string Conclusion { get { return _conclusion; } }
     }
 }

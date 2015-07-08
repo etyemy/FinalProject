@@ -67,7 +67,7 @@
             this.Xls2Button.TabIndex = 47;
             this.Xls2Button.Text = "CSV 2";
             this.Xls2Button.UseVisualStyleBackColor = true;
-            this.Xls2Button.Click += new System.EventHandler(this.LoadXlsButton_Click);
+            this.Xls2Button.Click += new System.EventHandler(this.LoadCsvButton_Click);
             // 
             // Xls1Button
             // 
@@ -77,7 +77,7 @@
             this.Xls1Button.TabIndex = 46;
             this.Xls1Button.Text = "CSV 1";
             this.Xls1Button.UseVisualStyleBackColor = true;
-            this.Xls1Button.Click += new System.EventHandler(this.LoadXlsButton_Click);
+            this.Xls1Button.Click += new System.EventHandler(this.LoadCsvButton_Click);
             // 
             // xls1TextBox
             // 

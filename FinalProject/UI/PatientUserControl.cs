@@ -9,17 +9,27 @@ using System.Windows.Forms;
 
 namespace FinalProject.UI
 {
+    /*
+    * Patient UserControl.
+    * Main purpose - manage patient details in MainForm.
+    * Second purpose - show patient details in HistoryForm.
+    * Part of MainForm. 
+    */
     public partial class PatientUserControl : UserControl
     {
         MainForm _mainForm;
         List<Mutation> _mutationList = null;
         Patient _patient;
         string testNmae;
+
+        //Initialize the empty UserControl.
         public PatientUserControl(MainForm mainForm)
         {
             _mainForm = mainForm;
             InitializeComponent();
         }
+
+        //Initialize UserControl with patient details.
         public PatientUserControl(Patient p)
         {
             InitializeComponent();
@@ -27,7 +37,8 @@ namespace FinalProject.UI
             PatientButtonPanel.Visible = false;
         }
 
-
+        //When search clicked, get the id from the idTextBox, search if patient with that id exist.
+        //If exist creates a new SerchResultForm and show the results, If not, Shows appropriate message
         private void _searchPatientButton_Click(object sender, EventArgs e)
         {
             string patientId = idToLoadTextBox.Text;
@@ -51,9 +62,9 @@ namespace FinalProject.UI
             {
                 GeneralMethods.showErrorMessageBox("Something Went Wrong, Please try Again");
             }
-               
         }
 
+        //When save clicked, gets all patient details from textBoxs and save patient to database.
         private void _savePatientButton_Click(object sender, EventArgs e)
         {
             string testName = _testNameTextBox.Text;
@@ -68,28 +79,28 @@ namespace FinalProject.UI
             string currTreatment = _currentTreatmentTextBox.Text;
             string background = _backgroundTextBox.Text;
             string conclusion = _conclusionsTextBox1.Text;
+            //validate textboxs text
             if (!(id.Equals("") || fName.Equals("") || lName.Equals("") || pathoNum.Equals("") || runNum.Equals("") || tumourSite.Equals("")))
             {
+                //check if patient with same test name allready exist.
                 Patient p = new Patient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
                 try
                 {
+                    //If Exist, show message for overwriting.
                     if (MainBL.patientExistByTestName(testNmae))
                     {
                         if (MessageBox.Show("TEST NAME allready exist, Overwrite?", "Notice", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
-
                             MainBL.updatePatient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, background, prevTreatment, currTreatment, conclusion);
                             _mainForm.CurrPatient = p;
                             _mutationList = MainBL.getMutationListByTestName(p.TestName);
                             _mainForm.MutationList = _mutationList;
                             MessageBox.Show("Patient saved successfully");
-
-
                         }
                     }
+                    //If not Exist, insert new patient to database.
                     else
                     {
-
                         MainBL.addPatient(testName, id, fName, lName, pathoNum, runNum, tumourSite, diseaseLevel, prevTreatment, currTreatment, background, conclusion);
                         _mainForm.CurrPatient = p;
                         _mainForm.MutationList = _mutationList;
@@ -98,15 +109,12 @@ namespace FinalProject.UI
                             MainBL.addMatch(testName, m.MutId);
                         }
                         MessageBox.Show("Patient saved successfully");
-
                     }
                 }
                 catch (Exception)
                 {
                     GeneralMethods.showErrorMessageBox("Something Went Wrong, Please try Again");
                 }
-               
-                
             }
             else
             {
@@ -115,12 +123,10 @@ namespace FinalProject.UI
                 errorToolTip.Show("Please Fill All Details", _savePatientButton, 800);
             }
             colorTextBoxs();
-
         }
-
+        //Check all textboxs and color the ones that failed validation.
         private void colorTextBoxs()
         {
-
             List<TextBox> textBoxList = new List<TextBox>();
             textBoxList.Add(_idTextBox);
             textBoxList.Add(_firstNameTextBox);
@@ -136,23 +142,22 @@ namespace FinalProject.UI
             lebalList.Add(_runNoLabel);
             lebalList.Add(_tumourSiteLabel);
 
-            for (int i = 0; i < textBoxList.Count;i++ )
+            for (int i = 0; i < textBoxList.Count; i++)
             {
                 if (textBoxList.ElementAt(i).Text.Equals(""))
                     lebalList.ElementAt(i).ForeColor = Color.Red;
                 else
                     lebalList.ElementAt(i).ForeColor = Color.Black;
-
             }
-
-
-
         }
+        //Sets the Patient User Control with mutation list and test name.
         public void initPatientUC(List<Mutation> mutationList, string testName)
         {
             _mutationList = mutationList;
             this.testNmae = testName;
         }
+
+        //Clear all text box and buttons to initial state.
         public void clearAll()
         {
             _savePatientButton.Enabled = false;
@@ -170,9 +175,9 @@ namespace FinalProject.UI
             _testNameTextBox.Text = "";
             _conclusionsTextBox1.Text = "";
             patientDetailPanel.Visible = false;
-
         }
 
+        //When new clicked, check if has tests loaded, if loaded, clear all fields and show all text boxs.
         private void newPatientButton_Click(object sender, EventArgs e)
         {
             if (_mainForm.MutationList != null)
@@ -190,13 +195,11 @@ namespace FinalProject.UI
             {
                 MessageBox.Show("Please Load Test files.");
             }
-
         }
 
-
+        //Load patient details to text boxs, fullView=true when in mainForm,fullView=false when in historyForm.
         internal void loadPatientDetails(Patient patient, bool fullView)
         {
-
             _savePatientButton.Enabled = true;
             patientDetailPanel.Visible = true;
 
@@ -218,6 +221,8 @@ namespace FinalProject.UI
             if (fullView)
                 _mainForm.CurrPatient = _patient;
         }
+
+        //Get mutation list of patient by test name, and sets the list to the MutationUserControl in MainForm
         public void loadMutationDetails(Patient p)
         {
             try
@@ -231,20 +236,10 @@ namespace FinalProject.UI
             catch (Exception)
             {
                 GeneralMethods.showErrorMessageBox("Something Went Wrong, Please try Again");
-
-            }
-            
-        }
-        public string TestName
-        {
-            get
-            {
-                return testNmae;
             }
         }
 
-
-
+        //occurs when id text boxes test changed, validates that text entered is digit only and limit length to 9.
         private void DigitTextBox_TextChanged(object sender, EventArgs e)
         {
             TextBox changedTextBox = sender as TextBox;
@@ -264,6 +259,8 @@ namespace FinalProject.UI
                 changedTextBox.SelectionStart = changedTextBox.Text.Length;
             }
         }
+
+        //occurs when patient personal details text boxes changed, limit length to 20.
         private void SmallDetailsTextBox_TextChanged(object sender, EventArgs e)
         {
             TextBox changedTextBox = sender as TextBox;
@@ -281,5 +278,6 @@ namespace FinalProject.UI
                 changedTextBox.SelectionStart = changedTextBox.Text.Length;
             }
         }
+        public string TestName { get { return testNmae; } }
     }
 }

@@ -5,10 +5,16 @@ using System.IO;
 
 namespace FinalProject
 {
+    /*
+     * UcscDAL class.
+     * Main purpose - Data Access Layer for ucsc database.
+     */
     class UcscDAL
     {
         static string connectionString = @"server=genome-mysql.cse.ucsc.edu;user id=genome;database=hg19";
 
+        //Get gene details from refGene table by geneName and chrom.
+        //if not exist return null.
         public static List<String> getGene(string geneName, string chrom)
         {
             List<String> toReturn = null;
@@ -45,6 +51,7 @@ namespace FinalProject
             return toReturn;
         }
 
+        //get COSMIC details for mutation, return list of COSMIC mutation id, if not exist any information return null.
         public static List<String> getCosmicDetails(string chromNum, int position, char refNuc, char varNuc)
         {
             List<String> toReturn = null;

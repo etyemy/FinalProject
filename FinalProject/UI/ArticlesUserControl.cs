@@ -9,26 +9,41 @@ using System.Windows.Forms;
 
 namespace FinalProject.UI
 {
+    /*
+    * Article UserControl.
+    * Main purpose - Get and show the Articles for important Mutation.
+    * Part of MainForm. 
+    */
     public partial class ArticlesUserControl : UserControl
     {
         private CosmicWebService _cosmicWebService;
         private List<Mutation> _mutationList;
         private MainForm _mainForm;
+        
+        //Initialize the UserControl.
         public ArticlesUserControl(MainForm mainForm)
         {
             _mainForm = mainForm;
             InitializeComponent();
             _cosmicWebService = new CosmicWebService();
         }
+
+        //initialize with mutation list
+        public void initArticleUC(List<Mutation> mutationList)
+        {
+            _mutationList = mutationList;
+            getArticlesButton.Enabled = true;
+        }
+
+        //Occurs when get articles clicked, start the BackgroundWorker.
         private void getArticlesButton_Click(object sender, EventArgs e)
         {
             _articlesBackgroundWorker.RunWorkerAsync();
-           
-
         }
+
+        //Connect to COSMIC, preform login and get the Articles for each mutatin that has cosmic details.
         private void _articlesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-           
             BeginInvoke((MethodInvoker)delegate
             {
                 _articleTabControl.TabPages.Clear();
@@ -46,15 +61,13 @@ namespace FinalProject.UI
                         foreach(int i in m.getCosmicNums())
                         {
                             string tsvStringFromCosmic = _cosmicWebService.getTsvFromCosmic(i);
-                            TSVHandler tsvHandler = new TSVHandler(tsvStringFromCosmic);
                             string tabName = m.GeneName + "  " + m.PMutationName + "  COSM"+i;
-                            ArticleTabPage p = new ArticleTabPage(tabName, tsvHandler.AllArticles);
+                            ArticleTabPage p = new ArticleTabPage(tabName, TSVHandler.getArticleListFromTsv(tsvStringFromCosmic));
                             BeginInvoke((MethodInvoker)delegate
                             {
                                 _articleTabControl.TabPages.Add(p);
                             });
                         }
-                        
                     }
                 }
             }
@@ -63,6 +76,7 @@ namespace FinalProject.UI
                 _articlesBackgroundWorker.ReportProgress(2);
             }
         }
+        //Use progressChanged to change the status text
         private void _articlesBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             switch (e.ProgressPercentage)
@@ -88,6 +102,8 @@ namespace FinalProject.UI
             if (_articleTabControl.TabCount != 0)
                 filterButton.Enabled = true;
         }
+
+        //Open the filter Article Form for selected TabPage.
         private void filterButton_Click(object sender, EventArgs e)
         {
             MainForm parentForm = (this.Parent as MainForm);
@@ -96,11 +112,7 @@ namespace FinalProject.UI
             filterArticleForm.Show();
         }
 
-        public void initArticleUC(List<Mutation> mutationList)
-        {
-            _mutationList = mutationList;
-            getArticlesButton.Enabled = true;
-        }
+        //Clear the Artile User Control.
         public void clearAll()
         {
             _articleTabControl.TabPages.Clear();

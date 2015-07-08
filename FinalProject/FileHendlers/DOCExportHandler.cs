@@ -11,13 +11,17 @@ using DocumentFormat.OpenXml;
 
 namespace FinalProject.FileHendlers
 {
+    /*
+     * DOCExportHandler class.
+     * Main purpose - export mutation details to DOCX file.
+     */
     public class DOCExportHandler
     {
-
+        //Main class function, export the mutationList to DOCX file, sets file name to patient's testName.
         public static void saveDOC(Patient patient, List<Mutation> mutationList, bool includePersonalDetails)
         {
             WordprocessingDocument myDoc = null;
-            string fullPath = Properties.Settings.Default.DocSavePath + @"\" + patient.TestName;
+            string fullPath = Properties.Settings.Default.ExportSavePath + @"\" + patient.TestName;
             if (includePersonalDetails)
                 fullPath += "_withDetails";
             fullPath += ".docx";
@@ -36,46 +40,52 @@ namespace FinalProject.FileHendlers
             Run run_paragraph = new Run();
             paragraph.Append(run_paragraph);
 
-            body.Append(addPara("Test Name",true));
-            body.Append(addPara(patient.TestName,false));
+            //add paragraph for each detail of the patient.
+            body.Append(generateParagraph("Test Name",true));
+            body.Append(generateParagraph(patient.TestName,false));
+            //add personal details of the patien, if includePersonalDetails=true
             if (includePersonalDetails)
             {
-                body.Append(addPara("ID", true));
-                body.Append(addPara(patient.PatientID, false));
-                body.Append(addPara("First Name", true));
-                body.Append(addPara(patient.FName, false));
-                body.Append(addPara("Last Name", true));
-                body.Append(addPara(patient.LName, false));
+                body.Append(generateParagraph("ID", true));
+                body.Append(generateParagraph(patient.PatientID, false));
+                body.Append(generateParagraph("First Name", true));
+                body.Append(generateParagraph(patient.FName, false));
+                body.Append(generateParagraph("Last Name", true));
+                body.Append(generateParagraph(patient.LName, false));
             }
             
-            body.Append(addPara("Pathological Number", true));
-            body.Append(addPara(patient.PathoNum, false));
-            body.Append(addPara("Run Number", true));
-            body.Append(addPara(patient.RunNum, false));
-            body.Append(addPara("Tumour Site", true));
-            body.Append(addPara(patient.TumourSite, false));
-            body.Append(addPara("Disease Level", true));
-            body.Append(addPara(patient.DiseaseLevel, false));
-            body.Append(addPara("Backgroud", true));
-            body.Append(addPara(patient.Background, false));
-            body.Append(addPara("Previous Treatment", true));
-            body.Append(addPara(patient.PrevTreatment, false));
-            body.Append(addPara("Current Treatment", true));
-            body.Append(addPara(patient.CurrTreatment, false));
-            body.Append(addPara("Conclusion", true));
-            body.Append(addPara(patient.Conclusion, false));
+            body.Append(generateParagraph("Pathological Number", true));
+            body.Append(generateParagraph(patient.PathoNum, false));
+            body.Append(generateParagraph("Run Number", true));
+            body.Append(generateParagraph(patient.RunNum, false));
+            body.Append(generateParagraph("Tumour Site", true));
+            body.Append(generateParagraph(patient.TumourSite, false));
+            body.Append(generateParagraph("Disease Level", true));
+            body.Append(generateParagraph(patient.DiseaseLevel, false));
+            body.Append(generateParagraph("Backgroud", true));
+            body.Append(generateParagraph(patient.Background, false));
+            body.Append(generateParagraph("Previous Treatment", true));
+            body.Append(generateParagraph(patient.PrevTreatment, false));
+            body.Append(generateParagraph("Current Treatment", true));
+            body.Append(generateParagraph(patient.CurrTreatment, false));
+            body.Append(generateParagraph("Conclusion", true));
+            body.Append(generateParagraph(patient.Conclusion, false));
 
+            //Add related mutation of the patient.
             CreateTable(body, mutationList);
 
             mainPart.Document.Append(body);
             mainPart.Document.Save();
             myDoc.Close();
         }
-        private static Paragraph addPara(string text,bool isHeader)
+
+        //Create paragraph that contain the text.
+        private static Paragraph generateParagraph(string text,bool isHeader)
         {
             Paragraph paragraph = new Paragraph();
             Run run_paragraph = new Run();
             paragraph.Append(run_paragraph);
+            //if isHeader=true style the text as header.
             if(isHeader)
             {
                 RunProperties runProperties = run_paragraph.AppendChild(new RunProperties());
@@ -93,8 +103,7 @@ namespace FinalProject.FileHendlers
             return paragraph;
         }
 
-        
-
+        //Create table that contain the mutation details and add it to body. 
         private static void CreateTable(Body body, List<Mutation> mutationList)
         {
             Table mutationTable = new Table();
@@ -128,7 +137,8 @@ namespace FinalProject.FileHendlers
             body.Append(mutationTable);
         }
 
-         private static TableCell makeCell(string p,int colorType)
+        //create new cell for the table with text and color for background.
+         private static TableCell makeCell(string text,int colorType)
         {
             TableCell cell = new TableCell();
             if(colorType!=0)
@@ -153,10 +163,11 @@ namespace FinalProject.FileHendlers
             }
             cell.Append(new TableCellProperties(
                 new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "2400" }));
-            cell.Append(new Paragraph(new Run(new Text(p))));
+            cell.Append(new Paragraph(new Run(new Text(text))));
             return cell;
         }
 
+        //Generate table properties.
         private static TableProperties getTableProperties()
         {
             return new TableProperties(

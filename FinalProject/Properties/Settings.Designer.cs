@@ -50,12 +50,12 @@ namespace FinalProject.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DocSavePath {
+        public string ExportSavePath {
             get {
-                return ((string)(this["DocSavePath"]));
+                return ((string)(this["ExportSavePath"]));
             }
             set {
-                this["DocSavePath"] = value;
+                this["ExportSavePath"] = value;
             }
         }
     }

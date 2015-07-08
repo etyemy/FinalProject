@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace FinalProject
 {
+    /*
+     * MainBL class.
+     * Main purpose - Bussiness Logic Layer for both UCSC and local databases.
+     * Check logic of queries data, rearrange the answers into competible data.
+     * No documentation for each function - same as DAL classes.
+     */
     public class MainBL
     {
         public static Mutation getMutationByDetails(string chrom, int position, char varNuc, char refNuc)
@@ -107,9 +113,10 @@ namespace FinalProject
                 throw;
             }
         }
-        public static void addGene(string geneName, string chrom)
+        public static Gene addGene(string geneName, string chrom)
         {
             List<String> geneStrings = null;
+            Gene toReturn = null;
             try
             {
                 geneStrings = UcscDAL.getGene(geneName, chrom);
@@ -120,13 +127,13 @@ namespace FinalProject
                     int cdsEnd = int.Parse(geneStrings[2]);
                     int[] exonStars = exonStringToIntArray(geneStrings[4]);
                     int[] exonEnds = exonStringToIntArray(geneStrings[5]);
-                    Gene g = new Gene(geneName, chrom, strand, cdsStart, cdsEnd, exonStars, exonEnds);
-                    string tempExonStarts = exonIntArrayToString(g.ExonStarts);
-                    string tempExonEnds = exonIntArrayToString(g.ExonEnds);
+                    toReturn = new Gene(geneName, chrom, strand, cdsStart, cdsEnd, exonStars, exonEnds);
+                    string tempExonStarts = exonIntArrayToString(toReturn.ExonStarts);
+                    string tempExonEnds = exonIntArrayToString(toReturn.ExonEnds);
 
                     LocalDbDAL.addGene(geneName, chrom, strand, tempExonStarts, tempExonEnds);
                 }
-
+                return toReturn;
             }
             catch (Exception)
             {
@@ -179,8 +186,6 @@ namespace FinalProject
                 throw;
             }
         }
-
-
 
         public static bool patientExistByTestName(string testName)
         {

@@ -9,11 +9,16 @@ using System.Windows.Forms;
 
 namespace FinalProject.UI
 {
+    /*
+     * Search Result Form .
+     * Main purpose - Shows the results for the patient search.
+     */
     public partial class SearchResultForm : Form
     {
         private List<Patient> _patientList;
         private MainForm _mainForm;
 
+        //Initialize the form with the patient list.
         public SearchResultForm(List<Patient> patientList,MainForm mainForm)
         {
             InitializeComponent();
@@ -25,6 +30,8 @@ namespace FinalProject.UI
             }
         }
 
+        //When Load clicked, sets the selected patient to Patint User Control in MainForm and close the current form.
+        //If none selected, show appropriate message.
         private void loadPatienButton_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedIndices.Count != 0)
@@ -39,6 +46,7 @@ namespace FinalProject.UI
                 MessageBox.Show("No Selection Made");
         }
 
+        //when cancel clicked, doesnt save anything, set main form enabled.
         private void cancelButton_Click(object sender, EventArgs e)
         {
             _mainForm.Enabled = true;
