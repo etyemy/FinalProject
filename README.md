@@ -20,7 +20,7 @@ My program auzomize this very long and complicate procedure, so that instead of 
 * v1.1 - [Working Version](https://github.com/motimonso/FinalProject/releases/tag/v1.1) - Complete working version - With comments to all code.
 
 ###Manual:
-[Hebrew Manual]()
+[Hebrew Manual](https://github.com/motimonso/FinalProject/blob/master/FinalProject/%D7%9E%D7%93%D7%A8%D7%99%D7%9A%20%D7%9E%D7%A9%D7%AA%D7%9E%D7%A9.pdf)
 
 
 Project Calendar and tasks managed in [Trello](https://trello.com/b/hqGIxK0G/final-project)
