@@ -20,10 +20,21 @@ My program auzomize this very long and complicate procedure, so that instead of 
 * v1.1 - [Working Version](https://github.com/motimonso/FinalProject/releases/tag/v1.1) - Complete working version - With comments to all code.
 
 ###Manual:
-[Hebrew Manual](https://github.com/motimonso/FinalProject/blob/master/FinalProject/%D7%9E%D7%93%D7%A8%D7%99%D7%9A%20%D7%9E%D7%A9%D7%AA%D7%9E%D7%A9.pdf)
+* [Hebrew Manual](https://github.com/motimonso/FinalProject/blob/master/FinalProject/%D7%9E%D7%93%D7%A8%D7%99%D7%9A%20%D7%9E%D7%A9%D7%AA%D7%9E%D7%A9.pdf)
+
+###Installation Instruction:
+Visual Studio 2013 - Debbug mode:
+* Set connection string to "Debbug Mode String" in LocalDbDAL.cs.
+* Press "Start" button and use the progrem.
+
+Visual Studio 2013 - Deploy:
+* Set connection string to "Publish Mode String" in LocalDbDAL.cs.
+* Press "Build" menu -> Publish.
+* Run installation and use the program.
 
 
-Project Calendar and Tasks managed in [Trello](https://trello.com/b/hqGIxK0G/final-project)
+###Project Calendar and Tasks:
+* Managed in [Trello](https://trello.com/b/hqGIxK0G/final-project)
 
 
 By Moti Monsonego
