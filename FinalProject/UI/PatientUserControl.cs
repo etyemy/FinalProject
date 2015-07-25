@@ -50,10 +50,6 @@ namespace FinalProject.UI
                     _mainForm.Enabled = false;
                     SearchResultForm srf = new SearchResultForm(patientList, _mainForm);
                     srf.Show();
-                    foreach (Patient p in patientList)
-                    {
-                        Console.WriteLine(p.ToString());
-                    }
                 }
                 else
                     GeneralMethods.showErrorMessageBox("Wrong ID, No patient found.");

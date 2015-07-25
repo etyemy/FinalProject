@@ -15,10 +15,10 @@ namespace FinalProject
     public class LocalDbDAL
     {
         //Connection string for debbuging mode
-        //static string connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Dev\Visual_Projects\FinalProject\FinalProject\Database.mdf;Integrated Security=True";
+        static string connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Dev\Visual_Projects\FinalProject\FinalProject\Database.mdf;Integrated Security=True";
 
         //Connection string for publish
-        static string connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
+        //static string connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
 
         //Get gene by gene name and chromosome, if not exist return null.
         public static List<String> getGene(string geneName, string chrom)

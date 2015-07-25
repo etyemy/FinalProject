@@ -12,7 +12,7 @@ namespace FinalProject
     {
         enum CsvColumn { Chrom = 0, Position, Ref, Variant, AlleleCall, Filter1, Frequency, Quality, Filter2, Type, AlleleSource, AlleleName, GeneID };
 
-        //Constructor, get the csv path and return only the important fields.
+        //Get the csv path and return only the important fields.
         public static List<string[]> getMutationsImportantDetails(string csvPath)
         {
             List<string[]> _csvMin = new List<string[]>();
